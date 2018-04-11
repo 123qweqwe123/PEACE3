@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.PipUqsAnswerqnLogMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.qn.domain.PipUqsAnswerqnLog" >
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="PATIENT_ID" property="patientId" jdbcType="VARCHAR" />
+    <result column="UQS_VERSION" property="uqsVersion" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="UQS_FILE" property="uqsFile" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    PROJECT_ID, LCC_CODE, PATIENT_ID, UQS_VERSION, START_TIME, END_TIME, CREATE_BY, UQS_FILE, 
+    STATE, CREATE_DATE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.qn.domain.PipUqsAnswerqnLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_UQS_ANSWERQN_LOG
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.qn.domain.PipUqsAnswerqnLogExample" >
+    delete from PIP_UQS_ANSWERQN_LOG
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.qn.domain.PipUqsAnswerqnLog" >
+    insert into PIP_UQS_ANSWERQN_LOG (PROJECT_ID, LCC_CODE, PATIENT_ID, 
+      UQS_VERSION, START_TIME, END_TIME, 
+      CREATE_BY, UQS_FILE, STATE, 
+      CREATE_DATE)
+    values (#{projectId,jdbcType=VARCHAR}, #{lccCode,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, 
+      #{uqsVersion,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{uqsFile,jdbcType=VARCHAR}, #{state,jdbcType=DECIMAL}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.qn.domain.PipUqsAnswerqnLog" >
+    insert into PIP_UQS_ANSWERQN_LOG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="patientId != null" >
+        PATIENT_ID,
+      </if>
+      <if test="uqsVersion != null" >
+        UQS_VERSION,
+      </if>
+      <if test="startTime != null" >
+        START_TIME,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="uqsFile != null" >
+        UQS_FILE,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null" >
+        #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="uqsVersion != null" >
+        #{uqsVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="uqsFile != null" >
+        #{uqsFile,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.qn.domain.PipUqsAnswerqnLogExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_UQS_ANSWERQN_LOG
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_UQS_ANSWERQN_LOG
+    <set >
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccCode != null" >
+        LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientId != null" >
+        PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uqsVersion != null" >
+        UQS_VERSION = #{record.uqsVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startTime != null" >
+        START_TIME = #{record.startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime != null" >
+        END_TIME = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uqsFile != null" >
+        UQS_FILE = #{record.uqsFile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null" >
+        STATE = #{record.state,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_UQS_ANSWERQN_LOG
+    set PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      UQS_VERSION = #{record.uqsVersion,jdbcType=VARCHAR},
+      START_TIME = #{record.startTime,jdbcType=TIMESTAMP},
+      END_TIME = #{record.endTime,jdbcType=TIMESTAMP},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      UQS_FILE = #{record.uqsFile,jdbcType=VARCHAR},
+      STATE = #{record.state,jdbcType=DECIMAL},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+  <select id="listData" parameterType="com.bdcor.pip.web.qn.filter.AnswerQnLogFilter" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from PIP_UQS_ANSWERQN_LOG
+    where 1=1
+    and state = ${state}
+    and patient_id = #{pid}
+    <if test="sidx!=null and sord!=null">
+    order by ${sidx}  ${sord}
+    </if>
+  </select>
+
+  <select id="getData" parameterType="com.bdcor.pip.web.qn.filter.AnswerQnLogFilter" resultType="Map">
+      SELECT  L.UQS_VERSION,to_char(L.START_TIME , 'yyyy-mm-dd HH24:mi:ss') START_TIME,to_char(L.END_TIME , 'yyyy-mm-dd HH24:mi:ss')    END_TIME,L.CREATE_BY,L.UQS_FILE,L.STATE,L.CREATE_DATE,L.PROJECT_ID,L.LCC_CODE,L.PATIENT_ID,
+      N.QUESTIONNAIRE_ID, N.DISPLAY_NAME, A.NAME
+      FROM PIP_UQS_ANSWERQN_LOG L
+      LEFT JOIN PIP_UQS_QUESTIONNAIRE N
+      ON L.UQS_VERSION = N.VERSION
+      LEFT JOIN PIP_SYS_ACCOUNT A
+      ON L.CREATE_BY = A.ID
+    where 1=1
+      and (  state = 1 or ( uqs_file like '%change%' and state = 2 ) )
+      and uqs_version = '004.001.001'
+      and patient_id = #{pid}
+      <if test="sidx!=null and sord!=null">
+        order by ${sidx}  ${sord}
+      </if>
+  </select>
+
+  <select id="getPatientInfoById" parameterType="string" resultType="map">
+
+   SELECT P.PATIENT_NAME , P.PATIENT_ID , P.SEX , to_char(P.BIRTHDAY , 'yyyy-mm-dd') BIRTHDAY,P.ID_NUMBER , L.LCC_NAME
+   FROM PIP_COMM_PATIENT P
+      LEFT JOIN PIP_COMM_LCC L
+      ON P.LCC_CODE = L.LCC_CODE
+      WHERE  PATIENT_ID = #{pid}
+
+  </select>
+
+  <select id="getUqsData" resultType="map">
+    select
+    p.PATIENT_ID as PATIENTID,
+    p.PATIENT_NAME as PATIENT_NAME,
+    p.SEX as SEX,
+    to_char(p.BIRTHDAY,'yyyy-MM-dd') as BIRTHDAY,
+    p.ID_NUMBER as ID_NUMBER,
+    p.MOBILE as MOBILE,
+    p.PHONE as PHONE,
+    to_char(p.LAST_FOLLOWVIEW_DATE,'yyyyMMdd') as LAST_FOLLOWVIEW_DATE,
+    anlog.UQS_FILE as uqsFile,
+    anlog.UQS_VERSION as uqsVersion,
+    to_char(anlog.STATE) as state,
+    p.LINK_MAN1 as LINK_MAN1,
+    p.LINK_MAN1_RELATION as LINK_MAN1_RELATION,
+    p.LINK_MAN1_MOBILE as LINK_MAN1_MOBILE,
+    to_char(anlog.START_TIME , 'yyyy-MM-dd HH24:mi:ss') START_TIME
+    from PIP_COMM_PATIENT p
+    left join PIP_UQS_ANSWERQN_LOG anlog on anlog.PROJECT_ID=p.PROJECT_ID
+    and anlog.PATIENT_ID=p.PATIENT_ID
+    where  1=1
+    and anlog.state=1
+    and p.PROJECT_ID='004'
+    and p.PATIENT_ID=#{pid}
+    <if test=" qnid != null ">
+    and anlog.UQS_VERSION = #{qnid}
+    </if>
+      <if test=" uqsfile != null ">
+          and anlog.UQS_FILE = #{uqsfile}
+      </if>
+    order by anlog.CREATE_DATE desc
+
+  </select>
+
+
+  <select id="getPatientInfo" resultType="map">
+    select * from PIP_COMM_PATIENT
+    where 1=1
+    and patient_id = #{pid}
+    <if test="proj_id != null and proj_id != '' " >
+        and project_id = #{proj_id}
+    </if>
+  </select>
+  
+  <select id="getStartHosDate" parameterType="map" resultType="java.util.Date">
+		select 
+		<if test='state == "1" '>
+			<if test='uqsCode == "001" '>
+				p.FOLLOW12_DATE
+			</if>
+			
+			<if test='uqsCode == "002" '>
+				d.FIRST_DATE
+			</if>
+			
+			<if test='uqsCode == "003" '>
+				d.SIX_REAL_DATE
+			</if>
+			
+			<if test='uqsCode == "011" '>
+				<!-- d.FIRST_DATE -->
+              decode( p.process_types , '1' ,d.FIRST_DATE, nvl(np.hospitaldate,p.FOLLOW12_DATE))
+			</if>
+		</if>
+		<if test='state == "2" '>
+            <choose>
+                <when test='uqsCode == "011" '>
+                  decode( p.process_types , '1' , d.FIRST_DATE, nvl(np.hospitaldate, p.FOLLOW12_DATE))
+                </when>
+                <otherwise>
+                    p.LAST_FOLLOWVIEW_DATE
+                </otherwise>
+            </choose>
+		</if> 
+		from PIP_COMM_PATIENT p
+		left join PIP_COMM_PATIENT_DATE d on d.PROJECT_ID=p.PROJECT_ID and d.PATIENT_ID=p.PATIENT_ID
+    left join PIP_COMM_PATIENT_NEWJOIN np on np.PATIENT_ID=p.PATIENT_ID
+		where p.PATIENT_ID=#{patientId}
+  </select>
+</mapper>

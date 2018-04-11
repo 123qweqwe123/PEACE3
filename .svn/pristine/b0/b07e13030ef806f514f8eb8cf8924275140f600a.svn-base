@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.pro.promgt.dao.LinkManDao">
+    <resultMap id="BaseResultMap" type="com.bdcor.pip.web.pro.promgt.domain.LinkMan">
+        <result column="LINKMAN_CODE" property="linkManCode" jdbcType="VARCHAR"/>
+        <result column="USERNAME" property="username" jdbcType="VARCHAR"/>
+        <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
+        <result column="MOBILE" property="mobile" jdbcType="VARCHAR"/>
+        <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="LCC_ROLE" property="lccRole" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR"/>
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+        <result column="DEPARTMENT" property="department" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+		LINKMAN_CODE,USERNAME,ADDRESS,PHONE,MOBILE,LCC_CODE,EMAIL,LCC_ROLE,STATUS,PROJECT_ID
+    </sql>
+    
+    <select id="getAllLinkMans" parameterType="com.bdcor.pip.web.pro.promgt.filter.LinkManFilter" resultMap="BaseResultMap">
+    	select
+    	l.*, c.LCC_NAME as lccName
+    	from pip_project_linkman l left join pip_comm_lcc c on l.lcc_code = c.lcc_code  and l.project_id=c.project_id
+    	where 1=1 
+    	<if test="projectId != null">
+			and l.project_id = #{projectId}
+        </if>
+    	<if test="username != null">
+			and l.USERNAME like '%'||#{username}||'%'
+        </if>
+        <if test="lccCode != null">
+        	and l.lcc_code = #{lccCode}
+        </if>
+        <if test="status != null and status != ''">
+        	and l.status = #{status}
+        </if>
+        <if test="sidx != null and sidx != ''">
+			order by l.${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+    </select>
+    
+    <select id="getLinkManByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    	select 
+    	<include refid="Base_Column_List"/>
+    	from pip_project_linkman where 1=1
+    	<if test="linkManCode != null">
+        	<if test="linkManCode != null">
+				and LINKMAN_CODE like '%'||#{linkManCode}||'%'
+			</if>
+        </if>
+    </select>
+    
+    <insert id="addLinkMan" parameterType="com.bdcor.pip.web.pro.promgt.domain.LinkMan">
+    	insert into pip_project_linkman
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="linkManCode != null">
+				LINKMAN_CODE,
+			</if>
+			<if test="username != null">
+				USERNAME,
+			</if>
+			<if test="phone != null">
+				PHONE,
+			</if>
+			<if test="mobile != null">
+				MOBILE,
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE,
+			</if>
+			<if test="email != null">
+				EMAIL,
+			</if>
+			<if test="lccRole != null">
+				LCC_ROLE,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="address != null">
+				ADDRESS,
+			</if>
+			<if test="department != null">
+				DEPARTMENT,
+			</if>
+			<if test="projectId != null">
+				PROJECT_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="linkManCode != null">
+				#{linkManCode, jdbcType=VARCHAR},
+			</if>
+			<if test="username != null">
+				#{username, jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone, jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile, jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				#{lccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email, jdbcType=VARCHAR},
+			</if>
+			<if test="lccRole != null">
+				#{lccRole, jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status, jdbcType=VARCHAR},
+			</if>
+			<if test="address !=null">
+				#{address, jdbcType=VARCHAR},
+			</if>
+			<if test="department != null">
+				#{department, jdbcType=VARCHAR},
+			</if>
+			<if test="projectId != null">
+				#{projectId, jdbcType=VARCHAR},
+			</if>
+		</trim>
+    </insert>
+    
+    <update id="updateLinkMan" parameterType="com.bdcor.pip.web.pro.promgt.domain.LinkMan">
+    	update pip_project_linkman
+		<set>
+			<if test="username != null">
+				USERNAME = #{username, jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				PHONE = #{phone, jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				MOBILE = #{mobile, jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE = #{lccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="department != null">
+				DEPARTMENT = #{department, jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				EMAIL = #{email, jdbcType=VARCHAR},
+			</if>
+			<if test="lccRole != null">
+				LCC_ROLE = #{lccRole, jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status, jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address, jdbcType=VARCHAR},
+			</if>
+			<if test="projectId != null">
+				PROJECT_ID = #{projectId, jdbcType=VARCHAR},
+			</if>
+		</set>
+		where LINKMAN_CODE = #{linkManCode,jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.String">
+    	 delete pip_project_linkman where LINKMAN_CODE = #{linkManCode,jdbcType=VARCHAR}
+    </delete>
+</mapper>

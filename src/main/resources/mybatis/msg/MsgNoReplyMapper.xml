@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.msg.dao.MsgNoReplyDao">
+	
+	<select id="list" parameterType="com.bdcor.pip.web.msg.filter.MsgNoReplyFilter" resultType="com.bdcor.pip.web.msg.domain.MsgNoReplyVo">
+		select
+		s.LCC_CODE as lccId,
+		s.PATIENT_ID as patientId,
+		p.PATIENT_NAME as patientName,
+		p.id_number as idNumber,
+		s.mobile as mobile,
+		p.belong_group as bGroup,
+		p.is_diabetes as isDiabetes,
+		s.MSG_NAME as msgName,
+		s.SENDTIME_REAL as sendTime
+		
+		from PIP_MSG_SEND s
+		left join PIP_MSG_MSGTMP m on m.ID=s.MSG_ID
+		left join PIP_COMM_PATIENT p on p.PROJECT_ID=s.PROJECT_ID and p.LCC_CODE=s.LCC_CODE and p.PATIENT_ID=s.PATIENT_ID
+		
+		where s.project_id=#{projectId} and 
+		s.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		and s.STATE=1 and s.IS_DELETE=2 and s.IS_NEEDREPLY=1
+		and s.SENDTIME_REAL+3&lt;sysdate
+		and not exists(select 1 from PIP_MSG_REPLY r where r.PROJECT_ID=s.PROJECT_ID and r.LCC_CODE=s.LCC_CODE and r.PATIENT_ID=s.PATIENT_ID and s.SENDTIME_REAL+3>r.REPLY_TIME and r.REPLY_TIME>s.SENDTIME_REAL)
+		
+		<if test="lccCode != null and lccCode != ''">
+			and s.LCC_CODE=#{lccCode}
+		</if>
+		<if test="patientId != null and patientId != ''">
+			and s.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and p.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="group != null">
+			and p.belong_group =#{group}
+		</if>
+		<if test="sendTime != null and sendTime != ''">
+			and to_char(s.SENDTIME_REAL,'yyyy-MM-dd') >= #{sendTime}
+		</if>
+		<if test="sendTimeEnd != null and sendTimeEnd != ''">
+			and to_char(s.SENDTIME_REAL,'yyyy-MM-dd') <![CDATA[<=]]> #{sendTimeEnd}
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+	
+	<select id="getMapList" parameterType="com.bdcor.pip.web.msg.filter.MsgNoReplyFilter" resultType="map">
+		select
+		s.LCC_CODE as lccId,
+		s.PATIENT_ID as patientId,
+		p.PATIENT_NAME as patientName,
+		p.id_number as idNumber,
+		s.mobile as mobile,
+		decode(p.belong_group, 01, '非糖尿病对照组', 02, '非糖尿病实验组', 11, '糖尿病对照组', 12, '糖尿病实验组') as bGroup,
+		s.MSG_NAME as msgName,
+		s.SENDTIME_REAL as sendTime
+		
+		from PIP_MSG_SEND s
+		left join PIP_MSG_MSGTMP m on m.ID=s.MSG_ID
+		left join PIP_COMM_PATIENT p on p.PROJECT_ID=s.PROJECT_ID and p.LCC_CODE=s.LCC_CODE and p.PATIENT_ID=s.PATIENT_ID
+		
+		where s.project_id=#{projectId} and 
+		s.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		and s.STATE=1 and s.IS_DELETE=2 and s.IS_NEEDREPLY=1
+		and s.SENDTIME_REAL+3&lt;sysdate
+		and not exists(select 1 from PIP_MSG_REPLY r where r.PROJECT_ID=s.PROJECT_ID and r.LCC_CODE=s.LCC_CODE and r.PATIENT_ID=s.PATIENT_ID and s.SENDTIME_REAL+3>r.REPLY_TIME and r.REPLY_TIME>s.SENDTIME_REAL)
+	
+		<if test="lccCode != null and lccCode != ''">
+			and s.LCC_CODE=#{lccCode}
+		</if>
+		<if test="patientId != null and patientId != ''">
+			and s.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and p.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="group != null">
+			and p.belong_group =#{group}
+		</if>
+		<if test="sendTime != null and sendTime != ''">
+			and to_char(s.SENDTIME_REAL,'yyyy-MM-dd') >= #{sendTime}
+		</if>
+		<if test="sendTimeEnd != null and sendTimeEnd != ''">
+			and to_char(s.SENDTIME_REAL,'yyyy-MM-dd') <![CDATA[<=]]> #{sendTimeEnd}
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx}
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+
+	<!-- 连续两次未回复数据查询 -->
+	<select id="getNoreplyList" resultType="map">
+		select t.lcc_code , t.patient_id ,to_char(t.SENDTIME_REAL,'yyyy-mm-dd HH24:mi:ss') SENDTIME_REAL,
+		t.mobile , p.patient_name ,
+		decode(p.belong_group , '01','非糖尿病实验组',decode(p.belong_group,'02','非糖尿病对照组',decode(
+		p.belong_group,'11','糖尿病实验组',decode(p.belong_group,'12','糖尿病对照组','')
+		))) belong_group
+		,nvl(t2.con, 0) con, t3.con as cou
+		from (
+		select ms.* , row_number() over( partition by patient_id order by sendtime_real desc ) rn
+		from pip_msg_send ms
+		where ms.state = '1'
+		and ms.is_needreply = '1'
+        and not exists(
+            select 1 from pip_msg_reply mr
+            where ms.mobile = mr.mobile
+            and ms.patient_id = mr.patient_id
+            and mr.reply_time >= (ms.sendtime_real - 1/96)
+            and mr.reply_time &lt;= (ms.sendtime_real+3)
+        )
+		and ms.sendtime_real &lt; sysdate-3
+			<!--/*and exists( select 1 from  v_pip_msg_twiceNoreply vp where vp.patient_id = ms.patient_id )*/ -->
+			and ms.patient_Id in (
+			select patient_Id from v_pip_msg_twiceNoreply
+			)
+		) t
+		left join pip_comm_patient p on t.patient_id = p.patient_id
+		left join (select count(1) con, patient_id
+		from pip_msg_handler
+		group by patient_id) t2
+		on t.patient_id = t2.patient_id
+		left join (
+		select pms.patient_id ,count(1) con from pip_msg_send pms where pms.is_needreply='1'
+		and pms.state='1' and not exists(
+		select 1 from pip_msg_handler pmh where pmh.msgsend_id = pms.id
+		)
+		and not exists(
+		select 1 from pip_msg_reply mr
+		where pms.mobile = mr.mobile
+		and pms.patient_id = mr.patient_id
+		and mr.reply_time >= (pms.sendtime_real - 1/96)
+		and mr.reply_time &lt;= (pms.sendtime_real+3)
+		)
+		group by patient_id
+		) t3
+		on t3.patient_id = t.patient_id
+		where rn = '1'
+		and ( t3.con is not null and t3.con != 0 )
+/*		and not exists (
+		select 1 from pip_msg_handler mh where mh.msgsend_id = t.id
+		)
+*/
+		<if test="lccCode!= null and lccCode != ''">
+			and t.lcc_code=#{lccCode}
+		</if>
+		<if test="patientId!= null and patientId != ''">
+			and t.patient_id = #{patientId}
+		</if>
+		<if test="group!= null and group != ''">
+			and p.belong_group = #{group}
+		</if>
+		<if test="patientName!= null and patientName != ''">
+			and p.patient_name like '%'|| #{patientName} ||'%'
+		</if>
+		<!-- order by patient_id ,sendtime_real desc-->
+		order by cou DESC
+	</select>
+
+	<select id="getWaitMsg" resultType="map">
+		select  ms.LCC_CODE,
+		ms.patient_id,
+		p.patient_name,
+		p.belong_group,
+		to_char(SENDTIME_REAL,'yyyy-mm-dd') SENDTIME_REAL,
+		substr(msg_name,0,20) msg_name,
+		ms.mobile,ms.id msgsend_id
+		from
+		pip_msg_send ms
+		left join pip_comm_patient p on ms.patient_id = p.patient_id
+		where 1=1
+		and ms.state = '1'
+		and ms.patient_id = #{patientId}
+		and ms.is_needreply = '1'
+		and not exists(
+		 select 1 from pip_msg_handler mh where ms.id = mh.msgsend_id
+		)
+		and not exists(
+		select 1 from pip_msg_reply mr
+		where ms.mobile = mr.mobile
+		and ms.patient_id = mr.patient_id
+		and mr.reply_time >= (ms.sendtime_real - 1/96)
+		and mr.reply_time &lt;= (ms.sendtime_real+3)
+		)
+		order by sendtime_real desc
+	</select>
+
+</mapper>

@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.AnswerQnDao">
+	
+	<select id="getAnswerLogMap" parameterType="map" resultType="map">
+		select * from(select 
+		p.PATIENT_ID as PATIENTID,
+		p.LCC_CODE as LCC_CODE,
+		p.PATIENT_NAME as PATIENT_NAME,
+		p.SEX as SEX,
+		to_char(p.BIRTHDAY,'yyyy-MM-dd') as BIRTHDAY,
+		p.ID_NUMBER as ID_NUMBER,
+		p.MOBILE as MOBILE,
+		p.PHONE as PHONE,
+		to_char(p.LAST_FOLLOWVIEW_DATE,'yyyyMMdd') as LAST_FOLLOWVIEW_DATE,
+		anlog.UQS_FILE as uqsFile,
+		anlog.UQS_VERSION as uqsVersion,
+		to_char(anlog.STATE) as state,
+		p.LINK_MAN1 as LINK_MAN1,
+		p.LINK_MAN1_RELATION as LINK_MAN1_RELATION,
+		p.LINK_MAN1_MOBILE as LINK_MAN1_MOBILE,
+		p.LINK_MAN2 as LINK_MAN2,
+		p.LINK_MAN2_RELATION as LINK_MAN2_RELATION,
+		p.LINK_MAN2_MOBILE as LINK_MAN2_MOBILE,
+		p.address,
+		to_char(p.IS_DIABETES) IS_DIABETES,
+		to_char(p.IS_XJGSBS) IS_XJGSBS,
+		to_char(info.GLU) GLU,
+		to_char(info.HBA1C) HBA1C,
+		to_char(info.GLU_DATE,'yyyy-MM-dd') GLU_DATE
+		from PIP_COMM_PATIENT p
+		left join PIP_UQS_ANSWERQN_LOG anlog on anlog.PROJECT_ID=p.PROJECT_ID and anlog.PATIENT_ID=p.PATIENT_ID
+        <if test=' uqsCode == "013" '>
+            and substr(anlog.UQS_VERSION,5,3) in('013','002')
+        </if>
+        <if test=' uqsCode != "013" '>
+            and substr(anlog.UQS_VERSION,5,3)=#{uqsCode}
+        </if>
+
+
+		left join PIP_COMM_PATIENT_INFO info on info.PROJECT_ID=p.PROJECT_ID and info.PATIENT_ID=p.PATIENT_ID
+		where p.PATIENT_ID=#{patientId} and p.PROJECT_ID=#{projectId}
+		order by anlog.STATE,anlog.CREATE_DATE desc)m where rownum=1
+	</select>
+	
+	<select id="getAnswerLogMap_MIN" parameterType="map" resultType="map">
+		select 
+		p.PATIENT_ID as PATIENTID,
+		anlog.UQS_FILE as uqsFile,
+		anlog.UQS_VERSION as uqsVersion,
+		anlog.UQS_TYPE_NAME as uqsTypeName
+		from PIP_COMM_PATIENT p
+		left join PIP_UQS_ANSWERQN_LOG_MIN anlog on anlog.PROJECT_ID=p.PROJECT_ID and anlog.PATIENT_ID=p.PATIENT_ID
+				  and substr(anlog.UQS_VERSION,5,3)=#{uqsCode}
+		<if test="logId == null || logId == '' ">
+	   		and anlog.ID is null
+	  	</if>
+	  	<if test="logId != null and logId != '' ">
+	  		and anlog.ID=#{logId}
+	  	</if>
+		where p.PATIENT_ID=#{patientId} and p.PROJECT_ID=#{projectId}
+	</select>
+	
+	<select id="getAnswerLogMap_bloodTest" parameterType="map" resultType="map">
+		select 
+		p.PATIENT_ID as PATIENTID,
+		anlog.UQS_FILE as uqsFile,
+		anlog.UQS_VERSION as uqsVersion
+		from PIP_COMM_PATIENT p
+		left join PIP_UQS_ANSWERQN_LOG_MIN anlog on anlog.PROJECT_ID=p.PROJECT_ID and anlog.PATIENT_ID=p.PATIENT_ID
+				  and substr(anlog.UQS_VERSION,5,3)=#{uqsCode}
+				  <if test="logId == null || logId == '' ">
+				   		and anlog.ID is null
+				  </if>
+				  <if test="logId != null and logId != '' ">
+				  		and anlog.ID=#{logId}
+				  </if>
+		where p.PATIENT_ID=#{patientId} and p.PROJECT_ID=#{projectId}
+	</select>
+	
+	<insert id="insertAnswerQnLog" parameterType="map">
+		insert into PIP_UQS_ANSWERQN_LOG(PROJECT_ID,LCC_CODE,PATIENT_ID,UQS_VERSION,START_TIME,END_TIME,CREATE_BY,UQS_FILE,STATE,CREATE_DATE)values
+		(#{projectId},#{lccCode},#{patientId},#{uqsVersion},#{startTime},#{endTime},#{createBy},#{uqsFile},#{state},sysdate)
+	</insert>
+	
+	<insert id="insertAnswerQnLog_MIN" parameterType="map">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="logId">  
+       		 select PIP_UQS_ANSWERQN_LOG_MIN_SEQ.nextval from dual
+   		</selectKey> 
+		insert into PIP_UQS_ANSWERQN_LOG_MIN(ID,PROJECT_ID,LCC_CODE,PATIENT_ID,UQS_VERSION,START_TIME,END_TIME,CREATE_BY,UQS_FILE,CREATE_DATE,UQS_TYPE_NAME)values
+		(#{logId},#{projectId},#{lccCode},#{patientId},#{uqsVersion},#{startTime},#{endTime},#{createBy},#{uqsFile},sysdate,#{uqsTypeName})
+	</insert>
+	
+	<update id="updateAnswerQnLog_MIN" parameterType="map">
+		update PIP_UQS_ANSWERQN_LOG_MIN set UQS_FILE=#{uqsFile} ,MODIFY_BY=#{createBy},MODIFY_DATE=sysdate
+   		where ID=#{logId} and PROJECT_ID=#{projectId} and LCC_CODE=#{lccCode} and PATIENT_ID=#{patientId} and UQS_VERSION=#{uqsVersion}
+	</update>
+	
+	<insert id="answerToDropMap" parameterType="map">
+		insert into PIP_UQS_ANSWER_DROP(OPTION_ID,QUESTION_ID,QUESTIONSET_ID,QUESTIONNAIRE_ID,PROJECT_ID,PATIENT_ID,ANSWER,CREATE_DATE,DROP_DATE,LOG_MIN_ID,LCC_CODE)
+		select OPTION_ID,QUESTION_ID,QUESTIONSET_ID,QUESTIONNAIRE_ID,PROJECT_ID,PATIENT_ID,ANSWER,CREATE_DATE,sysdate,LOG_MIN_ID,LCC_CODE from PIP_UQS_ANSWER_MIN a
+		where a.PROJECT_ID=#{projectId} and a.PATIENT_ID=#{patientId} and a.QUESTIONNAIRE_ID=#{uqsVersion} and a.LOG_MIN_ID=#{logId}
+	</insert>
+	
+	<delete id="clearUqsAnswer" parameterType="map">
+		delete from PIP_UQS_ANSWER_MIN where PROJECT_ID=#{projectId} and PATIENT_ID=#{patientId} and QUESTIONNAIRE_ID=#{uqsVersion} and LOG_MIN_ID=#{logId}
+	</delete>
+	
+	<insert id="insertAnswer" parameterType="map">
+		insert into PIP_UQS_ANSWER(PROJECT_ID,PATIENT_ID,QUESTIONNAIRE_ID,QUESTIONSET_ID,QUESTION_ID,OPTION_ID,ANSWER,CREATE_DATE,LCC_CODE)
+		values(#{projectId},#{patientId},#{uqsVersion},#{qnSetId},#{questionId},#{optionId},#{answer},#{createDate},#{lccCode})
+	</insert>
+	
+	<insert id="insertAnswer_MIN" parameterType="map">
+		insert into PIP_UQS_ANSWER_MIN(PROJECT_ID,PATIENT_ID,QUESTIONNAIRE_ID,QUESTIONSET_ID,QUESTION_ID,OPTION_ID,ANSWER,CREATE_DATE,LOG_MIN_ID,LCC_CODE)
+		values(#{projectId},#{patientId},#{uqsVersion},#{qnSetId},#{questionId},#{optionId},#{answer},#{createDate},#{logId,jdbcType=VARCHAR},#{lccCode})
+	</insert>
+
+	<sql id="patientList">
+		select
+		p.PATIENT_ID as id, max(p.is_join_msg) isjoinmsg,
+		max(p.PATIENT_NAME) as patientName,
+		max(p.ID_NUMBER) as idNumber,
+		max(p.MOBILE) as mobile,
+		max(lcc.LCC_CODE) as lccCode,
+		max(lcc.LCC_NAME) as lccName,
+		max(p.IS_DEAD) as isDead,
+		max(case when substr(UQS_VERSION,5,3)='001' then l.STATE else 0 end) as UQS001,
+		max(case when ( substr(UQS_VERSION,5,3)='013' or substr(UQS_VERSION,5,3)='002' )
+		then l.STATE else 0 end
+		) as UQS002,
+		max(case when substr(UQS_VERSION,5,3)='003' then l.STATE else 0 end) as UQS003,
+		max(case when substr(UQS_VERSION,5,3)='004' then l.STATE else 0 end) as UQS004,
+		max(case when substr(UQS_VERSION,5,3)='005' then l.STATE else 0 end) as UQS005,
+		max(p.IS_6STATE) IS_6STATE ,
+		max(p.is_diabetes) IS_DIABETES,
+		max(ta.name) ACCOUNTNAME,
+		max(ta.end_time) FINISHTIME
+		from PIP_COMM_PATIENT p
+		<!-- ??  为啥是inner join -->
+		inner join PIP_COMM_LCC lcc on lcc.PROJECT_ID=p.PROJECT_ID and lcc.LCC_CODE=p.LCC_CODE
+		left join (select *from
+		(select PROJECT_ID,PATIENT_ID,UQS_VERSION,STATE,
+		row_number() over(partition by PROJECT_ID,PATIENT_ID,substr(UQS_VERSION,5,3) order by CREATE_DATE desc) rn from PIP_UQS_ANSWERQN_LOG))l
+		on l.PROJECT_ID=p.PROJECT_ID and l.PATIENT_ID=p.PATIENT_ID and l.RN=1
+		left join (select t.project_id, t.patient_id, t.end_time, a.id, a.name from PIP_UQS_ANSWERQN_LOG t left join pip_sys_account a on t.create_by = a.id
+		where uqs_version = '004.013.001' and state = 1) ta
+		on p.project_id = ta.project_id and  p.patient_id = ta.patient_id
+		where p.PROJECT_ID=#{projectId}
+		and EXISTS (select lcc_code from pip_sys_user_data_limit dataLimit
+		where dataLimit.user_Id=#{userId} and p.lcc_code = dataLimit.lcc_code
+		)
+		<choose>
+			<when test= ' isdiabetes != null  and isdiabetes == "1" '> <!-- 是糖尿病 -->
+				and p.is_diabetes = 1
+			</when>
+			<when test= ' isdiabetes != null  and isdiabetes == "2" '> <!-- 不是糖尿病 -->
+				and (  p.is_diabetes != 1 or p.is_diabetes is null  )
+			</when>
+			<!--<otherwise>-->
+			<!--</otherwise>-->
+		</choose>
+
+		<if test="patientId != null and patientId != ''">
+			and p.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and p.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="is6State != null and is6State != ''">
+			and p.is_6State=#{is6State}
+		</if>
+		<if test="lccCode != null and lccCode != ''">
+			and lcc.LCC_CODE=#{lccCode}
+		</if>
+		<if test="createBy != null and createBy != ''">
+			and ta.name = TRIM(#{createBy})
+		</if>
+		group by p.PATIENT_ID
+		having 1=1
+
+		<choose>
+			<when test= 'suifang == "013" '><!-- 6月随访 -->
+
+				<if test="suifangtype !=null and suifangtype !='' and suifangtype != 3">
+					and max( case when
+					substr(UQS_VERSION,5,3) in ('013','002')
+					then l.STATE else 0 end)
+					=#{suifangtype}
+					<if test="suifangtype !=1  ">
+						and max(p.IS_DEAD) is null
+					</if>
+
+				</if>
+				<if test="suifangtype !=null and suifangtype !='' and suifangtype == 3">
+					and max(case when substr(UQS_VERSION,5,3)
+					in ('013','002') then l.STATE else 0 end) !=1
+					and max(p.IS_DEAD) =1
+				</if>
+				<if test='suifangtype !=null and suifangtype !="" and suifangtype == "0" '>
+					and ( max(p.is_join_msg) != 1 or max(p.is_join_msg) is null  )
+					and ( max( case when
+					substr(UQS_VERSION,5,3)='001'  then l.STATE else 0 end)
+					!= 1  or( max( case when
+					substr(UQS_VERSION,5,3)='001'  then l.STATE else 0 end)
+					=1 and max(p.is_6State)=1 ) )
+				</if>
+
+			</when>
+			<when test= ' suifang != "013" '><!-- 非6月随访 -->
+
+				<if test="suifang!=null and suifang !=''">
+					<if test="suifangtype !=null and suifangtype !='' and suifangtype != 3">
+						and max( case when
+						substr(UQS_VERSION,5,3)='${suifang}'  then l.STATE else 0 end)
+						=#{suifangtype}
+						<if test="suifangtype !=1  ">
+							and max(p.IS_DEAD) is null
+						</if>
+
+					</if>
+					<if test="suifangtype !=null and suifangtype !='' and suifangtype == 3">
+						and max(case when substr(UQS_VERSION,5,3)='${suifang}' then l.STATE else 0 end) !=1
+						and max(p.IS_DEAD) =1
+					</if>
+				</if>
+
+			</when>
+		</choose>
+
+		<if test="suifang ==null or  suifang ==''">
+			<if test="suifangtype == 3">
+				and max(p.IS_DEAD) =1
+			</if>
+		</if>
+
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx}
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</sql>
+
+    <select id="getPatientList" parameterType="com.bdcor.pip.web.data.filter.PatientFilter" resultType="map">
+		select * from (<include refid="patientList" /> ) t
+    </select>
+
+	<select id="exportPatientList" parameterType="com.bdcor.pip.web.data.filter.PatientFilter" resultType="map">
+		select
+			id,
+			case when isjoinmsg = 1 then '是' else '否' end isjoinmsg,
+			patientName,
+			idNumber,
+			mobile,
+			lccCode,
+			lccName,
+			case when isDead = 1 then '是' else '否' end isDead,
+			case when UQS001 = 1 then '已完成' when isDead = 1 and UQS002 != 1 then '已死亡' when ISJOINMSG = 1 then '不可答卷' else '' end UQS001,
+			case when isDead = 1 then '已死亡' when UQS002 = 1 then '已完成' when ISJOINMSG = 1 then '不可答卷' when UQS002 = 2 then '继续答卷' when UQS001 != 1 or (UQS001 = 1 and IS_6STATE = 1) then '开始答卷' else '' end UQS002,
+			case when UQS003 = 1 then '已完成' when isDead = 1 then '已死亡' when ISJOINMSG = 1 then '不可答卷' when UQS003 = 2 then '继续答卷' when UQS002 = 1 then '开始答卷' else '' end UQS003,
+			case when UQS004 = 1 then '已完成' when isDead = 1 then '已死亡' when ISJOINMSG = 1 then '不可答卷' when UQS004 = 2 then '继续答卷' when UQS003 = 1 then '开始答卷' else '' end UQS004,
+			case when UQS005 = 1 then '已完成' when isDead = 1 then '已死亡' when ISJOINMSG = 1 then '不可答卷' when UQS005 = 2 then '继续答卷' when UQS004 = 1 then '开始答卷' else '' end UQS005,
+			case when IS_6STATE = 1 then '是' else '否' end IS_6STATE,
+			case when IS_DIABETES = 1 then '是' else '否' end IS_DIABETES,
+			ACCOUNTNAME,
+			to_char(FINISHTIME, 'yyyy-MM-dd' ) FINISHTIME
+		from (<include refid="patientList" /> ) t
+	</select>
+
+	<update id="updatePatientBlood" parameterType="map">
+		update PIP_COMM_PATIENT set ${col} = #{value} where PATIENT_ID=#{patientId}
+	</update>
+	<!--  -->
+	<select id="checkBloodNo" parameterType="map" resultType="map">
+		select
+		s.*,a.package_state
+		from PIP_MMS_SCMSTOCK s
+		inner join PIP_MMS_SCMARCHIVES a on a.PROJECT_ID=s.PROJECT_ID and a.ARCHIVES_NO=s.ARCHIVES_NO
+		where 
+		s.PROJECT_ID=#{projectId} and s.LCC_CODE=#{lccCode} and a.BLOODPACKAGE_CODE=#{bloodNo}
+		and s.stock_num =1
+	</select>
+	
+	<select id="getDatePatient" parameterType="map" resultType="map">
+		select * from PIP_COMM_PATIENT_DATE where PROJECT_ID=#{PROJECT_ID} and PATIENT_ID=#{PATIENT_ID}
+	</select>
+	
+	<insert id="insertPlanDate" parameterType="map">
+		insert into PIP_COMM_PATIENT_DATE(PROJECT_ID,PATIENT_ID,PATIENT_NAME,FIRST_DATE,SIX_PLAN_DATE,NOW_REMARK)values
+		(#{PROJECT_ID},#{PATIENT_ID},(select PATIENT_NAME from  PIP_COMM_PATIENT where PATIENT_ID=#{PATIENT_ID}),#{FIRST_DATE},#{SIX_PLAN_DATE},#{NOW_REMARK,jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="insertDataRemark" parameterType="map">
+		insert into PIP_COMM_PATIENT_DATEREMARK(ID,PROJECT_ID,PATIENT_ID,DATE_TYPE,FOLLOW_DATE,REMARK)
+		values(#{ID},#{PROJECT_ID},#{PATIENT_ID},#{DATE_TYPE},#{FIRST_DATE,jdbcType=TIMESTAMP},#{NOW_REMARK,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updatePlanDate" parameterType="map">
+		update PIP_COMM_PATIENT_DATE set PROJECT_ID=#{PROJECT_ID}
+		<if test="SIX_PLAN_DATE != null">
+			,SIX_PLAN_DATE=#{SIX_PLAN_DATE}
+		</if>
+		<if test="SIX_REAL_DATE != null">
+			,SIX_REAL_DATE=#{SIX_REAL_DATE}
+		</if>
+		<if test="TWELVE_PLAN_DATE != null">
+			,TWELVE_PLAN_DATE=#{TWELVE_PLAN_DATE}
+		</if>
+		<if test="NOW_REMARK != null">
+			,NOW_REMARK=#{NOW_REMARK}
+		</if>
+		where PROJECT_ID=#{PROJECT_ID} and PATIENT_ID=#{PATIENT_ID} 
+	</update>
+	
+	<update id="updateLastDate" parameterType="map">
+		update PIP_COMM_PATIENT set LAST_FOLLOWVIEW_DATE=#{LAST_FOLLOWVIEW_DATE} where PATIENT_ID=#{PATIENT_ID}
+	</update>
+	
+	<update id="updatePatientInfo" parameterType="map">
+		update PIP_COMM_PATIENT set PATIENT_ID=PATIENT_ID
+		<if test="SEX != null and SEX != ''">
+			,SEX=#{SEX}
+		</if>
+		<if test="ID_NUMBER != null and ID_NUMBER != ''">
+			,ID_NUMBER=#{ID_NUMBER}
+		</if>
+		<if test="PHONE != null and PHONE != ''">
+			,PHONE=#{PHONE}
+		</if>
+		<if test="MOBILE != null and MOBILE != ''">
+			,MOBILE=#{MOBILE}
+		</if>
+		<if test="LINK_MAN1 != null and LINK_MAN1 != ''">
+			,LINK_MAN1=#{LINK_MAN1}
+		</if>
+		<if test="LINK_MAN1_RELATION != null and LINK_MAN1_RELATION != ''">
+			,LINK_MAN1_RELATION=#{LINK_MAN1_RELATION}
+		</if>
+		<if test="LINK_MAN1_MOBILE != null and LINK_MAN1_MOBILE != ''">
+			,LINK_MAN1_MOBILE=#{LINK_MAN1_MOBILE}
+		</if>
+		where PATIENT_ID=#{PATIENT_ID}
+	</update>
+	
+	<select id="listBlood" parameterType="com.bdcor.pip.web.qn.filter.ScmSearchFilter" resultType="map">
+		select substr(l.uqs_version,5,3) as uqs_version, t.project_id,t.patient_id,t.answer,l.end_time,l.lcc_code,lcc.lcc_name,
+		pa.patient_name,
+		<!--case
+           when (select count(1)
+                   from PIP_SCM_FROZEN_TUBE tu
+                  where tu.tube_code = t.answer) > 0 then
+            '已出库'
+           else
+            '未出库'
+         end state,-->
+		decode(t2.cun,null,'未出库','已出库') state,
+		t2.box_code
+		<!-- (select max(box_code) from PIP_SCM_FROZEN_TUBE where tube_code = t.answer) as box_code -->
+		from PIP_UQS_ANSWER t 
+		left join PIP_UQS_ANSWERQN_LOG l 
+		 on l.project_id = t.project_id and l.patient_id = t.patient_id and l.state=1
+		  and t.questionnaire_id = l.uqs_version
+		left join pip_comm_lcc lcc on lcc.project_id = t.project_id and lcc.lcc_code = l.lcc_code
+		left join pip_comm_patient pa on pa.patient_id = t.patient_id and pa.project_id = t.project_id
+		left join ( select max(box_code) box_code,tube_code,count(1) cun from PIP_SCM_FROZEN_TUBE
+				    group by tube_code ) t2
+			on t2.tube_code = t.answer
+		where 1=1
+		and t.answer is not null
+		and (
+				(
+					l.uqs_version = '004.001.001'
+					and t.option_id= '1'
+					and t.question_id= '3'
+					and t.questionset_id= '4'
+				)
+		    or
+				(
+					l.uqs_version = '004.011.001'
+					and t.option_id= '1'
+					and t.question_id= '3'
+					and t.questionset_id= '1'
+				)
+			or
+			(
+			l.uqs_version = '004.014.001'
+			and t.option_id= '1'
+			and t.question_id= '4'
+			and t.questionset_id= '4'
+			)
+			)
+		<if test="examinationStartDate !=null and examinationStartDate !=''">
+			and to_char(end_time,'yyyy-MM-dd') >= #{examinationStartDate}
+		</if>
+		<if test="examinationEndDate !=null and examinationEndDate !=''">
+			and to_char(end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{examinationEndDate}
+		</if>
+
+		<if test="lccCode !=null and lccCode != ''">
+			and lcc.lcc_code = #{lccCode}
+		</if>
+		<if test="patientId !=null and patientId != ''">
+			and t.patient_id like '%'||#{patientId}||'%'
+		</if>
+		<if test="answer !=null and answer != ''">
+			and t.answer  like '%'||#{answer}||'%'
+		</if>
+		<if test="patientName !=null and patientName != ''">
+			and pa.patient_name like '%'||#{patientName}||'%'
+		</if>
+		<if test="sfType !=null and sfType != ''">
+			and substr(l.uqs_version,5,3) =#{sfType}
+		</if>
+		<if test="boxCode !=null and boxCode !=''">
+			and (select distinct box_code
+          from PIP_SCM_FROZEN_TUBE
+         where tube_code = t.answer) like '%'||#{boxCode}||'%'
+		</if>
+		<if test="state !=null and state != ''">
+			<if test="state =='0' || state ==0">
+			  and not exists 
+              (select tube_code
+                            from PIP_SCM_FROZEN_TUBE tu
+                           where tu.tube_code = t.answer)
+			</if>
+			<if test="state =='1' || state ==1">
+			  and	exists 
+              (select tube_code
+                            from PIP_SCM_FROZEN_TUBE tu
+                           where tu.tube_code = t.answer)
+			</if>
+		</if>
+		 order by lcc_code, box_code  
+	</select>
+	<select id="selectUqsLog" parameterType="map" resultType="int">
+		select count(1) from pip_uqs_answerqn_log
+		where patient_id=#{patientId}
+		and uqs_version = #{uqsVersion}
+		and state=#{state}
+		
+	</select>
+	<select id="listBloodNoPage" parameterType="com.bdcor.pip.web.qn.filter.ScmSearchFilterNoBase" resultType="map">
+		select 
+		case
+           when substr(l.uqs_version,5,3) = '001' then
+            '首次随访'
+           when substr(l.uqs_version,5,3) = '011' then
+            '6月随访'
+           when substr(l.uqs_version,5,3) = '014' then
+          	'末次随访'
+           else
+            ' '
+         end uqs_version,
+		
+		t.project_id,t.patient_id,t.answer,
+		
+		to_char(l.end_time,'yyyy-MM-dd') as end_time,
+		
+		l.lcc_code,lcc.lcc_name,
+		pa.patient_name,
+		case
+           when (select count(1)
+                   from PIP_SCM_FROZEN_TUBE tu
+                  where tu.tube_code = t.answer) > 0 then
+            '已出库'
+           else
+            '未出库'
+         end state,
+         (select max(box_code) from PIP_SCM_FROZEN_TUBE where tube_code = t.answer) as box_code
+		from PIP_UQS_ANSWER t 
+		left join PIP_UQS_ANSWERQN_LOG l 
+		 on l.project_id = t.project_id and l.patient_id = t.patient_id and l.state=1
+		  and t.questionnaire_id = l.uqs_version
+		left join pip_comm_lcc lcc on lcc.project_id = t.project_id and lcc.lcc_code = l.lcc_code
+		left join pip_comm_patient pa on pa.patient_id = t.patient_id and pa.project_id = t.project_id
+		where 1=1
+		and t.answer is not null
+		and (
+		(
+		l.uqs_version = '004.001.001'
+		and t.option_id= '1'
+		and t.question_id= '3'
+		and t.questionset_id= '4'
+		)
+		or
+		(
+		l.uqs_version = '004.011.001'
+		and t.option_id= '1'
+		and t.question_id= '3'
+		and t.questionset_id= '1'
+		)
+		or
+		(
+		l.uqs_version = '004.014.001'
+		and t.option_id= '1'
+		and t.question_id= '4'
+		and t.questionset_id= '4'
+		)
+		)
+		<if test="examinationStartDate !=null and examinationStartDate !=''">
+			and to_char(end_time,'yyyy-MM-dd') >= #{examinationStartDate}
+		</if>
+		<if test="examinationEndDate !=null and examinationEndDate !=''">
+			and to_char(end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{examinationEndDate}
+		</if>
+		<!--<if test="optionId !=null and optionId != ''">-->
+			<!--and t.option_id= #{optionId}-->
+		<!--</if>-->
+		<!--<if test="questionId !=null and questionId != ''">-->
+			<!--and t.question_id= #{questionId}-->
+		<!--</if>-->
+		<!--<if test="questionsetId !=null and questionsetId != ''">-->
+			<!--and t.questionset_id= #{questionsetId}-->
+		<!--</if>-->
+		<if test="lccCode !=null and lccCode != ''">
+			and lcc.lcc_code = #{lccCode}
+		</if>
+		<if test="patientId !=null and patientId != ''">
+			and t.patient_id like '%'||#{patientId}||'%'
+		</if>
+		<if test="answer !=null and answer != ''">
+			and t.answer  like '%'||#{answer}||'%'
+		</if>
+		<if test="patientName !=null and patientName != ''">
+			and pa.patient_name like '%'||#{patientName}||'%'
+		</if>
+		<if test="sfType !=null and sfType != ''">
+			and substr(l.uqs_version,5,3) =#{sfType}
+		</if>
+		<if test="boxCode !=null and boxCode !=''">
+			and (select distinct box_code
+          from PIP_SCM_FROZEN_TUBE
+         where tube_code = t.answer) like '%'||#{boxCode}||'%'
+		</if>
+		<if test="state !=null and state != ''">
+			<if test="state =='0' || state ==0">
+			  and not exists 
+              (select tube_code
+                            from PIP_SCM_FROZEN_TUBE tu
+                           where tu.tube_code = t.answer)
+			</if>
+			<if test="state =='1' || state ==1">
+			  and	exists 
+              (select tube_code
+                            from PIP_SCM_FROZEN_TUBE tu
+                           where tu.tube_code = t.answer)
+			</if>
+		</if>
+		 order by lcc_code, box_code  
+	</select>
+
+	<select id="getCurrentVersion" resultType="String" parameterType="String">
+		select max(VERSION) from PIP_UQS_QUESTIONNAIRE where VERSION like #{_parameter}||'%'
+	</select>
+
+	<select id="getUqsAnswer" parameterType="map" resultType="map">
+		select * from PIP_UQS_ANSWER
+		where substr(QUESTIONNAIRE_ID,5,3)=#{uqsLabel}
+		and PROJECT_ID=#{projectId} and PATIENT_ID=#{patientId}
+		order by QUESTIONSET_ID,QUESTION_ID,OPTION_ID
+	</select>
+</mapper>

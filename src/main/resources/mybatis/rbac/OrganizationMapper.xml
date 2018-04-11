@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.sys.rbac.dao.OrganizationDao">
+    <resultMap id="BaseResultMap" type="com.bdcor.pip.web.sys.rbac.domain.Organization">
+        <constructor>
+            <idArg column="ID" jdbcType="CHAR" javaType="java.lang.String" />
+            <arg column="NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="GRADE" jdbcType="DECIMAL" javaType="java.lang.Long" />
+            <arg column="PARENT_ID" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="CREATE_USER" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="CREATE_DATETIME" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="UPDATE_USER" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="UPDATE_DATETIME" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="REMARK" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="IS_DELETE" jdbcType="DECIMAL" javaType="java.lang.Integer" />
+            <arg column="TYPE" jdbcType="DECIMAL" javaType="java.lang.Integer"/>
+            <arg column="PRINCIPAL" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ID, NAME, GRADE, PARENT_ID, CREATE_USER, CREATE_DATETIME, UPDATE_USER,
+        UPDATE_DATETIME, REMARK,
+        IS_DELETE,TYPE,PRINCIPAL
+    </sql>
+
+    <select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />
+        from pip_sys_organization
+        where ID = #{id,jdbcType=CHAR}
+    </select>
+
+    <select id="findByNameAndOrganId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from pip_sys_organization
+        where name = #{name,jdbcType=CHAR}
+        and is_delete!=1
+        <if test="null != id and ''!= id">
+        	and id != #{id}
+        </if>
+    </select>
+
+    <select id="list" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List" />
+        from pip_sys_organization
+        where is_delete!=1
+          <if test="null != type and ''!= type">
+            and type in (select ORGAN_TYPE from PIP_SYS_ORGANTYPE connect by prior  PARENT_TYPE = ORGAN_TYPE start with  ORGAN_TYPE ='${type}' )
+        </if>
+        <if test="null != root and ''!= root">
+           connect by prior  id = parent_id  start with  id ='${root}'
+        </if>
+    </select>
+
+    <insert id="save" parameterType="com.bdcor.pip.web.sys.rbac.domain.Organization">
+        insert into pip_sys_organization
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="name != null">
+                NAME,
+            </if>
+            <if test="grade != null">
+                GRADE,
+            </if>
+            <if test="parentId != null">
+                PARENT_ID,
+            </if>
+            <if test="createUser != null">
+                CREATE_USER,
+            </if>
+            <if test="createDatetime != null">
+                CREATE_DATETIME,
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER,
+            </if>
+            <if test="updateDatetime != null">
+                UPDATE_DATETIME,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="isDelete != null">
+                IS_DELETE,
+            </if>
+            <if test="type != null">
+            	TYPE,
+            </if>
+            <if test="principal != null">
+            	PRINCIPAL,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=CHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="grade != null">
+                #{grade,jdbcType=INTEGER},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDatetime != null">
+                #{createDatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDatetime != null">
+                #{updateDatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete,jdbcType=CHAR},
+            </if>
+            <if test="type != null">
+            	#{type,jdbcType=CHAR},
+            </if>
+            <if test="principal != null">
+            	#{principal,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="delete" parameterType="java.lang.String">
+        update pip_sys_organization SET is_delete=1
+        where id in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="update" parameterType="com.bdcor.pip.web.sys.rbac.domain.Organization">
+        update pip_sys_organization
+        <set>
+            <if test="name != null">
+                NAME=#{name,jdbcType=VARCHAR},
+            </if>
+            <if test="grade != null">
+                GRADE=#{grade,jdbcType=INTEGER},
+            </if>
+            <if test="parentId != null">
+                PARENT_ID=#{parentId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER=#{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDatetime != null">
+                UPDATE_DATETIME=#{updateDatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                REMARK=#{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isDelete != null">
+                IS_DELETE=#{isDelete,jdbcType=CHAR},
+            </if>
+            <if test="type != null">
+                TYPE=#{type,jdbcType=INTEGER},
+            </if>
+            <if test="principal != null">
+                PRINCIPAL=#{principal,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+	<select id="getOrgTree" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+        from pip_sys_organization where is_delete != 1 and type in
+		<foreach collection="array" item="type" index="i" open="("
+			separator="," close=")">
+			#{type,jdbcType=CHAR}
+		</foreach>
+	</select>
+	
+	<resultMap id="ResultMapForType" type="com.bdcor.pip.web.sys.rbac.domain.OrganType">
+        <constructor>
+            <arg column="ORGAN_TYPE" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="TYPE_NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="PARENT_TYPE" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="IN_USE" jdbcType="DECIMAL" javaType="java.lang.Integer" />
+        </constructor>
+    </resultMap>
+	
+	<select id="getOrganType" resultMap="ResultMapForType">
+		select * from pip_sys_organtype where in_use = 1
+	</select>
+	
+	<select id="getDepartOrCompanyByUserId" resultMap="BaseResultMap" >
+		select * from pip_sys_organization where type=#{type, jdbcType=INTEGER} start with id = #{organizationId, jdbcType=VARCHAR} connect by prior parent_id = id
+	</select>
+</mapper>

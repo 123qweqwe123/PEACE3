@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.spem.dao.IceBoxRegVoMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.spem.domain.IceBoxRegVo" >
+    <id column="FRIDGE_ID" property="id" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectid" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccid" jdbcType="VARCHAR" />
+    <result column="FRIDGE_NAME" property="iceboxName" jdbcType="VARCHAR" />
+    <result column="FRIDGE_CAPACITY" property="capacity" jdbcType="DECIMAL" />
+    <result column="CAPACITY_BOX" property="stock" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="regTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_BY" property="inputer" jdbcType="VARCHAR" />  
+    <result column="PROPORTION" property="proportion" jdbcType="DECIMAL" /> 
+    <result column="FRIDGE_SPC" property="fridge_spc" jdbcType="VARCHAR" />
+    <result column="FRIDGE_BRAND" property="fridge_brand" jdbcType="VARCHAR" />  
+    <result column="lcc_name" property="lcc_name" jdbcType="VARCHAR" />
+    <result column="user_name" property="user_name" jdbcType="VARCHAR" />
+    <result column="ADD_DATE" property="add_date" jdbcType="VARCHAR" />
+    <result column="isExsitWayBill" property="isExsitWayBill" jdbcType="TIMESTAMP" />
+  </resultMap>                
+ 
+  <sql id="Base_Column_List" >
+        FRIDGE_ID, PROJECT_ID, LCC_CODE, FRIDGE_NAME, FRIDGE_CAPACITY, CREATE_DATE, CREATE_BY,FRIDGE_SPC,FRIDGE_BRAND 
+  </sql>
+  <select id="list" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	select nvl(cb.CAPACITY_BOX,0) CAPACITY_BOX,sf.* ,    
+	nvl(cb.CAPACITY_BOX/FRIDGE_CAPACITY,0) as PROPORTION,  l.lcc_name ,acct.LOGIN_NAME user_name from PIP_SCM_FRIDGE sf 
+	left join pip_comm_lcc l on sf.LCC_CODE=l.lcc_code   and l.project_id=sf.project_id
+	left join PIP_SYS_ACCOUNT acct  on sf.CREATE_BY=acct.ID   and acct.project_id=sf.project_id
+	left join  (select count(FRIDGE_ID) CAPACITY_BOX, FRIDGE_ID from PIP_SCM_FROZENBOX  where IS_CHECKIN!=1  group by FRIDGE_ID) cb
+	on cb.FRIDGE_ID=sf.FRIDGE_ID
+	where sf.IS_REMOVE=0 and l.IS_REMOVED=2                         
+	
+      <if test="lccid != null" >    
+        and sf.LCC_CODE = #{lccid,jdbcType=VARCHAR} 
+      </if>   
+      <if test="projectid != null" >  
+        and sf.PROJECT_ID=#{projectid,jdbcType=VARCHAR} 
+      </if>      
+      order by PROPORTION desc
+  </select> 
+  
+  
+   <select id="qlist" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.spem.filter.IceBoxRegFilter" >
+    select 
+	lcc.lcc_code,
+	lcc.lcc_name,
+	fridge.fridge_id,
+	fridge.fridge_name,
+	fridge.FRIDGE_CAPACITY,
+	count(box.box_code) CAPACITY_BOX,
+	count(box.box_code)/fridge.FRIDGE_CAPACITY  PROPORTION
+	from pip_scm_fridge fridge
+	inner join pip_comm_lcc lcc on fridge.project_id=lcc.project_id and fridge.lcc_code=lcc.lcc_code  and lcc.IS_ADMIN_DEP != 1
+	left join pip_scm_frozenbox box on box.project_id=fridge.project_id and box.lcc_code=fridge.lcc_code
+	where 1=1
+    <if test="lcc_code != null" >    
+        and fridge.LCC_CODE in ${lcc_code} 
+    </if>   
+    <if test="project_id != null" >  
+      and fridge.PROJECT_ID=#{project_id,jdbcType=VARCHAR} 
+    </if>      
+     group by lcc.lcc_code,lcc.lcc_name,fridge.fridge_id,fridge.fridge_name,fridge.FRIDGE_CAPACITY 
+     <if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+  </select>  
+  
+  
+  
+  
+  
+    
+  <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+   select 
+    <include refid="Base_Column_List" />
+    from PIP_SCM_FRIDGE
+    where FRIDGE_ID = #{id,jdbcType=VARCHAR}
+  </select>    
+ <!-- 
+  <delete id="delete" parameterType="java.lang.String" >
+       delete  from   PIP_SCM_FRIDGE  where FRIDGE_ID = #{id,jdbcType=VARCHAR}
+       update 
+  </delete> 
+  --> 
+ <update id="delete" parameterType="java.lang.String"  >
+      update PIP_SCM_FRIDGE  set IS_REMOVE=1 where  FRIDGE_ID = #{id,jdbcType=VARCHAR} and PROJECT_ID=#{projectid,jdbcType=VARCHAR} 
+ </update> 
+  
+  <insert id="save" parameterType="com.bdcor.pip.web.spem.domain.IceBoxRegVo" >
+    
+    insert into PIP_SCM_FRIDGE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        FRIDGE_ID,
+      </if>
+      <if test="projectid != null" >
+        PROJECT_ID,
+      </if>
+      <if test="lccid != null" >
+        LCC_CODE,
+      </if>
+      <if test="iceboxName != null" >
+        FRIDGE_NAME,
+      </if>
+      <if test="capacity != null" >
+        FRIDGE_CAPACITY,
+      </if>
+      <if test="regTime != null" >
+        CREATE_DATE,
+      </if>
+      <if test="inputer != null" >
+        CREATE_BY,
+      </if>
+      <if test="stock != null" >
+        BOX_AMOUNT,
+      </if>
+      <if test="fridge_spc != null" >
+        FRIDGE_SPC,
+      </if> 
+      <if test="fridge_brand != null" >
+        FRIDGE_BRAND,
+      </if>      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="projectid != null" >
+        #{projectid,jdbcType=VARCHAR},
+      </if>
+      <if test="lccid != null" >
+        #{lccid,jdbcType=VARCHAR},
+      </if>
+      <if test="iceboxName != null" >
+        #{iceboxName,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null" >
+        #{capacity,jdbcType=DECIMAL},
+      </if>
+      <if test="regTime != null" >
+        #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inputer != null" >
+        #{inputer,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null" >
+        #{stock,jdbcType=DECIMAL},
+      </if>
+      <if test="fridge_spc != null" >
+        #{fridge_spc,jdbcType=VARCHAR},
+      </if>
+      <if test="fridge_brand != null" >
+        #{fridge_brand,jdbcType=VARCHAR},
+      </if> 
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.bdcor.pip.web.spem.domain.IceBoxRegVo" >
+    update PIP_SCM_FRIDGE   
+    <set>
+      <if test="projectid != null" >
+        PROJECT_ID = #{projectid,jdbcType=VARCHAR},
+      </if>
+      <if test="lccid != null" >
+        LCC_CODE = #{lccid,jdbcType=VARCHAR},
+      </if>
+      <if test="iceboxName != null" >
+        FRIDGE_NAME = #{iceboxName,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null" >
+        FRIDGE_CAPACITY = #{capacity,jdbcType=DECIMAL},
+      </if>
+      <if test="regTime != null" >
+        CREATE_DATE = #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inputer != null" >
+        CREATE_BY = #{inputer,jdbcType=VARCHAR},
+      </if>
+       <if test="stock != null" >
+        BOX_AMOUNT = #{stock,jdbcType=DECIMAL},
+      </if>
+       <if test="fridge_spc != null" >
+        FRIDGE_SPC = #{fridge_spc,jdbcType=VARCHAR},
+      </if>
+       <if test="fridge_brand != null" >
+        FRIDGE_BRAND = #{fridge_brand,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where FRIDGE_ID = #{id,jdbcType=VARCHAR}
+  </update>   
+  
+  
+  
+  
+  
+  
+   <insert id="save_spemType" parameterType="com.bdcor.pip.web.spem.domain.SpemTypeVo" >
+    
+    insert into PIP_SCM_FRIDGE_SAVETYPE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="project_id != null" >
+        PROJECT_ID,
+      </if>
+      <if test="lcc_code != null" >
+        LCC_CODE,
+      </if>
+      <if test="fridge_id != null" >
+        FRIDGE_ID,
+      </if>
+      <if test="box_type != null" >
+        BOX_TYPE,
+      </if>
+      <if test="create_date != null" >
+        CREATE_DATE,
+      </if>
+      <if test="create_by != null" >
+        CREATE_BY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="project_id != null" >
+        #{project_id,jdbcType=VARCHAR},
+      </if>
+      <if test="lcc_code != null" >
+        #{lcc_code,jdbcType=VARCHAR},
+      </if>
+      <if test="fridge_id != null" >
+        #{fridge_id,jdbcType=VARCHAR},
+      </if>
+      <if test="box_type != null" >
+        #{box_type,jdbcType=VARCHAR},
+      </if>
+      <if test="create_date != null" >
+        #{create_date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="create_by != null" >
+        #{create_by,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  
+   <delete id="delete_spemType" parameterType="com.bdcor.pip.web.spem.domain.SpemTypeVo" >
+       delete  from   PIP_SCM_FRIDGE_SAVETYPE  
+       where 
+       FRIDGE_ID  = #{fridge_id,jdbcType=VARCHAR}
+       and
+       LCC_CODE   = #{lcc_code,jdbcType=VARCHAR}
+       and 
+       PROJECT_ID = #{project_id,jdbcType=VARCHAR}
+   </delete>
+  
+  <resultMap id="spemTypeMap" type="com.bdcor.pip.web.spem.domain.SpemTypeVo" >
+    <result column="PROJECT_ID" property="project_id"  jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lcc_code"  jdbcType="VARCHAR" />
+    <result column="FRIDGE_ID" property="fridge_id"  jdbcType="VARCHAR" />
+    <result column="BOX_TYPE" property="box_type"  jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="create_date"  jdbcType="TIMESTAMP" />
+    <result column="CREATE_BY" property="create_by"  jdbcType="VARCHAR" />
+  </resultMap> 
+  
+  <select id="spemType_list" resultMap="spemTypeMap" parameterType="com.bdcor.pip.web.spem.domain.SpemTypeVo" >
+     select  upper(BOX_TYPE) as BOX_TYPE   from   PIP_SCM_FRIDGE_SAVETYPE
+     where 
+     FRIDGE_ID  =  #{fridge_id,jdbcType=VARCHAR}
+     and 
+     LCC_CODE   =  #{lcc_code,jdbcType=VARCHAR}
+     and 
+     PROJECT_ID =  #{project_id,jdbcType=VARCHAR}
+     
+     order by BOX_TYPE
+  </select> 
+  
+  <select id="getFrigdeList" resultType="map" parameterType="map" >
+  		select * from(
+			select 
+			fridge_id as "id",
+			fridge_name as "name",
+			lcc_code as "lccCode",
+			rownum r
+			from pip_scm_fridge 
+			where is_remove=0
+			and project_id=#{projectId}
+			and lcc_code in (select lcc_code from pip_sys_user_data_limit where user_Id=#{userId})
+			<if test="lccId != null and lccId !=''" >
+        		and lcc_code=#{lccId}
+      		</if>
+       		<if test="fridgeLike != null and fridgeLike !=''" >
+        		and fridge_name like '%'||#{fridgeNameLike}||'%'
+      		</if>
+			order by length(fridge_name)
+		)m where m.r &lt; ${limit}
+		
+  </select> 
+  
+    <select id="getExportFrigdeList" resultType="map" parameterType="map" >
+		select 
+		province.vName as "provinceName",
+		lcc.lcc_code as "lccCode",
+		lcc.lcc_name as "lccName",
+		countView.*,
+		(select count(distinct blood_code) from pip_scm_frozentube tube 
+      	inner join pip_scm_frozenbox box on tube.project_id=box.project_id and tube.lcc_code=box.lcc_code and tube.box_Code=box.box_code and tube.tube_type = box.box_type
+     	where box.project_id=lcc.project_id and box.lcc_code=lcc.lcc_code
+     	<if test="fridgeIDIn != null">
+	  		and box.fridge_id in
+	  		<foreach collection="fridgeIDIn" index="index" item="item" open="(" close=")" separator=",">
+	  			#{item}
+	  		</foreach>
+	  	</if>
+     	)  as "pCount"
+		from pip_comm_lcc lcc
+		inner join pip_comm_dict_district province on province.vCode = substr(lcc.lcc_code,0,2)
+		inner join (select 
+		  fridge.project_id,
+		  fridge.lcc_code,
+		  sum(decode(box.box_type,'A',1,0)) as "aCount",
+		  sum(decode(box.box_type,'B',1,0)) as "bCount",
+		  sum(decode(box.box_type,'C',1,0)) as "cCount",
+		  sum(decode(box.box_type,'D',1,0)) as "dCount",
+		  sum(decode(box.box_type,'E',1,0)) as "eCount",
+		  sum(decode(box.box_type,'F',1,0)) as "fCount",
+		  sum(decode(box.box_type,'G',1,0)) as "gCount",
+		  min(box.box_code) as "minBoxCode",
+		  max(box.box_code) as "maxBoxCode"
+		  from pip_scm_fridge fridge
+		  left join pip_scm_frozenbox box on box.project_id=fridge.project_id and box.lcc_code=fridge.lcc_code and  box.fridge_id = fridge.fridge_id
+		  <where> 
+		  	<if test="fridgeIDIn != null">
+		  		and fridge.fridge_id in
+		  		<foreach collection="fridgeIDIn" index="index" item="item" open="(" close=")" separator=",">
+		  			#{item}
+		  		</foreach>
+		  	</if>
+		  </where>
+		  group by fridge.project_id,fridge.lcc_code)countView on countView.project_id=lcc.project_id and countView.lcc_code=lcc.lcc_code
+		  where 
+		  lcc.project_id=#{projectId} and
+		  lcc.lcc_code in (select lcc_code from pip_sys_user_data_limit where user_Id=#{userId})
+		  order by lcc.lcc_code
+  </select>   
+     
+</mapper>

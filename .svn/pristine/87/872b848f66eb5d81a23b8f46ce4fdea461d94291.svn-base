@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.BloodTestDao">
+	<!-- 事件部分sql -->
+	<select id="getEventPatientList" parameterType="com.bdcor.pip.web.qn.filter.BloodTestFilter" resultType="com.bdcor.pip.web.qn.domain.BloodTestPatientVo">
+		select
+		p.PATIENT_ID as patientId,
+    	lcc.LCC_CODE as lccCode,
+    	lcc.LCC_NAME as lccName, 
+		p.PATIENT_NAME as patientName,
+		p.ID_NUMBER as idNumber,
+		p.BLOOD_TEST as bloodTest,
+	    p.BLOOD_TEST6 as bloodTest6,
+	    p.BLOOD_TEST12 as bloodTest12,
+	    p.BLOOD_TEST18 as bloodTest18,
+	    p.BLOOD_TEST24 as bloodTest24,
+	    (
+       case
+         when (select count(1) from  PIP_UQS_ANSWERQN_LOG_MIN l
+                      where l.PATIENT_ID = p.PATIENT_ID
+                      and l.UQS_VERSION = '004.007.001'
+                      and l.UQS_TYPE_NAME = '首次随访')  >0 then
+          1
+         else
+          0
+       end) as hasDo1,
+		(
+		case
+		when (select count(1) from  PIP_UQS_ANSWERQN_LOG_MIN l
+		where l.PATIENT_ID = p.PATIENT_ID
+		and l.UQS_VERSION = '004.007.001'
+		)  >0 then
+		1
+		else
+		0
+		end) as hasDo2,
+		p.process_types as processTypes
+		from PIP_COMM_PATIENT p
+		inner join PIP_COMM_LCC lcc on lcc.PROJECT_ID=p.PROJECT_ID and lcc.LCC_CODE=p.LCC_CODE
+		where (p.BLOOD_TEST is not null or p.BLOOD_TEST6 is not null or p.BLOOD_TEST12 is not null or p.BLOOD_TEST18 is not null
+          		or p.BLOOD_TEST24 is not null) 
+          	and p.PROJECT_ID=#{projectId} and p.LCC_CODE in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId}) 
+		<if test="patientId != null and patientId != ''">
+			and p.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and p.patient_name like '%'|| #{patientName} ||'%'
+		</if>
+		<if test="lccCode != null and lccCode != ''">
+			and p.LCC_CODE like '%'||#{lccCode}||'%'
+		</if>
+	</select>
+	
+	<select id="showBloodTestList" parameterType="com.bdcor.pip.web.qn.filter.BloodTestFilter" resultType="map">
+	    select 
+	    l.id,
+	    l.LCC_CODE,
+	    l.PATIENT_ID,
+	    p.PATIENT_NAME,
+	    to_char(l.START_TIME,'yyyy-MM-dd hh24:mi:ss') as START_TIME,
+	    to_char(l.END_TIME,'yyyy-MM-dd hh24:mi:ss') as END_TIME,
+	    <!-- l.UQS_TYPE_NAME, -->
+		decode( l.UQS_TYPE_NAME,'12月随访','末次随访',l.UQS_TYPE_NAME) UQS_TYPE_NAME,
+		a.name as CREATE_BY
+	    from PIP_UQS_ANSWERQN_LOG_MIN l
+	    left join PIP_COMM_PATIENT p on p.PATIENT_ID=l.PATIENT_ID
+		left join PIP_SYS_ACCOUNT a on a.id=l.CREATE_BY
+		where l.PROJECT_ID=#{projectId} and l.LCC_CODE in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId}) 
+			  and l.PATIENT_ID=#{patientId} and substr(l.UQS_VERSION,5,3)='007'
+		<if test="startTime !=null and startTime !=''">
+			and to_char(l.START_TIME,'yyyy-MM-dd')&gt;=#{startTime}
+		</if>
+		<if test="endTime !=null and endTime !=''">
+			and to_char(l.START_TIME,'yyyy-MM-dd')&lt;=#{endTime}
+		</if>
+	</select>
+</mapper>

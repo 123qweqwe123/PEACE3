@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.quality.dao.QuestionnaireConditionDao" >
+  <select id="getQuestionnaireList" resultType="com.bdcor.pip.web.quality.domain.QuestionnaireCondition" parameterType="com.bdcor.pip.web.quality.filter.QuestionnaireConditionFilter">
+   select 
+   t.lcc_code as lccCode,
+   f.lcc_name as lccName,
+   t.patient_id patientId,
+   tt.patient_name name,
+   case t.uqs_version
+	when'004.001.001' then '首次随访'
+	when'004.002.001' then '6月随访'
+	when'004.003.001' then '12月随访'
+	when'004.004.001' then '18月随访'
+	when'004.005.001' then '末次随访'
+   end as state,
+   t.start_time as startTimeStr,
+   t.end_time as endTimeStr,
+   t.create_by as createAccount,
+   ff.name as createName
+  from pip_uqs_answerqn_log t
+  left join pip_comm_lcc f on t.lcc_code = f.lcc_code
+  left join pip_comm_patient tt on t.patient_id = tt.patient_id
+  left join pip_sys_account ff on t.create_by=ff.id
+  where t.state='1'
+        <if test="lccCode != null and lccCode !=''">
+          and t.lcc_code = #{lccCode}
+        </if>
+        <if test="lccName != null and lccName !=''">
+          and f.lcc_name like '%${lccName}%'
+        </if>
+        <if test="startDate !=null and startDate !=''">
+            and to_char(t.end_time,'yyyy-MM-dd') >= to_char(#{startDate},'yyyy-MM-dd')
+        </if>
+        <if test="endDate !=null and endDate !=''">
+            and to_char(t.end_time,'yyyy-MM-dd') <![CDATA[<=]]> to_char(#{endDate},'yyyy-MM-dd')
+        </if>
+        order by t.lcc_code,t.patient_id
+  </select>
+</mapper>

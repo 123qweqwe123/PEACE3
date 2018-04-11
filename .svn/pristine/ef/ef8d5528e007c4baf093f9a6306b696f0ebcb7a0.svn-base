@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.material.supp.dao.PipMmsImscmdetalMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.material.supp.domain.PipMmsImscmdetal" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="IMORDER_NO" property="imorderNo" jdbcType="VARCHAR" />
+    <result column="MATERLINFO_CODE" property="materlinfoCode" jdbcType="VARCHAR" />
+    <result column="ARCHIVES_NO" property="archivesNo" jdbcType="VARCHAR" />
+    <result column="MATERL_BATCH" property="materlBatch" jdbcType="VARCHAR" />
+    <result column="MATERL_PRICE" property="materlPrice" jdbcType="DECIMAL" />
+    <result column="WHOLESALE_PRICE" property="wholesalePrice" jdbcType="DECIMAL" />
+    <result column="IMPORT_UNIT" property="importUnit" jdbcType="VARCHAR" />
+    <result column="STORE_UNIT" property="storeUnit" jdbcType="VARCHAR" />
+    <result column="PERIOD_VALIDITY" property="periodValidity" jdbcType="TIMESTAMP" />
+    <result column="MANUFACTURER_CODE" property="manufacturerCode" jdbcType="VARCHAR" />
+    
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, PROJECT_ID, IMORDER_NO, MATERLINFO_CODE, ARCHIVES_NO, MATERL_BATCH, MATERL_PRICE, 
+    WHOLESALE_PRICE, IMPORT_UNIT, STORE_UNIT, PERIOD_VALIDITY, MANUFACTURER_CODE, CREATE_BY, 
+    CREATE_DATE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsImscmdetalExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_MMS_IMSCMDETAL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+    
+  <select id="selectByFilter" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.filter.PipMmsImscmdetalFilter">
+  	select
+    <include refid="Base_Column_List" />
+    from PIP_MMS_IMSCMDETAL
+    
+    where 1=1 
+    	<if test="projectId != null">
+    	 and project_id = #{projectId}
+    	</if>  
+    	<if test="imorderNo != null">
+    	 and IMORDER_NO = #{imorderNo}
+    	</if> 
+    order  by ARCHIVES_NO
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_MMS_IMSCMDETAL
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short" >
+    delete from PIP_MMS_IMSCMDETAL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsImscmdetalExample" >
+    delete from PIP_MMS_IMSCMDETAL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  
+  <select id="insertIfExit" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsImscmdetal"  resultType="java.lang.Integer" >
+    select count(*)
+    from PIP_MMS_IMSCMDETAL
+    where 1=1 
+    and project_Id=#{projectId,jdbcType=VARCHAR}
+    and imorder_No=#{imorderNo,jdbcType=VARCHAR}
+    and ARCHIVES_NO=#{archivesNo,jdbcType=VARCHAR}
+  </select>
+
+  
+ <select id="selectArchivesNo" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsImscmdetal"  resultType="java.lang.Integer" >
+    select count(*)
+    from PIP_MMS_IMSCMDETAL
+    where 1=1 
+    and project_Id=#{projectId,jdbcType=VARCHAR}
+    and ARCHIVES_NO=#{archivesNo,jdbcType=VARCHAR}
+  </select>
+
+  <insert id="insert" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsImscmdetal" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_MMS_MATERL_BLOODBOX_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_MMS_IMSCMDETAL (ID, PROJECT_ID, IMORDER_NO, 
+      MATERLINFO_CODE, ARCHIVES_NO, MATERL_BATCH, 
+      MATERL_PRICE, WHOLESALE_PRICE, IMPORT_UNIT, 
+      STORE_UNIT, PERIOD_VALIDITY, MANUFACTURER_CODE,
+      CREATE_BY, CREATE_DATE)
+    values (#{id,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{imorderNo,jdbcType=VARCHAR}, 
+      #{materlinfoCode,jdbcType=VARCHAR}, #{archivesNo,jdbcType=VARCHAR}, #{materlBatch,jdbcType=VARCHAR}, 
+      #{materlPrice,jdbcType=DECIMAL}, #{wholesalePrice,jdbcType=DECIMAL}, #{importUnit,jdbcType=VARCHAR}, 
+      #{storeUnit,jdbcType=VARCHAR}, #{periodValidity,jdbcType=TIMESTAMP}, #{manufacturerCode,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsImscmdetal" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_MMS_MATERL_BLOODBOX_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_MMS_IMSCMDETAL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="imorderNo != null" >
+        IMORDER_NO,
+      </if>
+      <if test="materlinfoCode != null" >
+        MATERLINFO_CODE,
+      </if>
+      <if test="archivesNo != null" >
+        ARCHIVES_NO,
+      </if>
+      <if test="materlBatch != null" >
+        MATERL_BATCH,
+      </if>
+      <if test="materlPrice != null" >
+        MATERL_PRICE,
+      </if>
+      <if test="wholesalePrice != null" >
+        WHOLESALE_PRICE,
+      </if>
+      <if test="importUnit != null" >
+        IMPORT_UNIT,
+      </if>
+      <if test="storeUnit != null" >
+        STORE_UNIT,
+      </if>
+      <if test="periodValidity != null" >
+        PERIOD_VALIDITY,
+      </if>
+      <if test="manufacturerCode != null" >
+        manufacturer_Code,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="imorderNo != null" >
+        #{imorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materlinfoCode != null" >
+        #{materlinfoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="archivesNo != null" >
+        #{archivesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materlBatch != null" >
+        #{materlBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="materlPrice != null" >
+        #{materlPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wholesalePrice != null" >
+        #{wholesalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="importUnit != null" >
+        #{importUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="storeUnit != null" >
+        #{storeUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="periodValidity != null" >
+        #{periodValidity,jdbcType=TIMESTAMP},
+      </if>
+      <if test="supplierCode != null" >
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsImscmdetalExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_MMS_IMSCMDETAL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_MMS_IMSCMDETAL
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imorderNo != null" >
+        IMORDER_NO = #{record.imorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.materlinfoCode != null" >
+        MATERLINFO_CODE = #{record.materlinfoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.archivesNo != null" >
+        ARCHIVES_NO = #{record.archivesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.materlBatch != null" >
+        MATERL_BATCH = #{record.materlBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="record.materlPrice != null" >
+        MATERL_PRICE = #{record.materlPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wholesalePrice != null" >
+        WHOLESALE_PRICE = #{record.wholesalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.importUnit != null" >
+        IMPORT_UNIT = #{record.importUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.storeUnit != null" >
+        STORE_UNIT = #{record.storeUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.periodValidity != null" >
+        PERIOD_VALIDITY = #{record.periodValidity,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.manufacturerCode != null" >
+        manufacturer_Code = #{record.manufacturerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_MMS_IMSCMDETAL
+    set ID = #{record.id,jdbcType=DECIMAL},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      IMORDER_NO = #{record.imorderNo,jdbcType=VARCHAR},
+      MATERLINFO_CODE = #{record.materlinfoCode,jdbcType=VARCHAR},
+      ARCHIVES_NO = #{record.archivesNo,jdbcType=VARCHAR},
+      MATERL_BATCH = #{record.materlBatch,jdbcType=VARCHAR},
+      MATERL_PRICE = #{record.materlPrice,jdbcType=DECIMAL},
+      WHOLESALE_PRICE = #{record.wholesalePrice,jdbcType=DECIMAL},
+      IMPORT_UNIT = #{record.importUnit,jdbcType=VARCHAR},
+      STORE_UNIT = #{record.storeUnit,jdbcType=VARCHAR},
+      PERIOD_VALIDITY = #{record.periodValidity,jdbcType=TIMESTAMP},
+      manufacturer_Code = #{record.manufacturerCode,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsImscmdetal" >
+    update PIP_MMS_IMSCMDETAL
+    <set >
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="imorderNo != null" >
+        IMORDER_NO = #{imorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materlinfoCode != null" >
+        MATERLINFO_CODE = #{materlinfoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="archivesNo != null" >
+        ARCHIVES_NO = #{archivesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materlBatch != null" >
+        MATERL_BATCH = #{materlBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="materlPrice != null" >
+        MATERL_PRICE = #{materlPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wholesalePrice != null" >
+        WHOLESALE_PRICE = #{wholesalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="importUnit != null" >
+        IMPORT_UNIT = #{importUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="storeUnit != null" >
+        STORE_UNIT = #{storeUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="periodValidity != null" >
+        PERIOD_VALIDITY = #{periodValidity,jdbcType=TIMESTAMP},
+      </if>
+      <if test="manufacturerCode != null" >
+        manufacturer_Code = #{manufacturerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsImscmdetal" >
+    update PIP_MMS_IMSCMDETAL
+    set PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      IMORDER_NO = #{imorderNo,jdbcType=VARCHAR},
+      MATERLINFO_CODE = #{materlinfoCode,jdbcType=VARCHAR},
+      ARCHIVES_NO = #{archivesNo,jdbcType=VARCHAR},
+      MATERL_BATCH = #{materlBatch,jdbcType=VARCHAR},
+      MATERL_PRICE = #{materlPrice,jdbcType=DECIMAL},
+      WHOLESALE_PRICE = #{wholesalePrice,jdbcType=DECIMAL},
+      IMPORT_UNIT = #{importUnit,jdbcType=VARCHAR},
+      STORE_UNIT = #{storeUnit,jdbcType=VARCHAR},
+      PERIOD_VALIDITY = #{periodValidity,jdbcType=TIMESTAMP},
+      manufacturer_Code = #{manufacturerCode,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

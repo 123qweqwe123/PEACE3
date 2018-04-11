@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.sys.rbac.dao.MenuDao">
+	<resultMap id="BaseResultMap" type="com.bdcor.pip.web.sys.rbac.domain.Menu">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+	    <result column="TEXT" property="text" jdbcType="VARCHAR" />
+	    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+	    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+	    <result column="PERMISSION" property="permission" jdbcType="VARCHAR" />
+	    <result column="TARGET" property="target" jdbcType="VARCHAR" />
+	    <result column="PARENT" property="parent" jdbcType="VARCHAR" />
+	    <result column="MENU_ORDER" property="menuOrder" jdbcType="DECIMAL" />
+	    <result column="ROWNUM" property="menurn" jdbcType="DECIMAL"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID,TEXT,TYPE,TITLE,PERMISSION,TARGET,PARENT,MENU_ORDER
+	</sql>
+
+	<select id="queryAllMenus" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from pip_sys_menu  order by MENU_ORDER
+	</select>
+	
+	<insert id="save" parameterType="com.bdcor.pip.web.sys.rbac.domain.Menu">
+		insert into pip_SYS_menu
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	      <if test="id != null" >
+	        ID,
+	      </if>
+	      <if test="text != null" >
+	        TEXT,
+	      </if>
+	      <if test="permission != null" >
+	        PERMISSION,
+	      </if>
+	      <if test="parent != null" >
+	        PARENT,
+	      </if>
+	      <if test="target != null" >
+	        TARGET,
+	      </if>
+	      <if test="title != null" >
+	        TITLE,
+	      </if>
+	      <if test="type != null">
+	      	TYPE,
+	      </if>
+	      <if test="menuOrder != null">
+	      	MENU_ORDER
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      <if test="id != null" >
+	        #{id,jdbcType=CHAR},
+	      </if>
+	      <if test="text != null" >
+	        #{text,jdbcType=VARCHAR},
+	      </if>
+	      <if test="permission != null" >
+	        #{permission,jdbcType=VARCHAR},
+	      </if>
+	      <if test="parent != null" >
+	        #{parent,jdbcType=VARCHAR},
+	      </if>
+	      <if test="target != null" >
+	        #{target,jdbcType=VARCHAR},
+	      </if>
+	      <if test="title != null" >
+	        #{title,jdbcType=VARCHAR},
+	      </if>
+	      <if test="null != type">
+	      	#{type,jdbcType=DECIMAL},
+	      </if>
+	      <if test="null != menuOrder">
+	      	#{menuOrder,jdbcType=DECIMAL}
+	      </if>
+	    </trim>
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.String">
+		delete from pip_sys_menu where id in (
+			select id name from pip_sys_menu
+			start with ID = #{id,jdbcType=CHAR}     
+			connect by prior id=parent)
+	</delete>
+	
+	<update id="update" parameterType="com.bdcor.pip.web.sys.rbac.domain.Menu">
+		update pip_SYS_MENU
+	    <set >
+	      <if test="text != null" >
+	        TEXT = #{text,jdbcType=VARCHAR},
+	      </if>
+	      <if test="permission != null" >
+	        PERMISSION = #{permission,jdbcType=VARCHAR},
+	      </if>
+	      <if test="parent != null" >
+	        PARENT = #{parent,jdbcType=VARCHAR},
+	      </if>
+	      <if test="target != null" >
+	        TARGET = #{target,jdbcType=VARCHAR},
+	      </if>
+	      <if test="title != null" >
+	        TITLE = #{title,jdbcType=VARCHAR},
+	      </if>
+	      <if test="null != type">
+	      	TYPE = #{type,jdbcType=DECIMAL}
+	      </if>
+	    </set>
+		where ID = #{id,jdbcType=CHAR}
+	</update>
+	
+	
+	<select id="getMenuByUserPermission" parameterType="java.lang.String" resultType="map" >
+    select ID,TEXT text ,TYPE,TITLE,PERMISSION,TARGET,PARENT parent,MENU_ORDER from pip_sys_menu m  where m.PERMISSION in 
+    (
+    select p.id from 
+    pip_sys_permission p,
+    pip_sys_user_role r,
+    pip_sys_role_permission rp  
+    where r.USER_ID='${userId}' and r.ROLE_ID=rp.ROLE_ID and p.id=rp.PERMISSIONS_ID
+    )     order by MENU_ORDER
+  </select>  
+	
+	<select id="getMenuById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select rownum menurn, t.* from (select
+		<include refid="Base_Column_List" />
+		from pip_sys_menu where parent=#{id} order by menu_order) t
+	</select>
+	
+	<update id="updateMenuOder" parameterType="java.lang.String" >
+		update pip_sys_menu set menu_order=#{menuOrder} where id=#{id}
+	</update>
+	
+	<select id="getOrderCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(id) from pip_sys_menu where parent = #{parentId, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="checkNameExists" parameterType="com.bdcor.pip.web.sys.rbac.domain.Menu" resultMap="BaseResultMap">
+		select * from pip_sys_menu where parent = #{parent, jdbcType=VARCHAR} and text = #{text, jdbcType=VARCHAR}
+	</select>
+</mapper>

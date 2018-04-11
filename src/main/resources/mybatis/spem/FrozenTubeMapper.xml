@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdcor.pip.web.spem.dao.FrozenTubeMapper">
+  
+  <select id="spTubeListByfilter" parameterType="com.bdcor.pip.web.spem.filter.FrozenTubeFilter" resultType="com.bdcor.pip.web.spem.domain.FrozenTubeVo"> 
+    select 
+	lcc.lcc_name as "lccName",
+	fridge.fridge_name as "fridgeName",
+	box.box_code as "boxCode",
+	tube.tube_type as "tubeType",
+	tube.tube_code as "tubeCode",
+	tube.blood_code as "bloodCode",
+	tube.box_rowno as "boxRowNo",
+	tube.box_colno as "boxColNo",
+	tube.is_hemolysis as "isHemolysis",
+	tube.is_lipid as "isLipid",
+	tube.is_empty as "isEmpty"
+	
+	from pip_scm_frozentube tube
+	left join pip_comm_lcc lcc on lcc.lcc_code = tube.lcc_code
+	left join pip_scm_frozenbox box on box.box_code=tube.box_code and box.box_type=tube.tube_type
+	left join pip_scm_fridge fridge on fridge.fridge_id = box.fridge_id
+	
+	where tube.project_id=#{projectId}
+	
+	<if test="tubeCodeLike != null and tubeCodeLike != '' ">
+		and tube.tube_code like '%'||#{tubeCodeLike}||'%'
+	</if>
+	
+	<if test="lccIdEq != null and lccIdEq != '' ">
+		and tube.lcc_code in ${lccIdEq}
+	</if>
+	
+	<if test="fridgeIdEq != null and fridgeIdEq != '' ">
+		and fridge.fridge_id = #{fridgeIdEq}
+	</if>
+	
+	<if test="tubeTypeEq != null and tubeTypeEq != '' ">
+		and tube.tube_type = #{tubeTypeEq}
+	</if>
+	
+	<if test="bloodCodeLike != null and bloodCodeLike != '' ">
+		and tube.blood_code like '%'||#{bloodCodeLike}||'%'
+	</if>
+	
+	<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+  </select> 
+  
+</mapper>

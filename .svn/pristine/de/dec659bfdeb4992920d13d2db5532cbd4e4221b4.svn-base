@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.quality.dao.PipExpImplementMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.quality.domain.PipExpImplement" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="LCC_NAME" property="lccName" jdbcType="VARCHAR" />
+    <result column="IMPLEMENT_START_DATE" property="implementStartDate" jdbcType="TIMESTAMP" />
+    <result column="IMPLEMENT_END_DATE" property="implementEndDate" jdbcType="TIMESTAMP" />
+    <result column="WATCH_PATIENT_TYPE" property="watchPatientType" jdbcType="VARCHAR" />
+    <result column="PATIENT_COUNT" property="patientCount" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="PROVINCE_CODE" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="PROVINCE_NAME" property="provinceName" jdbcType="VARCHAR"/>
+    <result column="ISZTQK_1" property="isztqk1" jdbcType="VARCHAR" />
+    <result column="ISZTQK_2" property="isztqk2" jdbcType="VARCHAR" />
+    <result column="ISZTQK_3" property="isztqk3" jdbcType="VARCHAR" />
+    <result column="ISZTQK_4" property="isztqk4" jdbcType="VARCHAR" />
+    <result column="ISZTQK_5" property="isztqk5" jdbcType="VARCHAR" />
+    <result column="ISZTQK_6" property="isztqk6" jdbcType="VARCHAR" />
+    <result column="ISZTQK_7" property="isztqk7" jdbcType="VARCHAR" />
+    <result column="ISZTQK_8" property="isztqk8" jdbcType="VARCHAR" />
+    <result column="ISZTQK_9" property="isztqk9" jdbcType="VARCHAR" />
+    <result column="ISZTQK_10" property="isztqk10" jdbcType="VARCHAR" />
+    <result column="ISZTQK_11" property="isztqk11" jdbcType="VARCHAR" />
+    <result column="ISYJWJHC_1" property="isyjwjhc1" jdbcType="VARCHAR" />
+    <result column="ISYJWJHC_2" property="isyjwjhc2" jdbcType="VARCHAR" />
+    <result column="ISYJWJHC_3" property="isyjwjhc3" jdbcType="VARCHAR" />
+    <result column="ISYJWJHC_4" property="isyjwjhc4" jdbcType="VARCHAR" />
+    <result column="ISYJWJHC_5" property="isyjwjhc5" jdbcType="VARCHAR" />
+    <result column="ISYJWJHC_6" property="isyjwjhc6" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+   	ID, LCC_CODE, LCC_NAME, IMPLEMENT_START_DATE,IMPLEMENT_END_DATE, WATCH_PATIENT_TYPE, PATIENT_COUNT, REMARK, 
+    CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE, PROJECT_ID, PROVINCE_CODE, ISZTQK_1, 
+    ISZTQK_2, ISZTQK_3, ISZTQK_4, ISZTQK_5, ISZTQK_6, ISZTQK_7, ISZTQK_8, ISZTQK_9, ISZTQK_10, 
+    ISZTQK_11, ISYJWJHC_1, ISYJWJHC_2, ISYJWJHC_3, ISYJWJHC_4, ISYJWJHC_5, ISYJWJHC_6
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplementExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+     p.*, d.vname as province_name
+    from PIP_EXP_IMPLEMENT p
+    left join pip_comm_dict_district d on p.PROVINCE_CODE = d.vcode
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="listByFilter" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.quality.filter.PipExpImplementFilter" >
+    select
+     p.*, d.vname as province_name
+    from PIP_EXP_IMPLEMENT p
+    left join pip_comm_dict_district d on p.PROVINCE_CODE = d.vcode
+    where 1=1
+    <if test="lccCode !=null and lccCode !=''">
+    	and p.lcc_code like '%'||#{lccCode}||'%'
+    </if>
+    <if test="startSDate !=null and startSDate !=''">
+    	and p.implement_start_date >= #{startSDate}
+    </if>
+    <if test="endSDate !=null and endSDate !=''">
+    	and p.implement_start_date  <![CDATA[<=]]> #{endSDate}
+    </if>
+    <if test="startEDate !=null and startEDate !=''">
+    	and p.implement_end_date >= #{startEDate}
+    </if>
+    <if test="endEDate !=null and endEDate !=''">
+    	and p.implement_end_date  <![CDATA[<=]]> #{endEDate}
+    </if>
+    <if test="sidx != null and sidx != ''">
+			order by p.${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    p.*, d.vname as province_name
+    from PIP_EXP_IMPLEMENT p
+    left join pip_comm_dict_district d on p.PROVINCE_CODE = d.vcode
+    where p.ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PIP_EXP_IMPLEMENT
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplementExample" >
+    delete from PIP_EXP_IMPLEMENT
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplement" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_EXP_IMPLEMENT_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_EXP_IMPLEMENT (ID, LCC_CODE, LCC_NAME, 
+      IMPLEMENT_START_DATE,IMPLEMENT_END_DATE, WATCH_PATIENT_TYPE, PATIENT_COUNT, 
+      REMARK, CREATE_BY, CREATE_DATE, 
+      UPDATE_BY, UPDATE_DATE, PROJECT_ID, 
+      PROVINCE_CODE, ISZTQK_1, ISZTQK_2, 
+      ISZTQK_3, ISZTQK_4, ISZTQK_5, 
+      ISZTQK_6, ISZTQK_7, ISZTQK_8, 
+      ISZTQK_9, ISZTQK_10, ISZTQK_11, 
+      ISYJWJHC_1, ISYJWJHC_2, ISYJWJHC_3, 
+      ISYJWJHC_4, ISYJWJHC_5, ISYJWJHC_6
+      )
+    values (#{id,jdbcType=VARCHAR}, #{lccCode,jdbcType=VARCHAR}, #{lccName,jdbcType=VARCHAR}, 
+      #{implementStartDate,jdbcType=TIMESTAMP},#{implementEndDate,jdbcType=TIMESTAMP}, #{watchPatientType,jdbcType=VARCHAR}, #{patientCount,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{projectId,jdbcType=VARCHAR}, 
+      #{provinceCode,jdbcType=VARCHAR}, #{isztqk1,jdbcType=VARCHAR}, #{isztqk2,jdbcType=VARCHAR}, 
+      #{isztqk3,jdbcType=VARCHAR}, #{isztqk4,jdbcType=VARCHAR}, #{isztqk5,jdbcType=VARCHAR}, 
+      #{isztqk6,jdbcType=VARCHAR}, #{isztqk7,jdbcType=VARCHAR}, #{isztqk8,jdbcType=VARCHAR}, 
+      #{isztqk9,jdbcType=VARCHAR}, #{isztqk10,jdbcType=VARCHAR}, #{isztqk11,jdbcType=VARCHAR}, 
+      #{isyjwjhc1,jdbcType=VARCHAR}, #{isyjwjhc2,jdbcType=VARCHAR}, #{isyjwjhc3,jdbcType=VARCHAR}, 
+      #{isyjwjhc4,jdbcType=VARCHAR}, #{isyjwjhc5,jdbcType=VARCHAR}, #{isyjwjhc6,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplement" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_EXP_IMPLEMENT_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_EXP_IMPLEMENT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="lccName != null" >
+        LCC_NAME,
+      </if>
+      <if test="implementStartDate != null" >
+        IMPLEMENT_START_DATE,
+      </if>
+      <if test="implementEndDate != null" >
+        IMPLEMENT_END_DATE,
+      </if>
+      <if test="watchPatientType != null" >
+        WATCH_PATIENT_TYPE,
+      </if>
+      <if test="patientCount != null" >
+        PATIENT_COUNT,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="provinceCode != null" >
+        PROVINCE_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccName != null" >
+        #{lccName,jdbcType=VARCHAR},
+      </if>
+      <if test="implementStartDate != null" >
+        #{implementStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="implementEndDate != null" >
+        #{implementEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="watchPatientType != null" >
+        #{watchPatientType,jdbcType=VARCHAR},
+      </if>
+      <if test="patientCount != null" >
+        #{patientCount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplementExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_EXP_IMPLEMENT
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_EXP_IMPLEMENT
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccCode != null" >
+        LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccName != null" >
+        LCC_NAME = #{record.lccName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.implementDate != null" >
+        IMPLEMENT_START_DATE = #{record.implementDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.watchPatientType != null" >
+        WATCH_PATIENT_TYPE = #{record.watchPatientType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientCount != null" >
+        PATIENT_COUNT = #{record.patientCount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.provinceCode != null" >
+        PROVINCE_CODE = #{record.provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk1 != null" >
+        ISZTQK_1 = #{record.isztqk1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk2 != null" >
+        ISZTQK_2 = #{record.isztqk2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk3 != null" >
+        ISZTQK_3 = #{record.isztqk3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk4 != null" >
+        ISZTQK_4 = #{record.isztqk4,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk5 != null" >
+        ISZTQK_5 = #{record.isztqk5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk6 != null" >
+        ISZTQK_6 = #{record.isztqk6,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk7 != null" >
+        ISZTQK_7 = #{record.isztqk7,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk8 != null" >
+        ISZTQK_8 = #{record.isztqk8,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk9 != null" >
+        ISZTQK_9 = #{record.isztqk9,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk10 != null" >
+        ISZTQK_10 = #{record.isztqk10,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isztqk11 != null" >
+        ISZTQK_11 = #{record.isztqk11,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isyjwjhc1 != null" >
+        ISYJWJHC_1 = #{record.isyjwjhc1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isyjwjhc2 != null" >
+        ISYJWJHC_2 = #{record.isyjwjhc2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isyjwjhc3 != null" >
+        ISYJWJHC_3 = #{record.isyjwjhc3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isyjwjhc4 != null" >
+        ISYJWJHC_4 = #{record.isyjwjhc4,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isyjwjhc5 != null" >
+        ISYJWJHC_5 = #{record.isyjwjhc5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isyjwjhc6 != null" >
+        ISYJWJHC_6 = #{record.isyjwjhc6,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_EXP_IMPLEMENT
+    set ID = #{record.id,jdbcType=VARCHAR},
+      LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      LCC_NAME = #{record.lccName,jdbcType=VARCHAR},
+      IMPLEMENT_START_DATE = #{record.implementStartDate,jdbcType=TIMESTAMP},
+      IMPLEMENT_END_DATE = #{record.implementEndDate,jdbcType=TIMESTAMP},
+      WATCH_PATIENT_TYPE = #{record.watchPatientType,jdbcType=VARCHAR},
+      PATIENT_COUNT = #{record.patientCount,jdbcType=DECIMAL},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      PROVINCE_CODE = #{record.provinceCode,jdbcType=VARCHAR},
+      ISZTQK_1 = #{record.isztqk1,jdbcType=VARCHAR},
+      ISZTQK_2 = #{record.isztqk2,jdbcType=VARCHAR},
+      ISZTQK_3 = #{record.isztqk3,jdbcType=VARCHAR},
+      ISZTQK_4 = #{record.isztqk4,jdbcType=VARCHAR},
+      ISZTQK_5 = #{record.isztqk5,jdbcType=VARCHAR},
+      ISZTQK_6 = #{record.isztqk6,jdbcType=VARCHAR},
+      ISZTQK_7 = #{record.isztqk7,jdbcType=VARCHAR},
+      ISZTQK_8 = #{record.isztqk8,jdbcType=VARCHAR},
+      ISZTQK_9 = #{record.isztqk9,jdbcType=VARCHAR},
+      ISZTQK_10 = #{record.isztqk10,jdbcType=VARCHAR},
+      ISZTQK_11 = #{record.isztqk11,jdbcType=VARCHAR},
+      ISYJWJHC_1 = #{record.isyjwjhc1,jdbcType=VARCHAR},
+      ISYJWJHC_2 = #{record.isyjwjhc2,jdbcType=VARCHAR},
+      ISYJWJHC_3 = #{record.isyjwjhc3,jdbcType=VARCHAR},
+      ISYJWJHC_4 = #{record.isyjwjhc4,jdbcType=VARCHAR},
+      ISYJWJHC_5 = #{record.isyjwjhc5,jdbcType=VARCHAR},
+      ISYJWJHC_6 = #{record.isyjwjhc6,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplement" >
+    update PIP_EXP_IMPLEMENT
+    <set >
+      <if test="lccCode != null" >
+        LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccName != null" >
+        LCC_NAME = #{lccName,jdbcType=VARCHAR},
+      </if>
+      <if test="implementStartDate != null" >
+        IMPLEMENT_START_DATE = #{implementStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="implementEndDate != null" >
+        IMPLEMENT_END_DATE = #{implementEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="watchPatientType != null" >
+        WATCH_PATIENT_TYPE = #{watchPatientType,jdbcType=VARCHAR},
+      </if>
+      <if test="patientCount != null" >
+        PATIENT_COUNT = #{patientCount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        PROVINCE_CODE = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk1 != null" >
+        ISZTQK_1 = #{isztqk1,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk2 != null" >
+        ISZTQK_2 = #{isztqk2,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk3 != null" >
+        ISZTQK_3 = #{isztqk3,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk4 != null" >
+        ISZTQK_4 = #{isztqk4,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk5 != null" >
+        ISZTQK_5 = #{isztqk5,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk6 != null" >
+        ISZTQK_6 = #{isztqk6,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk7 != null" >
+        ISZTQK_7 = #{isztqk7,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk8 != null" >
+        ISZTQK_8 = #{isztqk8,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk9 != null" >
+        ISZTQK_9 = #{isztqk9,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk10 != null" >
+        ISZTQK_10 = #{isztqk10,jdbcType=VARCHAR},
+      </if>
+      <if test="isztqk11 != null" >
+        ISZTQK_11 = #{isztqk11,jdbcType=VARCHAR},
+      </if>
+      <if test="isyjwjhc1 != null" >
+        ISYJWJHC_1 = #{isyjwjhc1,jdbcType=VARCHAR},
+      </if>
+      <if test="isyjwjhc2 != null" >
+        ISYJWJHC_2 = #{isyjwjhc2,jdbcType=VARCHAR},
+      </if>
+      <if test="isyjwjhc3 != null" >
+        ISYJWJHC_3 = #{isyjwjhc3,jdbcType=VARCHAR},
+      </if>
+      <if test="isyjwjhc4 != null" >
+        ISYJWJHC_4 = #{isyjwjhc4,jdbcType=VARCHAR},
+      </if>
+      <if test="isyjwjhc5 != null" >
+        ISYJWJHC_5 = #{isyjwjhc5,jdbcType=VARCHAR},
+      </if>
+      <if test="isyjwjhc6 != null" >
+        ISYJWJHC_6 = #{isyjwjhc6,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplement" >
+    update PIP_EXP_IMPLEMENT
+    set LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      LCC_NAME = #{lccName,jdbcType=VARCHAR},
+      IMPLEMENT_START_DATE = #{implementStartDate,jdbcType=TIMESTAMP},
+      IMPLEMENT_END_DATE = #{implementEndDate,jdbcType=TIMESTAMP},
+      WATCH_PATIENT_TYPE = #{watchPatientType,jdbcType=VARCHAR},
+      PATIENT_COUNT = #{patientCount,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      PROVINCE_CODE = #{provinceCode,jdbcType=VARCHAR},
+      ISZTQK_1 = #{isztqk1,jdbcType=VARCHAR},
+      ISZTQK_2 = #{isztqk2,jdbcType=VARCHAR},
+      ISZTQK_3 = #{isztqk3,jdbcType=VARCHAR},
+      ISZTQK_4 = #{isztqk4,jdbcType=VARCHAR},
+      ISZTQK_5 = #{isztqk5,jdbcType=VARCHAR},
+      ISZTQK_6 = #{isztqk6,jdbcType=VARCHAR},
+      ISZTQK_7 = #{isztqk7,jdbcType=VARCHAR},
+      ISZTQK_8 = #{isztqk8,jdbcType=VARCHAR},
+      ISZTQK_9 = #{isztqk9,jdbcType=VARCHAR},
+      ISZTQK_10 = #{isztqk10,jdbcType=VARCHAR},
+      ISZTQK_11 = #{isztqk11,jdbcType=VARCHAR},
+      ISYJWJHC_1 = #{isyjwjhc1,jdbcType=VARCHAR},
+      ISYJWJHC_2 = #{isyjwjhc2,jdbcType=VARCHAR},
+      ISYJWJHC_3 = #{isyjwjhc3,jdbcType=VARCHAR},
+      ISYJWJHC_4 = #{isyjwjhc4,jdbcType=VARCHAR},
+      ISYJWJHC_5 = #{isyjwjhc5,jdbcType=VARCHAR},
+      ISYJWJHC_6 = #{isyjwjhc6,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

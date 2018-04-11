@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.sys.rbac.dao.UserDao">
+	<resultMap id="BaseResultMap" type="com.bdcor.pip.web.sys.rbac.domain.User">
+		<id column="ID" property="id" jdbcType="CHAR" />
+		<result column="LOGIN_NAME" property="loginName" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="SALT" property="salt" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="IS_ADMIN" property="isAdmin" jdbcType="DECIMAL" />
+		<result column="ORGANIZATION_ID" property="organizationId" jdbcType="CHAR" />
+		
+		<result column="STATUS" property="status" jdbcType="DECIMAL" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_DATETIME" property="createDatetime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_DATETIME" property="updateDatetime" jdbcType="TIMESTAMP" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="IS_DELETE" property="isDelete" jdbcType="DECIMAL" />
+		
+		<result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR"/>
+		<result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR"/>
+		<result column="USER_CODE" property="userCode" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, LOGIN_NAME, PASSWORD, NAME, SALT, EMAIL, IS_ADMIN,
+		ORGANIZATION_ID,
+		STATUS, CREATE_USER,
+		CREATE_DATETIME,
+		UPDATE_USER, UPDATE_DATETIME, REMARK, IS_DELETE, PROJECT_ID, LCC_CODE, USER_CODE
+	</sql>
+
+	<select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from pip_sys_account
+		where ID = #{id,jdbcType=CHAR}
+	</select>
+
+	<select id="getUsersByOrganId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select 
+		<include refid="Base_Column_List" />
+		from pip_sys_account where organization_id = #{organId, jdbcType=VARCHAR} and is_delete!=1 
+	</select>
+
+	<select id="queryUsersByLoginName" resultMap="BaseResultMap">
+		select
+		u.ID,
+		u.LOGIN_NAME,
+		u.PASSWORD,
+		u.NAME,
+		u.SALT,
+		u.EMAIL,
+		u.IS_ADMIN,
+		u.ORGANIZATION_ID,
+		u.STATUS,
+		u.CREATE_USER,
+		u.CREATE_DATETIME,
+		u.UPDATE_USER,
+		u.UPDATE_DATETIME,
+		u.REMARK,
+		u.IS_DELETE,
+		u.PROJECT_ID,
+		u.LCC_CODE,
+		u.USER_CODE
+		from pip_sys_account u
+		where 
+		u.login_name = #{loginName} 
+		and  
+		u.is_delete!=1 
+	</select>  
+
+	<select id="queryByLoginName" resultMap="BaseResultMap">
+		select
+		u.ID,
+		u.LOGIN_NAME,
+		u.PASSWORD,
+		u.NAME,
+		u.SALT,
+		u.EMAIL,
+		u.IS_ADMIN,
+		u.ORGANIZATION_ID,
+		u.STATUS,
+		u.CREATE_USER,
+		u.CREATE_DATETIME,
+		u.UPDATE_USER,
+		u.UPDATE_DATETIME,
+		u.REMARK,
+		u.IS_DELETE,
+		u.PROJECT_ID,
+		u.LCC_CODE,
+		u.USER_CODE
+		from pip_sys_account u
+		where 
+		u.login_name = #{loginName} 
+		and  
+		u.is_delete!=1 
+	</select>  
+	
+
+	<select id="list" parameterType="com.bdcor.pip.web.sys.rbac.filter.UserFilter"
+		resultType="com.bdcor.pip.web.sys.rbac.domain.UserDTO">
+	  select a.id as id,a.login_name as loginName,a.name,a.status,a.email ,a.is_admin as isAdmin,a.is_delete as isDelete ,a.user_code as userCode,a.lcc_code as lccCode,lcc.lcc_name lccName,a.project_id as projectId,
+	  (select listagg(r.name,',') within GROUP(order by r.name) from pip_sys_user_role ur 
+	  inner join pip_sys_role r on r.id=ur.role_id
+	  where ur.user_id=a.id
+	  )as roleName
+	  from pip_sys_account a
+	  left join pip_comm_lcc lcc on lcc.project_id=a.project_id and lcc.lcc_code=a.lcc_code
+	  where a.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+	  and a.project_id=#{projectId}
+	  and a.is_delete !=1
+		<if test="loginName != null ">
+			and a.login_name like '%'||#{loginName}||'%'
+		</if>
+		<if test="name != null ">
+			and a.name like '%'||#{name}||'%'
+		</if>
+		<if test="lccName != null ">
+			and lcc.lcc_name like '%'||#{lccName}||'%'
+		</if>
+        <if test="null != isAdmin and ''!=isAdmin">
+            <if test="isAdmin ==1">
+                and (a.is_admin = 0 or a.is_admin is null or a.is_admin=2)
+            </if>
+            <if test="isAdmin ==2">
+                and a.is_admin = 0
+            </if>
+        </if>
+        <if test="null == isAdmin or ''==isAdmin or 0 == isAdmin">
+            and (a.is_admin = 0 or a.is_admin is null)
+        </if>
+		<if test="sidx!=null and sord!=null"> order by ${sidx} ${sord} </if>
+		<if test="sidx==null or sord == null"> order by a.create_datetime desc</if>
+	</select>
+
+	<insert id="save" parameterType="com.bdcor.pip.web.sys.rbac.domain.User">
+		insert into pip_sys_account
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="loginName != null">
+				login_name,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="salt != null">
+				salt,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="organizationId != null">
+				ORGANIZATION_ID,
+			</if>
+			<if test="isAdmin != null">
+				IS_ADMIN,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="createUser != null">
+				CREATE_USER,
+			</if>
+			<if test="createDatetime != null">
+				CREATE_DATETIME,
+			</if>
+			<if test="updateUser != null">
+				UPDATE_USER,
+			</if>
+			<if test="updateDatetime != null">
+				UPDATE_DATETIME,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+			<if test="isDelete != null">
+				IS_DELETE,
+			</if>
+			<if test="projectId != null">
+				PROJECT_ID,
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE,
+			</if>
+			<if test="userCode != null">
+				USER_CODE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=CHAR},
+			</if>
+			<if test="loginName != null">
+				#{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="salt != null">
+				#{salt,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="organizationId != null">
+				#{organizationId,jdbcType=CHAR},
+			</if>
+			<if test="isAdmin != null">
+				#{isAdmin,jdbcType=CHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDatetime != null">
+				#{createDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null">
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDatetime != null">
+				#{updateDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=INTEGER},
+			</if>
+			<if test="projectId != null">
+				#{projectId,jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				#{lccCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.bdcor.pip.web.sys.rbac.domain.User">
+		update pip_sys_account
+		<set>
+			<if test="password != null">
+				PASSWORD = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="salt != null">
+				SALT = #{salt,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				EMAIL = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="isAdmin != null">
+				IS_ADMIN = #{isAdmin,jdbcType=DECIMAL},
+			</if>
+			<if test="organizationId != null">
+				ORGANIZATION_ID = #{organizationId,jdbcType=CHAR},
+			</if>
+			<if test="isDelete != null">
+				IS_DELETE = #{isDelete,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="updateUser != null">
+				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDatetime != null">
+				UPDATE_DATETIME = #{updateDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="projectId != null">
+				PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				USER_CODE = #{userCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=CHAR} 
+	</update>
+
+	<update id="delete">
+		update pip_sys_account set is_delete = 1
+		where is_delete !=1 and id in
+		<foreach collection="array" item="id" index="i" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+
+	<insert id="saveUserRole" parameterType="java.util.List">
+		insert into pip_sys_user_role
+		(user_id, role_id)
+		<foreach collection="list" item="ur" index="i" separator="union all">
+			select #{ur.userId,jdbcType=CHAR},#{ur.roleId,jdbcType=CHAR} from
+			dual
+		</foreach>
+	</insert>
+
+	<delete id="deleteUserRole" parameterType="java.lang.String">
+		delete pip_sys_user_role
+		where user_id = #{value,jdbcType=CHAR}
+	</delete>
+
+	<delete id="deleteUserRoles">
+		delete pip_sys_user_role where user_id in
+		<foreach collection="array" item="id" index="i" open="("
+			separator="," close=")">
+			#{id,jdbcType=CHAR}
+		</foreach>
+	</delete>
+	
+	<insert id="saveLccAccount" parameterType="com.bdcor.pip.web.sys.rbac.domain.LccAccount">
+		insert into pip_sys_user_data_limit(user_id,lcc_code) values(#{userId,jdbcType=CHAR},#{lccCode,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateLccAccount" parameterType="com.bdcor.pip.web.sys.rbac.domain.LccAccount">
+		update pip_sys_user_data_limit set lcc_code=#{lccCode,jdbcType=VARCHAR} where user_id=#{userId,jdbcType=CHAR}
+	</update>
+	
+	<delete id="deleteLccAccount">
+		delete pip_sys_user_data_limit where user_id in
+		<foreach collection="array" item="id" index="i" open="("
+			separator="," close=")">
+			#{id,jdbcType=CHAR}
+		</foreach>
+	</delete>
+	
+	<select id="getLccListBuUserId" parameterType="com.bdcor.pip.web.sys.rbac.domain.UserDataLimit" resultType="com.bdcor.pip.web.sys.rbac.domain.UserDataLimit">
+	select
+		PC.LCC_CODE id,
+		PC.LCC_NAME name,
+		0 pid
+	from PIP_COMM_LCC PC
+	where 1=1
+	<if test='type=="1"'>
+	and PC.LCC_CODE NOT IN(select PS.LCC_CODE from PIP_SYS_USER_DATA_LIMIT PS WHERE PS.USER_ID=#{userId})
+	</if>
+	<if test='type=="2"'>
+	and PC.LCC_CODE  IN(select PS.LCC_CODE from PIP_SYS_USER_DATA_LIMIT PS WHERE PS.USER_ID=#{userId})
+	</if>
+	</select>
+	
+	
+	<select id="getDataLimitByUserId" parameterType="String" resultType="map">
+		select
+			LCC_CODE ,
+			USER_ID
+		from PIP_SYS_USER_DATA_LIMIT
+		WHERE USER_ID=#{userId}
+	</select>
+	
+	<select id="getDataLimitTree" resultType="com.bdcor.pip.web.sys.rbac.domain.UserDataLimit" parameterType="java.lang.String">
+	  select
+      lcc.lcc_code id,
+      lcc.lcc_name name,
+      lcc.rcc_code rccCode,
+      rcc.rcc_name rccName,
+      (case when lcc.rcc_code is not null and lcc.rcc_code!=-1 then 2 else 1 end) lev
+      from pip_comm_lcc lcc
+      left join pip_comm_rcc rcc
+      on lcc.rcc_code=rcc.rcc_code
+      <if test="_parameter!=null">
+      	where lcc.lcc_code in(select l.lcc_code from pip_sys_user_data_limit l where l.user_id=#{userId} )
+      </if>
+	</select>
+	
+	<delete id="deleteDataLimitByUserId" parameterType="String">
+		delete from PIP_SYS_USER_DATA_LIMIT PS WHERE PS.USER_ID=#{userId}
+	</delete>
+	
+	<select id="exportAccount" parameterType="String" resultType="map">
+select a.lcc_code , lcc.lcc_name , a.login_name , a.name , substr(a.USER_CODE, 6 ) as id , listagg(r.name,',')within GROUP(order by r.name) as role from pip_sys_account a left join pip_sys_user_role ur on a.id = ur.user_id left join pip_sys_role r on ur.role_id = r.id
+left join pip_comm_lcc lcc on lcc.lcc_code = a.lcc_code
+where a.lcc_code in ( select lcc_code from pip_sys_user_data_limit where user_id = #{userId} )
+group by a.lcc_code , a.login_name , a.name , substr(a.USER_CODE, 6 ) , lcc.lcc_name
+order by a.lcc_code, substr(a.USER_CODE, 6 )
+	</select>
+	
+		
+	<select id="getListForLoginName" parameterType="String" resultMap="BaseResultMap">
+		select * 
+		from pip_sys_account
+		WHERE login_name=#{loginName,jdbcType=VARCHAR}
+	</select>
+	
+	
+	
+	
+</mapper>

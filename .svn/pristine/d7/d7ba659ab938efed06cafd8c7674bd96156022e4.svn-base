@@ -1,0 +1,364 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<questionnaire xmlns="http://www.gener-health.com/uqsPaper">
+
+
+  <title>CHAT研究筛查问卷</title>
+  <doctype projectid="004" projectname="冠心病及合并糖尿病患者长期自我管理的适宜信息化辅助工具评价研究" UQSid="004010" UQSName="糖尿病筛查问卷" UQSVersion="004.010.001" VersionCreateDate="2016-08-5 14:07:01"/>
+
+  <QuestionSet id="1" displayname="A.患者基本信息" order="10">
+    
+    <question id="1" type="FillBlank" displayname="姓名：" order="10" code="">
+      <option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="maxlength" value="16"/>
+        <Attribute id="2" type="validate" validateobjecttype="char" validatetype="ch" value="1"/>
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="helptext" value="如发现姓名错误，请联系NCC相关人员更改"/>
+      <Attribute id="4" type="readonly" value="1"/>
+    </question>
+    <question id="2" type="Single" displayname="性别：" order="20" code="">
+      <option id="1" displayname="男" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="女" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="3" type="FillBlank" displayname="出生日期：" order="30" code="">
+      <option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="4" type="FillBlank" displayname="身份证号：" order="40" code="">
+      <option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="idcard" value="1"/>
+      </option>
+      <Attribute id="1" type="isnull" value="0"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="readonly" value="1"/>
+    </question>
+    <question id="5" type="SingleFill" displayname="其他证件类型：" order="50" code="">
+      <option id="1" displayname="居民户口簿" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="护照" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <option id="3" displayname="军官证" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+      </option>
+      <option id="4" displayname="驾驶证" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+      </option>
+      <option id="5" displayname="港澳居民来往内地通行证" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+      </option>
+      <option id="6" displayname="台湾居民来往内地通行证" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+      </option>
+      <option id="7" datatype="VARCHAR2(32)" order="70" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="其他法定有效证件："/>
+      </option>
+      <Attribute id="1" type="isnull" value="0"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="helptext" value="如果想取消选择，请双击单选按钮！"/>
+    </question>
+    <question id="6" type="FillBlank" displayname="其他证件号：" order="60" code="">
+      <option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="0"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+
+  </QuestionSet>
+
+  <QuestionSet id="2" displayname="B.联系方式 (至少提供1个非共同居住的亲属联系方式)" order="20">
+    <question id="1" type="FillBlank" displayname="本人现居住住址：" order="10" code="">
+      <option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="省（自治区）"/>
+        <Attribute id="2" type="isnull" value="1"/>
+      </option>
+      <option id="2" datatype="VARCHAR2(64)" order="20" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="市（盟，自治州）"/>
+        <Attribute id="2" type="isnull" value="1"/>
+      </option>
+      <option id="3" datatype="VARCHAR2(64)" order="30" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="县（旗、市辖区、林区）"/>
+        <Attribute id="2" type="isnull" value="1"/>
+      </option>
+      <option id="4" datatype="VARCHAR2(64)" order="40" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="乡（镇、街道、苏木）"/>
+        <Attribute id="2" type="isnull" value="0"/>
+      </option>
+      <option id="5" datatype="VARCHAR2(64)" order="50" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="村（社区）"/>
+        <Attribute id="2" type="isnull" value="0"/>
+      </option>
+      <option id="6" datatype="VARCHAR2(64)" order="60" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="号"/>
+        <Attribute id="2" type="isnull" value="0"/>
+      </option>
+      <option id="7" datatype="VARCHAR2(512)" order="70" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="地址（如果上面找不到具体地址）："/>
+        <Attribute id="2" type="isnull" value="0"/>
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    
+    <question id="2" type="SingleFill" displayname="本人有无固定电话？" order="20" code="">
+      <option id="1" datatype="VARCHAR2(48)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="有："/>        
+        <Attribute id="2" type="calculateandvalidate" value="/^[0-9]{2,5}-[0-9]{7,8}/g.test('#2_2_1')"/>
+	<Attribute id="3" type="maxlength" value="14"/>
+      </option>
+      <option id="2" displayname="无" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="helptext" value="电话必须填写区号，格式例如：010-1234567。”"/>
+    </question>
+    
+    <question id="3" type="SingleFill" displayname="请输入参加短信干预研究的患者本人手机号码，点击发送按钮：" order="30" code="">
+      <option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="有："/>
+        <Attribute id="2" type="validate" validateobjecttype="char" validatetype="num" value="1"/>
+        <Attribute id="3" type="maxlength" value="11"/>
+        <Attribute id="4" type="calculateandvalidate" value="/^1[0-9]{10}/g.test('#2_3_1')"/>
+      </option>
+      <option id="2" displayname="患者本人无手机号码" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+        <Attribute id="1" type="alert" value="请研究医生返回主界面，回答非干预面访问卷"/>
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="helptext" value="请患者确认该手机号无误后点击发送按钮！本手机号为参加短信干预研究的本人手机号码！"/>
+    </question>
+    
+    <question id="4" type="FillBlank" displayname="第一联系人姓名：" order="40" code="">
+      <option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="maxlength" value="16"/>
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="controlhide" value="S2_3_2"/>
+    </question>
+    
+    <question id="5" type="SingleFill" displayname="第一联系人与本人关系：" order="50" code="">
+      <option id="1" displayname="父母" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="配偶" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+      </option>
+      <option id="3" displayname="子女" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <option id="4" displayname="兄弟姐妹" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+      </option>
+      <option id="5" displayname="其他" datatype="VARCHAR2(32)" order="50" datastyle="FillBlank" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="helptext" value="如选择“其它需注明第一联系人与本人关系”"/>
+      <Attribute id="4" type="controlhide" value="S2_3_2"/>
+    </question>   
+    
+    <question id="6" type="FillBlank" displayname="第一联系人手机：" order="60" code="">
+      <option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="validate" validateobjecttype="char" validatetype="num" value="1"/>
+        <Attribute id="2" type="maxlength" value="11"/>
+        <Attribute id="3" type="calculateandvalidate" value="#2_3_1-#2_6_1!=0 &amp;&amp; /^1[0-9]{10}/g.test('#2_6_1')"/>
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="controlhide" value="S2_3_2"/>
+    </question>
+    
+    <question id="7" type="FillBlank" displayname="第二联系人姓名：" order="70" code="">
+      <option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="maxlength" value="16"/>
+      </option>
+      <Attribute id="1" type="isnull" value="0"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="controlhide" value="S2_3_2"/>
+    </question>
+    
+    <question id="8" type="SingleFill" displayname="第二联系人与本人关系：" order="80" code="">
+      <option id="1" displayname="父母" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="配偶" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+      </option>
+      <option id="3" displayname="子女" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <option id="4" displayname="兄弟姐妹" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+      </option>
+      <option id="5" displayname="其他" datatype="VARCHAR2(32)" order="50" datastyle="FillBlank" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="0"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="controlhide" value="S2_3_2"/>
+    </question>
+    
+    <question id="9" type="FillBlank" displayname="第二联系人手机：" order="90" code="">
+      <option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="validate" validateobjecttype="char" validatetype="num" value="1"/>
+        <Attribute id="2" type="maxlength" value="11"/>
+        <Attribute id="3" type="calculateandvalidate" value="#2_3_1-#2_6_1!=0 &amp;&amp; /^1[0-9]{10}/g.test('#2_6_1')"/>
+      </option>
+      <Attribute id="1" type="isnull" value="0"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="controlhide" value="S2_3_2"/>
+    </question>
+  </QuestionSet>
+
+  <QuestionSet id="3" displayname="C.知情同意书" order="30">
+    
+    <question id="1" type="SingleFill" displayname="是否签署干预研究的知情同意书？" order="10" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" datatype="VARCHAR2(32)" order="20" datastyle="Fillblank" code="">
+        <Attribute id="1" type="before_content_display" value="否，拒绝原因"/>
+        <Attribute id="2" type="ischosennull" value="1"/>
+       <Attribute id="3" type="alert" value="请研究医生返回主界面，回答非干预面访问卷！"/>
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>      
+    </question>
+    <question id="2" type="FillBlank" displayname="签署知情同意书的日期 :" order="20" code="">
+      <option id="1" datatype="DATE" order="1" datastyle="FillBlank" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="constrainvalidate" validateobjecttype="datenum" validatetype="scope" value="[2016-04-01,2017-12-31]"/>
+      <Attribute id="4" type="controlhide" value="S3_1_2"/>
+    </question>
+    <Attribute id="1" type="controlhide" value="S2_3_2"/>
+  </QuestionSet>
+  
+  <QuestionSet id="4" displayname="D.动态血压监测" order="40">
+    <question id="1" type="Single" displayname="患者是否已完成或即将在1个月内完成动态血压监测？" order="10" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+        <Attribute id="1" type="alert" value="允许在外院检查，给患者报销费用，请协助尽可能完成此项检查！"/>
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="controlhide" value="S3_1_2"/>
+    </question>
+    <Attribute id="1" type="controlhide" value="S2_3_2"/>
+  </QuestionSet>
+
+  <QuestionSet id="5" displayname="E.糖尿病诊断" order="50">        
+    <question id="1" type="Single" displayname="研究系统中是否记录该患者有糖尿病(系统自动选择)？" order="10" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>      
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="readonly" value="1"/>
+    </question>
+    <question id="2" type="Single" displayname="患者自报有糖尿病病史？" order="20" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S5_1_2"/>      
+    </question>
+    <question id="3" type="Single" displayname="患者是否能提供糖尿病的支持性文件，如诊断证明，处方，既往化验单等？" order="30" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S5_2_1&amp;&amp;S5_1_2"/>
+    </question>
+    <question id="4" type="Single" displayname="患者提供糖尿病的支持性文件类型？" order="40" code="">
+      <option id="1" displayname="诊断证明" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="处方" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <option id="3" displayname="既往化验单（空腹血糖大于等于7mmol/L，任意血糖大于等于11mmol/L和OGTT餐后两小时血糖大于等于11.1mmol/L）" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S5_2_1&amp;&amp;S5_3_1&amp;&amp;S5_1_2"/>
+    </question>
+    <question id="5" type="Single" displayname="患者目前是否正在服用降糖药？" order="50" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S5_2_1&amp;&amp;S5_1_2"/>
+    </question>
+    <question id="6" type="Single" displayname="患者是否有糖尿病症状？" order="60" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S5_1_2"/>
+    </question>
+    <question id="7" type="FillBlank" displayname="上次随访空腹血糖为（系统导入）：" order="70" code="">
+      <option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="mmol/L"/>
+        <Attribute id="2" type="isnull" value="0"/>
+      </option>
+      <option id="2" datatype="VARCHAR2(64)" order="20" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="HbA1C："/>
+        <Attribute id="2" type="after_content_display" value="%"/>
+        <Attribute id="3" type="isnull" value="0"/>
+        <Attribute id="4" type="validate" validateobjecttype="number" validatetype="format" value="F4.1"/>
+      </option>
+      <option id="3" datatype="DATE" order="30" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="测量日期"/>
+        <Attribute id="2" type="isnull" value="0"/>
+      </option>
+      <Attribute id="1" type="isnull" value="0"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="readonly" value="1"/>
+      <Attribute id="3" type="controlshow" value="S5_1_2"/>
+    </question>
+    <question id="8" type="Single" displayname="患者自上次随访至本次随访是否额外做过空腹血糖检测？" order="80" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S5_1_2"/>
+    </question>
+    <question id="9" type="FillBlank" displayname="上次随访后空腹血糖为：" order="90" code="">
+      <option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="mmol/L"/>
+        <Attribute id="2" type="isnull" value="1"/>
+      </option>
+      <option id="2" datatype="DATE" order="20" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="测量日期"/>
+        <Attribute id="2" type="isnull" value="1"/>
+      </option>
+      <option id="3" datatype="VARCHAR2(64)" order="30" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="第二次随访后空腹血糖为："/>
+        <Attribute id="2" type="after_content_display" value="mmol/L"/>
+        <Attribute id="3" type="isnull" value="0"/>
+      </option>
+      <option id="4" datatype="DATE" order="40" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="测量日期"/>
+        <Attribute id="2" type="isnull" value="0"/>
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S5_8_1&amp;&amp;S5_1_2"/>
+    </question>
+    <question id="10" type="Single" displayname="患者是否有心梗病史？" order="1" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <Attribute id="1" type="controlhide" value="S3_1_2||S2_3_2"/>
+  </QuestionSet>  
+  
+</questionnaire>

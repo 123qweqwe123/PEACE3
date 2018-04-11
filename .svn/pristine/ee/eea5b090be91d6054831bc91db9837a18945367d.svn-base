@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.msg.dao.PipMsgSendMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.msg.domain.PipMsgSend" >
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="PATIENT_ID" property="patientId" jdbcType="VARCHAR" />
+    <result column="SENDTIME_PREINSTALL" property="sendtimePreinstall" jdbcType="TIMESTAMP" />
+    <result column="SENDTIME_REAL" property="sendtimeReal" jdbcType="TIMESTAMP" />
+    <result column="MSG_ID" property="msgId" jdbcType="VARCHAR" />
+    <result column="MSG_NAME" property="msgName" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="INTEGER" />
+    <result column="IS_DELETE" property="isDelete" jdbcType="INTEGER" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+    <result column="IS_NEEDREPLY" property="isNeedreply" jdbcType="INTEGER" />
+    <result column="REPORT_CODE" property="reportCode" jdbcType="VARCHAR" />
+    <result column="SEND_COUNT" property="sendCount" jdbcType="VARCHAR" />
+    <result column="SEND_RESULT" property="sendResult" jdbcType="VARCHAR" />
+    <result column="SEND_REASON" property="sendReason" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    PROJECT_ID, LCC_CODE, PATIENT_ID, SENDTIME_PREINSTALL, SENDTIME_REAL, MSG_ID, MSG_NAME, 
+    STATE, IS_DELETE, CREATE_BY, CREATE_DATE, ID, MOBILE, IS_NEEDREPLY, REPORT_CODE, 
+    SEND_COUNT, SEND_RESULT, SEND_REASON
+  </sql>
+  <select id="selectMsgTypeByPatient" parameterType="map" resultType="int">
+  	select count(1) from pip_msg_msgtype t
+	where  t.msg_type_code in
+	(
+	       select distinct p.msg_type_code from pip_msg_send s left join pip_msg_msgtmp p on p.id= s.msg_id
+	       <if test="PATIENT_ID!=null and PATIENT_ID!=''">
+	       	where s.patient_id=#{PATIENT_ID} and s.is_delete ='2'
+	       </if>
+	)
+	<if test="MSG_TYPE_CODE!=null and MSG_TYPE_CODE !=''">
+		and t.MSG_TYPE_CODE = #{MSG_TYPE_CODE}
+	</if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.msg.domain.PipMsgSendExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_MSG_SEND
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.msg.domain.PipMsgSendExample" >
+    delete from PIP_MSG_SEND
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.msg.domain.PipMsgSend" >
+    insert into PIP_MSG_SEND (PROJECT_ID, LCC_CODE, PATIENT_ID, 
+      SENDTIME_PREINSTALL, SENDTIME_REAL, MSG_ID, 
+      MSG_NAME, STATE, IS_DELETE, 
+      CREATE_BY, CREATE_DATE, ID, 
+      MOBILE, IS_NEEDREPLY, REPORT_CODE, 
+      SEND_COUNT, SEND_RESULT, SEND_REASON
+      )
+    values (#{projectId,jdbcType=VARCHAR}, #{lccCode,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, 
+      #{sendtimePreinstall,jdbcType=TIMESTAMP}, #{sendtimeReal,jdbcType=TIMESTAMP}, #{msgId,jdbcType=VARCHAR}, 
+      #{msgName,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{isDelete,jdbcType=INTEGER}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{id,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{isNeedreply,jdbcType=INTEGER}, #{reportCode,jdbcType=VARCHAR}, 
+      #{sendCount,jdbcType=VARCHAR}, #{sendResult,jdbcType=VARCHAR}, #{sendReason,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.msg.domain.PipMsgSend" >
+    insert into PIP_MSG_SEND
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="patientId != null" >
+        PATIENT_ID,
+      </if>
+      <if test="sendtimePreinstall != null" >
+        SENDTIME_PREINSTALL,
+      </if>
+      <if test="sendtimeReal != null" >
+        SENDTIME_REAL,
+      </if>
+      <if test="msgId != null" >
+        MSG_ID,
+      </if>
+      <if test="msgName != null" >
+        MSG_NAME,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+      <if test="isDelete != null" >
+        IS_DELETE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="mobile != null" >
+        MOBILE,
+      </if>
+      <if test="isNeedreply != null" >
+        IS_NEEDREPLY,
+      </if>
+      <if test="reportCode != null" >
+        REPORT_CODE,
+      </if>
+      <if test="sendCount != null" >
+        SEND_COUNT,
+      </if>
+      <if test="sendResult != null" >
+        SEND_RESULT,
+      </if>
+      <if test="sendReason != null" >
+        SEND_REASON,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null" >
+        #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendtimePreinstall != null" >
+        #{sendtimePreinstall,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendtimeReal != null" >
+        #{sendtimeReal,jdbcType=TIMESTAMP},
+      </if>
+      <if test="msgId != null" >
+        #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="msgName != null" >
+        #{msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="id != null" >
+        PIP_MSG_SEND_SEQ.nextval,
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isNeedreply != null" >
+        #{isNeedreply,jdbcType=INTEGER},
+      </if>
+      <if test="reportCode != null" >
+        #{reportCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sendCount != null" >
+        #{sendCount,jdbcType=VARCHAR},
+      </if>
+      <if test="sendResult != null" >
+        #{sendResult,jdbcType=VARCHAR},
+      </if>
+      <if test="sendReason != null" >
+        #{sendReason,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.msg.domain.PipMsgSendExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_MSG_SEND
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_MSG_SEND
+    <set >
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccCode != null" >
+        LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientId != null" >
+        PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendtimePreinstall != null" >
+        SENDTIME_PREINSTALL = #{record.sendtimePreinstall,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.sendtimeReal != null" >
+        SENDTIME_REAL = #{record.sendtimeReal,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.msgId != null" >
+        MSG_ID = #{record.msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgName != null" >
+        MSG_NAME = #{record.msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null" >
+        STATE = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.isDelete != null" >
+        IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isNeedreply != null" >
+        IS_NEEDREPLY = #{record.isNeedreply,jdbcType=INTEGER},
+      </if>
+      <if test="record.reportCode != null" >
+        REPORT_CODE = #{record.reportCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendCount != null" >
+        SEND_COUNT = #{record.sendCount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendResult != null" >
+        SEND_RESULT = #{record.sendResult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendReason != null" >
+        SEND_REASON = #{record.sendReason,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_MSG_SEND
+    set PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      SENDTIME_PREINSTALL = #{record.sendtimePreinstall,jdbcType=TIMESTAMP},
+      SENDTIME_REAL = #{record.sendtimeReal,jdbcType=TIMESTAMP},
+      MSG_ID = #{record.msgId,jdbcType=VARCHAR},
+      MSG_NAME = #{record.msgName,jdbcType=VARCHAR},
+      STATE = #{record.state,jdbcType=INTEGER},
+      IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      ID = #{record.id,jdbcType=VARCHAR},
+      MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      IS_NEEDREPLY = #{record.isNeedreply,jdbcType=INTEGER},
+      REPORT_CODE = #{record.reportCode,jdbcType=VARCHAR},
+      SEND_COUNT = #{record.sendCount,jdbcType=VARCHAR},
+      SEND_RESULT = #{record.sendResult,jdbcType=VARCHAR},
+      SEND_REASON = #{record.sendReason,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+  <select id="getMsgDbType" resultType="string">
+
+    select PM_TYPE
+    from (select PM_TYPE
+    from pip_msg_needmsg_type t
+    where 1 = 1
+    and p_type = #{ptype}
+    <if test="smoke != null ">
+      and is_smoke = #{smoke}
+    </if>
+    and t.m_type != 'M007' <!-- 去掉 生日 随访短信的随机 -->
+    and t.m_type != 'M008'
+    and not exists
+        (select 1
+            from (select msg_type_code, count(1) num
+              from (select ms.msg_id, mm.msg_type_code
+                    from pip_msg_send ms
+                    left join pip_msg_msgtmp mm
+                    on ms.msg_id = mm.id
+                    where ms.patient_id = #{pid}
+                    and trunc(ms.create_date, 'yyyy') =
+                    <!-- trunc(to_date(#{sysdate},'yyyy-mm-dd'), 'yyyy') -->
+                    trunc(sysdate, 'yyyy')
+                    and to_char(ms.create_date, 'iw') =
+                    <!-- to_char(to_date(#{sysdate},'yyyy-mm-dd'), 'iw') -->
+                    to_char(sysdate, 'iw')
+                    )
+            group by msg_type_code) t2
+        where t.pm_type = t2.msg_type_code
+        and t.need_count &lt;= t2.num
+        )
+    order by dbms_random.value)
+    where rownum = 1
+  </select>
+
+  <select id="getRandomMsg" resultType="map">
+
+    SELECT ID, MSG_NAME, IS_REPLY
+    FROM
+      (
+        SELECT ID, MSG_NAME, IS_REPLY
+          FROM PIP_MSG_MSGTMP MT
+          WHERE
+            MSG_TYPE_CODE = #{dbtype}
+      <if test="startdate != null and enddate != null">
+            AND NOT EXISTS
+              (SELECT 1
+                FROM PIP_MSG_SEND MS
+                  WHERE MS.PATIENT_ID = #{pid}
+                    <if test="startdate != null">
+                      AND MS.SENDTIME_PREINSTALL >= #{startdate}
+                    </if>
+                    <if test="enddate != null ">
+                      AND MS.SENDTIME_PREINSTALL &lt; #{enddate}
+                    </if>
+                    AND MT.ID = MS.MSG_ID
+              )
+      </if>
+        ORDER BY DBMS_RANDOM.VALUE
+      )
+    WHERE ROWNUM = 1
+
+  </select>
+
+        <select id="getPatientByGroup" resultMap="com.bdcor.pip.web.data.dao.PipCommPatientMapper.BaseResultMap">
+          select
+            p.*
+          from pip_comm_patient p
+            where 1=1
+            <if test=' group != null and group == "1" '> <!-- 实验组 -->
+                and p.BELONG_GROUP in ('01','11')
+                and p.is_smoking in ('1','2')
+            </if>
+            <if test=' group != null and group == "2" '> <!-- 对照组 -->
+                and p.BELONG_GROUP in ('02','12')
+                <!--and p.is_smoking in ('1','2') -->
+            </if>
+            and p.IS_SUBSCRIBE =1
+            and p.is_join_msg =1
+            and p.mobile is not null
+            and ( p.is_dead !=1 or p.is_dead is null )
+            and p.SEND_TYPE = 1
+        </select>
+
+    <select id="getRandomMsgByType" resultType="map">
+        select id , msg_name from (
+            select * from pip_msg_msgtmp tm
+            where tm.msg_type_code in(
+            select pm_type from pip_msg_needmsg_type
+            where p_type=#{group}
+            and m_type = #{mtype}
+            )
+            order by dbms_random.value
+            )
+            where rownum = 1
+    </select>
+
+
+    <select id="getPatientForView" resultMap="com.bdcor.pip.web.data.dao.PipCommPatientMapper.BaseResultMap">
+        select * from pip_comm_patient p
+        where exists(
+              select 1 from v_patietn_date_nextview n
+              where trunc(plandate) = trunc(sysdate + 1)
+              and p.patient_id = n.PATIENT_ID
+        )
+          and p.IS_SUBSCRIBE =1
+          and p.is_join_msg =1
+          and p.mobile is not null
+          and ( p.is_dead !=1 or p.is_dead is null )
+          and p.SEND_TYPE = 1
+    </select>
+
+    <select id="getPatientForBirthday" resultMap="com.bdcor.pip.web.data.dao.PipCommPatientMapper.BaseResultMap">
+        select * from pip_comm_patient p
+        where p.birthday is not null
+           and p.IS_SUBSCRIBE =1
+           and p.is_join_msg =1
+           and p.mobile is not null
+           and ( p.is_dead !=1 or p.is_dead is null )
+           and to_char(p.birthday,'mm-dd')= to_char(sysdate,'mm-dd')
+           and p.SEND_TYPE = 1
+    </select>
+
+    <select id="isNeedReply" resultType="int">
+        select count(1) num from pip_msg_send ms
+            where patient_id = #{pid}
+            and trunc(sysdate,'mm') = trunc(create_date,'mm')
+            and ms.is_needreply = '1'
+            and exists(
+            select 1 from pip_msg_msgtmp mt where mt.msg_type_code = #{dbtype} and mt.id = ms.msg_id
+            )
+    </select>
+
+  <update id="setIsreply" >
+    update pip_msg_send ms set ms.is_reply = '1'
+      where mobile = #{mobile}
+      and ms.sendtime_real >= sysdate -3
+      and ms.is_needreply = '1'
+      and ms.state = '1'
+  </update>
+</mapper>

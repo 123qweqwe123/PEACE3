@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<questionnaire xmlns="http://www.gener-health.com/uqsPaper">
+
+
+	<title>UQS0M随访问卷</title>
+	<doctype projectid="004" projectname="冠心病及合并糖尿病患者长期自我管理的适宜信息化辅助工具评价研究" UQSid="004008" UQSName="住院结局事件" UQSVersion="004.008.001" VersionCreateDate="2015-08-31 14:07:01"/>
+
+	<QuestionSet id="1" displayname="" order="1">
+
+
+		<!-- 第一次住院-->
+
+		<question id="1" type="FillBlank" displayname="住院日期是：" order="40" code="">
+			<option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="helptext" value="如果若原始资料中家属表述的日期不足以精确到“日”，请在精确范围内取中间值填写，如“2011年4月”对应2011年4月15日，“2009年”对应2009年6月30日，“年初”对应1月15日，“年末”对应12月15日，“上半年”对应3月31日，“下半年”对应9月30日，“春”对应3月15日，“夏”对应6月15日，“秋”对应9月15日，“冬”对应12月15日。"/>
+    </question>
+		<question id="2" type="FillBlank" displayname="出院日期是：" order="50" code="">
+			<option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="helptext" value="如果若原始资料中家属表述的日期不足以精确到“日”，请在精确范围内取中间值填写，如“2011年4月”对应2011年4月15日，“2009年”对应2009年6月30日，“年初”对应1月15日，“年末”对应12月15日，“上半年”对应3月31日，“下半年”对应9月30日，“春”对应3月15日，“夏”对应6月15日，“秋”对应9月15日，“冬”对应12月15日。"/>
+    
+    </question>
+		<question id="3" type="FillBlank" displayname="住院医院名称：" order="60" code="">
+			<option id="1" datatype="VARCHAR2(128)" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="helptext" value="请输入完整的医院名称！"/>
+				</question>
+		<question id="4" type="Single" displayname="入院状态：" order="70" code="">
+			<option id="1" displayname="急诊入院" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="择期入院" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+	
+		</question>
+		<question id="5" type="MultiFill" displayname="住院主要原因：" order="80" code="">
+      <option id="1" displayname="心肌梗死" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+      </option>
+      <option id="2" displayname="不稳定性心绞痛" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+      </option>
+      <option id="3" displayname="稳定性心绞痛" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+      </option>
+      <option id="4" displayname="新发缺血性脑卒中" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+      </option>
+      <option id="5" displayname="新发出血性脑卒中" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+      </option>
+      <option id="6" displayname="短暂性脑缺血发作" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+      </option>
+      <option id="7" displayname="心力衰竭" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+      </option>
+      <option id="8" displayname="脑出血以外的任何部位出血" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+      </option>
+      <option id="9" displayname="瓣膜疾病 " datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+      </option>
+      <option id="10" displayname="心律失常" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+      </option>
+      <option id="11" displayname="糖尿病" datatype="VARCHAR2(32)" order="110" datastyle="Multi" code="">
+      </option>
+      <option id="12" displayname="肾脏疾病" datatype="VARCHAR2(32)" order="120" datastyle="Multi" code="">
+      </option>
+      <option id="13" displayname="心脏手术操作相关感染" datatype="VARCHAR2(32)" order="130" datastyle="Multi" code="">
+      </option>
+      <option id="14" displayname="心包渗出或填塞" datatype="VARCHAR2(32)" order="140" datastyle="Multi" code="">
+      </option>
+      <option id="15" displayname="肺栓塞" datatype="VARCHAR2(32)" order="150" datastyle="Multi" code="">
+      </option>
+      <option id="16" displayname="社会原因住院" datatype="VARCHAR2(32)" order="160" datastyle="Multi" code="">
+      </option>
+      <option id="17" datatype="VARCHAR2(128)" order="170" datastyle="FillBlank" code="ICD.A">
+        <Attribute id="1" type="before_content_display" value="其他："/>
+        <Attribute id="2" type="ischosennull" value="1"/>
+      </option>
+      <option id="18" datatype="VARCHAR2(128)" order="180" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="其他（自由录入）："/>
+        <Attribute id="2" type="ischosennull" value="1"/>
+      </option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="updatereadonly" value="1"/>
+		
+		</question>
+		<question id="6" type="MultiFill" displayname="住院期间接受的诊疗措施：" order="90" code="">
+      <option id="1" displayname="冠状动脉介入" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+      </option>
+      <option id="2" displayname="冠状动脉搭桥" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+      </option>
+      <option id="3" displayname="非冠状动脉血管重建术（介入+外科）" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+      </option>
+      <option id="4" displayname="急性心肌梗死溶栓" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+      </option>
+      <option id="5" displayname="冠脉造影" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+      </option>
+      <option id="6" displayname="脑卒中溶栓" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+      </option>
+      <option id="7" displayname="瓣膜手术" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+      </option>
+      <option id="8" displayname="左心室辅助装置植入" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+      </option>
+      <option id="9" displayname="起搏器或除颤器植入" datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+      </option>
+      <option id="10" displayname="肺栓塞溶栓" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+      </option>     
+      <option id="11" displayname="透析" datatype="VARCHAR2(32)" order="110" datastyle="Multi" code="">
+      </option>
+      <option id="12" displayname="心肺复苏" datatype="VARCHAR2(32)" order="120" datastyle="Multi" code="">
+      </option>
+      <option id="13" datatype="VARCHAR2(128)" order="130" datastyle="FillBlank" code="ICD.C">
+        <Attribute id="1" type="before_content_display" value="其他："/>
+      </option>
+      <option id="14" datatype="VARCHAR2(128)" order="140" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="其他（自由录入）："/>
+      </option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="updatereadonly" value="1"/>
+			
+		</question>
+		<question id="7" type="Single" displayname="出院转归：" order="100" code="">
+			<option id="1" displayname="好转" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="未愈/未治疗" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="临终放弃治疗" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="转院" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			
+		</question>
+		
+	</QuestionSet>
+
+	
+</questionnaire>

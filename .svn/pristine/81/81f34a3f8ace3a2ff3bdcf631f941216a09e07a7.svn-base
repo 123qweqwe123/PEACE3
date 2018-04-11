@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.UqsEventDao">
+	
+	<select id="getEventTemMapList" parameterType="map" resultType="map">
+		select 
+		tem.QUESTIONSET_ID||'_'||tem.QUESTION_ID||'_'||tem.OPTION_ID as optionFullId,
+		to_char(nvl(tem.IS_DEATH,2)) as isDeath,
+		IN_HOS_DATE,
+		OUT_HOS_DATE,
+		IN_HOS_NAME,
+		CONTRAST_CODE,
+		EVENT_NAME
+		from PIP_UQS_EVENT_TEM tem
+		where tem.QUESTIONNAIRE_ID = #{questionnaireId} and tem.IS_USE=#{isUse}
+	</select>
+	
+	<delete id="clearEvent" parameterType="map">
+		delete from PIP_COMM_EVENT where LOG_MIN_ID=#{logId}
+	</delete>
+	
+	<insert id="insertEvent" parameterType="map">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="EVENT_CODE">  
+       		select #{LCC_CODE}||#{CODE_LABEL}||trim(to_char(to_number(nvl(max(substr(EVENT_CODE,-4,4)),0))+1,'0000')) from PIP_COMM_EVENT where PROJECT_ID=#{PROJECT_ID} and lcc_code=#{LCC_CODE} and IS_DEATH=#{IS_DEATH}
+			and regexp_like(EVENT_CODE,'^[[:digit:]]+$') <!-- 过滤掉非纯数字的code -->
+		</selectKey>
+		insert into PIP_COMM_EVENT(LCC_CODE,PATIENT_ID,EVENT_CODE,PATIENT_NAME,EVENT_NAME,IN_HOS_DATE,OUT_HOS_DATE,HOS_NAME,EVENT_DATE,QUESTIONNAIRE_ID,
+        PROJECT_ID,IS_DEATH,EVENT_TYPE,LOG_MIN_ID,UQS_NO,CREATE_BY)values(#{LCC_CODE},#{PATIENT_ID},#{EVENT_CODE},(select PATIENT_NAME from  PIP_COMM_PATIENT where PATIENT_ID=#{PATIENT_ID}),#{EVENT_NAME},#{IN_HOS_DATE,jdbcType=TIMESTAMP},#{OUT_HOS_DATE,jdbcType=TIMESTAMP},
+        #{HOS_NAME,jdbcType=VARCHAR},sysdate,#{QUESTIONNAIRE_ID},#{PROJECT_ID},#{IS_DEATH},#{EVENT_TYPE},#{logId,jdbcType=VARCHAR},#{UQS_NO},#{CREATE_BY})
+	</insert>
+	
+	<update id="updateEvent" parameterType="map">
+		update PIP_COMM_EVENT set IN_HOS_DATE=#{IN_HOS_DATE,jdbcType=TIMESTAMP},OUT_HOS_DATE=#{OUT_HOS_DATE,jdbcType=TIMESTAMP},HOS_NAME=#{HOS_NAME,jdbcType=VARCHAR} where LOG_MIN_ID=#{logId} and UQS_NO=#{UQS_NO}
+	</update>
+	
+	<update id="updateUsrFile" parameterType="map">
+		update PIP_COMM_EVENT_USRFILE set IN_HOS_DATE=#{IN_HOS_DATE,jdbcType=TIMESTAMP} where LOG_MIN_ID=#{logId}
+	</update>
+	
+	<!-- 事件部分sql -->
+	<select id="getEventPatientList" parameterType="com.bdcor.pip.web.qn.filter.EventFilter" resultType="com.bdcor.pip.web.qn.domain.EventVo">
+		select 
+		p.PATIENT_ID as patientId,
+		p.PATIENT_NAME as patientName,
+		p.LCC_CODE as lccCode,
+		p.ID_NUMBER as idNumber,
+    	l.ID as logId,
+   	    case when (select count(1) from pip_comm_event et where et.patient_id = p.patient_id and et.is_death=1 <![CDATA[ and length(et.event_code) < 9  ]]>)>0 then '1'
+        else '0' end  isEventDeal
+		from PIP_COMM_PATIENT p
+    	left join PIP_UQS_ANSWERQN_LOG_MIN l on l.PROJECT_ID=p.PROJECT_ID and l.PATIENT_ID=p.PATIENT_ID and  substr(l.UQS_VERSION,5,3)='006'
+    	where p.PROJECT_ID=#{projectId} and p.LCC_CODE in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+    	<if test="patientId != null and patientId != ''">
+			and p.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="lccCode != null and lccCode != ''">
+			and p.LCC_CODE  = #{lccCode}
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and p.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="hasEvent == 1">
+			and (select count(*) from PIP_COMM_EVENT e where e.PROJECT_ID=p.PROJECT_ID and e.PATIENT_ID=p.PATIENT_ID and (e.IS_DELETE != 1 or e.IS_DELETE is null))>0
+		</if>
+		<if test="hasFile == 1">
+			and exists (select u.patient_id from pip_comm_event_usrfile u where u.patient_id = p.patient_id)
+		</if>
+		order by p.lcc_code 
+	</select>
+	
+	<select id="showEventList" parameterType="com.bdcor.pip.web.qn.filter.EventFilter" resultType="map">
+		select 
+		LCC_CODE,
+		PATIENT_ID,
+		PATIENT_NAME,
+		EVENT_CODE,
+		EVENT_NAME as EVENT_TYPE,
+		to_char(IN_HOS_DATE,'yyyy-MM-dd') as IN_HOS_DATE,
+		to_char(OUT_HOS_DATE,'yyyy-MM-dd') as OUT_HOS_DATE,
+		HOS_NAME,
+		to_char(EVENT_DATE,'yyyy-MM-dd hh24:mi:ss') as EVENT_DATE,
+		
+		IS_DEATH
+		from PIP_COMM_EVENT
+		where PROJECT_ID=#{projectId} and LCC_CODE in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId}) 
+			and PATIENT_ID=#{patientId}
+		and <![CDATA[ length(event_code) < 9  ]]>
+		<if test="eventName != null and eventName != ''">
+			and EVENT_NAME=#{eventName}
+		</if>
+	</select>
+	<select id="showUsrFileList" parameterType="com.bdcor.pip.web.qn.filter.EventFilter" resultType="map">
+		 select t.log_min_id,
+                  t.patient_id,
+                  to_char(t.IN_HOS_DATE, 'yyyy-MM-dd') as IN_HOS_DATE,
+                  to_char(t.OUT_HOS_DATE, 'yyyy-MM-dd') as OUT_HOS_DATE,
+                  t.file_info,
+                  to_char(t.CREATE_DATE, 'yyyy-MM-dd hh24:mi:ss') as CREATE_DATE,
+                  t.state as COMPLETED,
+                  t.create_by,
+                  a.name as create_name,
+                  p.patient_name,
+                  p.lcc_code,
+                  t.hos_name
+             from pip_comm_event_usrfile t
+             left join pip_sys_account a on a.id= t.create_by
+             left join pip_comm_patient p on p.patient_id= t.patient_id
+             where p.PROJECT_ID=#{projectId} and p.LCC_CODE in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId}) 
+			  and t.PATIENT_ID=#{patientId}
+             <if test="fileInfo !=null and fileInfo !=''">
+				and t.FILE_INFO=#{fileInfo}
+			</if>
+             order by -- t.LOG_MIN_ID,
+		lcc_code asc
+	</select>
+	<select id="showAllUsrFileList" parameterType="com.bdcor.pip.web.qn.filter.EventFilter" resultType="map">
+		 select t.log_min_id,
+                  t.patient_id,
+                  to_char(t.IN_HOS_DATE, 'yyyy-MM-dd') as IN_HOS_DATE,
+                  to_char(t.OUT_HOS_DATE, 'yyyy-MM-dd') as OUT_HOS_DATE,
+                  t.file_info,
+                  to_char(t.CREATE_DATE, 'yyyy-MM-dd hh24:mi:ss') as CREATE_DATE,
+                  t.state as COMPLETED,
+                  t.create_by,
+                  a.name as create_name,
+                  p.patient_name,
+                  p.lcc_code,
+                  lcc.lcc_name,
+                  t.hos_name
+             from pip_comm_event_usrfile t
+             left join pip_sys_account a on a.id= t.create_by
+             left join pip_comm_patient p on p.patient_id= t.patient_id
+             left join pip_comm_lcc lcc on lcc.lcc_code = p.lcc_code
+             where 1=1 
+			  
+             <if test="fileInfo !=null and fileInfo !=''">
+				and t.FILE_INFO = #{fileInfo}
+			 </if>
+			 <if test="lccCode !=null and lccCode !=''">
+				and p.lcc_code = #{lccCode}
+			 </if>
+			 <if test="patientId !=null and patientId!=''">
+			 	and t.PATIENT_ID like '%${patientId}%'
+			 </if>
+			 <if test="patientName !=null and patientName !=''">
+			 	and p.PATIENT_NAME like '%${patientName}%'
+			 </if>
+			 <if test="hosName !=null and hosName !=''">
+			 	and t.hos_name like '%${hosName}%'
+			 </if>
+			 <if test="state !=null and state != ''">
+			 	and t.state = #{state}
+			 </if>
+             order by --t.LOG_MIN_ID,
+			lcc_code asc
+	</select>
+	<!-- <select id="showUsrFileList" parameterType="com.bdcor.pip.web.qn.filter.EventFilter" resultType="map">
+		select 
+		e.LOG_MIN_ID,
+		e.LCC_CODE,
+		e.PATIENT_ID,
+		e.PATIENT_NAME,
+		max(to_char(e.IN_HOS_DATE,'yyyy-MM-dd')) as IN_HOS_DATE,
+    	max(to_char(e.OUT_HOS_DATE,'yyyy-MM-dd')) as OUT_HOS_DATE,
+		f.FILE_INFO,
+		max((case when uf.PATIENT_ID is null then 0 else 1 end)) as COMPLETED,
+		max(to_char(uf.CREATE_DATE,'yyyy-MM-dd hh24:mi:ss')) as CREATE_DATE,
+		max(a.NAME) as CREATE_BY
+		from PIP_COMM_EVENT e
+		inner join PIP_COMM_EVENT_DICTFILE f on f.EVENT_NAME=e.EVENT_NAME and f.IS_USED=1
+		left join PIP_COMM_EVENT_USRFILE uf on  uf.PATIENT_ID=e.PATIENT_ID and (to_char(uf.IN_HOS_DATE,'yyyy-MM-dd')=to_char(e.IN_HOS_DATE,'yyyy-MM-dd')  or (uf.IN_HOS_DATE is null and e.IN_HOS_DATE is null) ) and (uf.LOG_MIN_ID=uf.LOG_MIN_ID or e.LOG_MIN_ID is null) and uf.FILE_INFO=f.FILE_INFO
+		left join PIP_SYS_ACCOUNT a on a.id=uf.CREATE_BY
+		where e.PROJECT_ID=#{projectId} and e.LCC_CODE in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId}) 
+			  and e.PATIENT_ID=#{patientId}
+		<if test="fileInfo !=null and fileInfo !=''">
+			and f.FILE_INFO=#{fileInfo}
+		</if>
+		 group by e.LCC_CODE,e.PATIENT_ID,e.PATIENT_NAME,e.LOG_MIN_ID,f.FILE_INFO,e.IN_HOS_DATE
+		 order by LOG_MIN_ID
+	</select> -->
+	
+	<select id="showReportList" parameterType="com.bdcor.pip.web.qn.filter.EventFilter" resultType="map">
+	    select 
+	    l.id,
+	    l.LCC_CODE,
+	    l.PATIENT_ID,
+	    p.PATIENT_NAME,
+	    to_char(l.START_TIME,'yyyy-MM-dd hh24:mi:ss') as START_TIME,
+	    to_char(l.END_TIME,'yyyy-MM-dd hh24:mi:ss') as END_TIME,
+	    a.name as CREATE_BY
+	    from PIP_UQS_ANSWERQN_LOG_MIN l
+	    left join PIP_COMM_PATIENT p on p.PATIENT_ID=l.PATIENT_ID
+		left join PIP_SYS_ACCOUNT a on a.id=l.CREATE_BY
+		where l.PROJECT_ID=#{projectId} and l.LCC_CODE in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId}) 
+			  and l.PATIENT_ID=#{patientId} and substr(l.UQS_VERSION,5,3)='008'
+		<if test="startTime !=null and startTime !=''">
+			and to_char(l.START_TIME,'yyyy-MM-dd')&gt;=#{startTime}
+		</if>
+		<if test="endTime !=null and endTime !=''">
+			and to_char(l.START_TIME,'yyyy-MM-dd')&lt;=#{endTime}
+		</if>
+	</select>
+	
+	<insert id="insertEventUsrFile" parameterType="map">
+		insert into PIP_COMM_EVENT_USRFILE(LOG_MIN_ID,PATIENT_ID,FILE_INFO,IN_HOS_DATE,CREATE_BY,CREATE_DATE)values(#{LOG_MIN_ID},#{PATIENT_ID},#{FILE_INFO},#{IN_HOS_DATE,jdbcType=TIMESTAMP},#{CREATE_BY},sysdate)
+	</insert>
+	<update id="updateEventUsrFileState" parameterType="map">
+		update 	
+			PIP_COMM_EVENT_USRFILE 
+			set state =1 ,CREATE_BY=#{CREATE_BY},CREATE_DATE =sysdate 
+		where
+			FILE_INFO =#{FILE_INFO}
+			AND PATIENT_ID = #{PATIENT_ID}
+			<if test="IN_HOS_DATE !=null and IN_HOS_DATE !=''">
+				AND TO_CHAR(IN_HOS_DATE,'yyyy-MM-dd') = #{IN_HOS_DATE}
+			</if>
+			<if test="OUT_HOS_DATE !=null and OUT_HOS_DATE !=''">
+				AND TO_CHAR(OUT_HOS_DATE,'yyyy-MM-dd') = #{OUT_HOS_DATE}
+			</if>
+			<if test="HOS_NAME !=null and HOS_NAME !=''">
+				AND HOS_NAME = #{HOS_NAME}
+			</if>
+			<if test="LOG_MIN_ID !=null and LOG_MIN_ID !=''">
+				AND LOG_MIN_ID = #{LOG_MIN_ID}
+			</if>
+			
+	</update>
+	
+	<select id="getDictFiles" resultType="map">
+		select 
+		distinct
+		FILE_INFO,HELP_CODE 
+		from PIP_COMM_EVENT_DICTFILE
+		where IS_USED=1
+	</select>
+	
+	<select id="getHisList" resultType="map">
+		select
+		VCODE,VNAME
+		from PIP_COMM_DICT_HIS
+		where DICT_CODE='HIS.003'
+	</select>
+	
+	<update id="updatePDead" parameterType="String">
+		update PIP_COMM_PATIENT set IS_DEAD=1 where PATIENT_ID=#{patientId}
+	</update>
+	<select id="getEventList" parameterType="com.bdcor.pip.web.qn.filter.EventFilter" resultType="map">
+
+		select
+		e.LCC_CODE,
+		lcc.LCC_NAME,
+		e.PATIENT_ID,
+		e.PATIENT_NAME,
+		e.EVENT_CODE,
+		e.EVENT_NAME as EVENT_TYPE,
+		to_char(EVENT_DATE,'yyyy-MM-dd') as EVENT_DATE, <!--  hh24:mi:ss -->
+		to_char(e.in_hos_date,'yyyy-MM-dd') as IN_HOS_DATE,
+		to_char(e.out_hos_date,'yyyy-MM-dd') as OUT_HOS_DATE,
+		e.HOS_NAME,
+		decode(e.IS_DEATH,'1','是','否') IS_DEATH,
+		<!-- (select count(*) from PIP_COMM_EVENT_DICTFILE f where f.EVENT_NAME=e.EVENT_NAME and f.IS_USED=1)as FILECOUNT -->
+        decode(hasfile,'1','是','否') FILECOUNT,
+        belongtype
+		from (
+            select e.*,ttype.belongtype,hasFile FROM PIP_COMM_EVENT e
+            left join (
+                        select
+                        decode(uqs1,'1', decode(is_join_msg,'1', decode(uqs10,'1','入选CHAT研究','空') ,'非干预面访') ,
+						decode(uqs10,'1','CHAT研究补充入选',decode(is_dead,'1','其它','空'))
+						)as belongtype, patient_id
+                        from (
+                        select t.uqs1,t.uqs10,uqs14 , decode(p.is_join_msg,1,'1','2') is_join_msg ,
+                        decode(p.is_dead,1,'1','2') is_dead , p.patient_id
+                        from pip_comm_patient p left join (
+                        select
+                        patient_id ,
+                        max(decode( uqs_version , '004.001.001','1','0')) uqs1,
+                        max(decode( uqs_version , '004.010.001','1','0')) uqs10,
+						max(decode( uqs_version , '004.014.001','1','0')) uqs14
+                        from pip_uqs_answerqn_log
+                        where state = 1
+                        group by patient_id
+                        ) t  on t.patient_id = p.patient_id)
+                    )ttype on e.patient_id = ttype.patient_id
+            left join ( select distinct EVENT_NAME,'1' as hasFile
+            from  PIP_COMM_EVENT_DICTFILE f where  f.IS_USED=1
+            ) tf on e.event_name = tf.event_name
+		where <![CDATA[ length(e.event_code) < 9  ]]>
+        ) e
+        left join PIP_COMM_LCC lcc on lcc.PROJECT_ID=e.PROJECT_ID and lcc.LCC_CODE=e.LCC_CODE
+		where e.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="startTime != null and startTime != '' " >
+			and e.event_date >= to_date(#{startTime},'yyyy-mm-dd')
+		</if>
+		<if test="endTime != null and endTime != '' " >
+			and e.event_date &lt;= to_date(#{endTime},'yyyy-mm-dd')
+		</if>
+		<if test="patientId !=null and patientId !=''">
+			and e.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientName !=null and patientName !=''">
+			and e.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="eventName !=null and eventName !=''">
+			and e.EVENT_NAME=#{eventName}
+		</if>
+		<if test="lccCode !=null and lccCode !=''">
+			and e.LCC_CODE=#{lccCode}
+		</if>
+        <choose>
+            <when test='isDead != null and isDead != "" and ambtype != null and ambtype =="1"'>
+                AND ( e.is_death = #{isDead} or
+                  belongtype = '入选CHAT研究'
+                )
+            </when>
+            <when test='isDead != null and isDead != "" and ambtype != null and ambtype =="2"'>
+                AND ( e.is_death = #{isDead} or
+                  belongtype = '非干预面访'
+                )
+            </when>
+            <when test='isDead != null and isDead != "" and ambtype != null and ambtype =="3"'>
+                AND ( e.is_death = #{isDead} or
+                    belongtype = '空'
+                )
+            </when>
+            <when test='isDead != null and isDead != "" and ambtype != null and ambtype =="4"'>
+                AND ( e.is_death = #{isDead} or
+                    belongtype = '其它'
+                )
+            </when>
+            <when test='isDead != null and isDead != ""'>
+                AND e.is_death = #{isDead}
+            </when>
+            <when test='ambtype != null and ambtype =="1"'>
+                AND  belongtype = '入选CHAT研究'
+            </when>
+            <when test='ambtype != null and ambtype =="2"'>
+                AND  belongtype = '非干预面访'
+            </when>
+            <when test='ambtype != null and ambtype =="3"'>
+                AND belongtype = '空'
+            </when>
+            <when test='ambtype != null and ambtype =="4"'>
+                AND belongtype = '其它'
+            </when>
+			<when test='ambtype != null and ambtype =="5"'>
+				AND belongtype = 'CHAT研究补充入选'
+			</when>
+        </choose>
+		<if test="isCallBack !=null and isCallBack !=''">
+			<if test="isCallBack ==1">
+			<!-- and	(select count(*) from PIP_COMM_EVENT_DICTFILE f where f.EVENT_NAME=e.EVENT_NAME and f.IS_USED=1)>0 -->
+                and hasfile = '1'
+			</if>
+			<if test="isCallBack ==2">
+			<!-- and	(select count(*) from PIP_COMM_EVENT_DICTFILE f where f.EVENT_NAME=e.EVENT_NAME and f.IS_USED=1)<![CDATA[<=]]>0 -->
+                and hasfile is null
+			</if>
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx}
+			<if test="sord!=null and sord!= ''">
+				${sord} ,EVENT_CODE asc
+			</if>
+		</if>
+	</select>
+	<select id="getEventListExcel" parameterType="com.bdcor.pip.web.qn.filter.EventExportFilter" resultType="map">
+		select 
+	    e.LCC_CODE,
+	    lcc.LCC_NAME,
+	    e.PATIENT_ID,
+	    e.PATIENT_NAME,
+	    e.EVENT_CODE,
+	    e.EVENT_NAME as EVENT_TYPE,
+	    to_char(EVENT_DATE,'yyyy-MM-dd') as EVENT_DATE,
+	    to_char(e.in_hos_date,'yyyy-MM-dd') as in_hos_date,
+      	to_char(e.out_hos_date,'yyyy-MM-dd') as out_hos_date,
+		hos_name,
+	    case when e.IS_DEATH =1 then '是'
+	         else '否' end IS_DEATH
+		<!--,case when (select count(*) from PIP_COMM_EVENT_DICTFILE f where f.EVENT_NAME=e.EVENT_NAME and f.IS_USED=1)>0 then '是'
+	         else '否' end  FILECOUNT -->
+        ,belongtype
+        from (
+        select e.*,ttype.belongtype FROM PIP_COMM_EVENT e
+        left join (
+        select
+        decode(uqs1,'1', decode(is_join_msg,'1', decode(uqs10,'1','入选CHAT研究','空') ,'非干预面访') ,
+		decode(uqs10,'1','CHAT研究补充入选',decode(is_dead,'1','其它','空'))
+		)as belongtype, patient_id
+        from (
+        select t.uqs1,t.uqs10,uqs14,decode(p.is_join_msg,1,'1','2') is_join_msg ,
+        decode(p.is_dead,1,'1','2') is_dead , p.patient_id
+        from pip_comm_patient p left join (
+        select
+        patient_id ,
+        max(decode( uqs_version , '004.001.001','1','0')) uqs1,
+        max(decode( uqs_version , '004.010.001','1','0')) uqs10,
+		max(decode( uqs_version , '004.014.001','1','0')) uqs14
+
+		from pip_uqs_answerqn_log
+        where state = 1
+        group by patient_id
+        ) t  on t.patient_id = p.patient_id)
+        )ttype on e.patient_id = ttype.patient_id
+        ) e
+
+		left join PIP_COMM_LCC lcc on lcc.PROJECT_ID=e.PROJECT_ID and lcc.LCC_CODE=e.LCC_CODE
+		where e.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="patientId !=null and patientId !=''">
+			and e.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientName !=null and patientName !=''">
+			and e.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="eventName !=null and eventName !=''">
+			and e.EVENT_NAME=#{eventName}
+		</if>
+		<if test="lccCode !=null and lccCode !=''">
+			and e.LCC_CODE=#{lccCode}
+		</if>
+        <choose>
+            <when test='isDead != null and isDead != "" and ambtype != null and ambtype =="1"'>
+                AND ( e.is_death = #{isDead} or
+                belongtype = '入选CHAT研究'
+                )
+            </when>
+            <when test='isDead != null and isDead != "" and ambtype != null and ambtype =="2"'>
+                AND ( e.is_death = #{isDead} or
+                belongtype = '非干预面访'
+                )
+            </when>
+            <when test='isDead != null and isDead != "" and ambtype != null and ambtype =="3"'>
+                AND ( e.is_death = #{isDead} or
+                belongtype = '空'
+                )
+            </when>
+            <when test='isDead != null and isDead != "" and ambtype != null and ambtype =="4"'>
+                AND ( e.is_death = #{isDead} or
+                belongtype = '其它'
+                )
+            </when>
+            <when test='isDead != null and isDead != ""'>
+                AND e.is_death = #{isDead}
+            </when>
+            <when test='ambtype != null and ambtype =="1"'>
+                AND  belongtype = '入选CHAT研究'
+            </when>
+            <when test='ambtype != null and ambtype =="2"'>
+                AND  belongtype = '非干预面访'
+            </when>
+            <when test='ambtype != null and ambtype =="3"'>
+                AND belongtype = '空'
+            </when>
+            <when test='ambtype != null and ambtype =="4"'>
+                AND belongtype = '其它'
+            </when>
+			<when test='ambtype != null and ambtype =="5"'>
+				AND belongtype = 'CHAT研究补充入选'
+			</when>
+        </choose>
+		<if test="isCallBack !=null and isCallBack !=''">
+			<if test="isCallBack ==1">
+			and	(select count(*) from PIP_COMM_EVENT_DICTFILE f where f.EVENT_NAME=e.EVENT_NAME and f.IS_USED=1)>0
+			</if>
+			<if test="isCallBack ==2">
+			and	(select count(*) from PIP_COMM_EVENT_DICTFILE f where f.EVENT_NAME=e.EVENT_NAME and f.IS_USED=1)<![CDATA[<=]]>0
+			</if>
+		</if>
+
+		order by LCC_CODE,PATIENT_ID asc
+	</select>
+</mapper>

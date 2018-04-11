@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<questionnaire xmlns="http://www.gener-health.com/uqsPaper">
+
+
+  <title>Trail随访问卷</title>
+  <doctype projectid="004" projectname="冠心病及合并糖尿病患者长期自我管理的适宜信息化辅助工具评价研究" UQSid="004012" UQSName="CHAT研究随机问卷" UQSVersion="004.012.001" VersionCreateDate="2016-08-05 14:07:01"/>
+  
+  <QuestionSet id="1" displayname="糖尿病诊断" order="10">
+    <question id="1" type="Single" displayname="研究系统中是否记录该患者有糖尿病？(系统自动选择)" order="10" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="readonly" value="1"/>
+    </question>
+    <question id="2" type="Single" displayname="患者自报有糖尿病病史？(系统自动选择)" order="20" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="readonly" value="1"/>
+    </question>
+    <question id="3" type="Single" displayname="患者是否能提供糖尿病的支持性文件，如诊断证明，处方，既往化验单等？(系统自动选择)" order="30" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S1_2_1"/>
+      <Attribute id="4" type="readonly" value="1"/>
+    </question>
+    <question id="4" type="Single" displayname="患者提供糖尿病的支持性文件类型？(系统自动选择)" order="40" code="">
+      <option id="1" displayname="诊断证明" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="处方" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <option id="3" displayname="既往化验单（空腹血糖大于等于7mmol/L，任意血糖大于等于11mmol/L和OGTT餐后两小时血糖大于等于11.1mmol/L）" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S1_2_1&amp;&amp;S1_3_1"/>
+      <Attribute id="4" type="readonly" value="1"/>
+    </question>
+    <question id="5" type="Single" displayname="患者目前是否正在服用降糖药？(系统自动选择)" order="50" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S1_2_1"/>
+      <Attribute id="4" type="readonly" value="1"/>
+    </question>
+    <question id="6" type="Single" displayname="患者是否有糖尿病症状？(系统自动选择)" order="60" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="readonly" value="1"/>
+    </question>
+    <question id="7" type="FillBlank" displayname="上次随访空腹血糖为（系统导入）：" order="70" code="">
+      <option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="mmol/L"/>
+        <Attribute id="2" type="isnull" value="0"/>
+        <Attribute id="3" type="readonly" value="1"/>
+      </option>
+      <option id="2" datatype="VARCHAR2(64)" order="20" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="HbA1C："/>
+        <Attribute id="2" type="isnull" value="0"/>
+        <Attribute id="3" type="readonly" value="1"/>
+      </option>
+      <option id="3" datatype="DATE" order="30" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="测量日期"/>
+        <Attribute id="2" type="isnull" value="0"/>
+      </option>
+      <Attribute id="1" type="isnull" value="0"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="readonly" value="1"/>
+    </question>
+    <question id="8" type="Single" displayname="患者自上次随访之后是否做过空腹血糖检测？(系统自动选择)" order="80" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="readonly" value="1"/>
+    </question>
+    <question id="9" type="FillBlank" displayname="上次随访后空腹血糖为：（系统导入）" order="90" code="">
+      <option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="mmol/L"/>
+        <Attribute id="2" type="isnull" value="1"/>
+      </option>
+      <option id="2" datatype="DATE" order="20" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="测量日期"/>
+        <Attribute id="2" type="isnull" value="1"/>
+      </option>
+      <option id="3" datatype="VARCHAR2(64)" order="30" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="第二次随访后空腹血糖为："/>
+        <Attribute id="2" type="after_content_display" value="mmol/L"/>        
+      </option>
+      <option id="4" datatype="DATE" order="40" datastyle="FillBlank" code="">
+        <Attribute id="1" type="before_content_display" value="测量日期"/>       
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S1_8_1"/>
+      <Attribute id="4" type="readonly" value="1"/>
+    </question>    
+    <question id="10" type="FillBlank" displayname="患者本次随访空腹血糖为：" order="100" code="">
+      <option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="mmol/L"/>
+        <Attribute id="2" type="isnull" value="1"/>
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="11" type="Single" displayname="本次患者是否进行OGTT试验？" order="110" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="12" type="FillBlank" displayname="2小时血糖数值：" order="120" code="">
+      <option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+        <Attribute id="1" type="after_content_display" value="mmol/L"/>
+        <Attribute id="2" type="isnull" value="1"/>
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="1"/>
+      <Attribute id="3" type="controlshow" value="S1_11_1"/>
+    </question>
+    <question id="13" type="Single" displayname="根据以上信息，研究医生是否判定该患者患有糖尿病？" order="130" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="14" type="ShowText" displayname="附：本研究糖尿病诊断标准：1 China PEACE前瞻研究基线病例出院诊断显示糖尿病；2自报已有糖尿病病史，并可以提供支持性文件（诊断证明、处方，化验单）或目前正在口服降糖药；或3符合中国2013年2型糖尿病防治指南中推荐的诊断标准：中国糖尿病指南2013诊断标准；典型糖尿病症状（多饮、多尿、多食、体重下降）加上随机血糖检测大于等于11.1mmol/L;或加上空腹血糖检测大于等于7mmol/L; 或加上葡萄糖负荷两小时血糖检测大于等于11.1mmol/L。无糖尿病症状者，需改日重复检查，仍满足上述条件才能诊断。注：糖尿病临床诊断应依据静脉血浆血糖而不是毛细血管的血糖检测结果；空腹状态指至少8小时没有进食热量；随机血糖指不考虑上次用餐时间，一天中任意时间的血糖，不能用来诊断空腹血糖受损或糖耐量异常。" order="140" code="">
+      <Attribute id="1" type="isnull" value="0"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="fontsize" value="14"/>
+    </question>
+
+  </QuestionSet>  
+</questionnaire>

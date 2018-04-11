@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.quality.dao.InWorkStatisticsDao">
+	<select id="list" parameterType="com.bdcor.pip.web.quality.filter.InWorkStatisticsFilter" resultType="com.bdcor.pip.web.quality.domain.InWorkStatisticsVo">
+		select
+		province.vName as provinceName,
+		info.lcc_code as lccCode,
+		lcc.lcc_name as lccName,
+		nvl(substr(uqs_operator_id,-3,3),uqs_operator_id) as operatorId,
+		UQS_OPERATOR_NAME as operatorName,
+		sum(case when substr(info.VERSION,4,3)='001'  and dual.dummy is not null then 1 else 0 end) as paper1Count,
+		sum(case when substr(info.VERSION,4,3)='002'  and dual.dummy is not null  then 1 else 0 end) as paper2Count,
+		sum(case when substr(info.VERSION,4,3)='003'  and dual.dummy is not null  then 1 else 0 end) as paper3Count,
+		sum(case when substr(info.VERSION,4,3)='004'  and dual.dummy is not null  then 1 else 0 end) as paper4Count,
+		sum(case when substr(info.VERSION,4,3)='005'  and dual.dummy is not null  then 1 else 0 end) as paper5Count,
+		sum(case when substr(info.VERSION,4,3)='006'  and dual.dummy is not null  then 1 else 0 end) as paper6Count
+		from pip_scan_uqs_info info
+		left join pip_comm_lcc lcc on lcc.project_id=info.project_id and lcc.lcc_code=info.lcc_code
+		left join pip_comm_dict_district province on province.vcode=substr(info.lcc_code,0,2)
+		left join dual on 1=1 
+		<if test="startDate != null and startDate != ''">
+			and to_char(info.END_TIME,'yyyy-MM-dd')&gt;=#{startDate}
+		</if>
+		
+		<if test="endDate != null and endDate != ''">
+			and to_char(info.END_TIME,'yyyy-MM-dd')&lt;=#{endDate}
+		</if>
+		where info.PROJECT_ID=#{projectId} and 
+		info.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="provinceCode != null and provinceCode != ''">
+			and province.vcode = #{provinceCode}
+		</if>
+		
+		<if test="rccCode != null and rccCode != ''">
+			and substr(info.lcc_code,0,4) = #{rccCode}
+		</if>
+		
+		<if test="lccCode != null and lccCode != ''">
+			and info.lcc_code = #{lccCode}
+		</if>
+		
+		<if test="operatorId != null and operatorId != ''">
+			and info.UQS_OPERATOR_ID like '%'||#{operatorId}||'%'
+		</if>
+		
+		<if test="operatorName != null and operatorName != ''">
+			and info.UQS_OPERATOR_NAME like '%'||#{operatorName}||'%'
+		</if>
+		
+		group by province.vName,info.lcc_code,lcc.lcc_name,UQS_OPERATOR_ID,UQS_OPERATOR_NAME
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+</mapper>

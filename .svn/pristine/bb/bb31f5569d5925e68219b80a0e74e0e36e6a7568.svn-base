@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.msg.dao.PipMsgTempMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.msg.domain.PipMsgTemp" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="MSG_ID" property="msgId" jdbcType="VARCHAR" />
+    <result column="PATIENT_ID" property="patientId" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="FLAG" property="flag" jdbcType="VARCHAR" />
+    <result column="IS_USED" property="isUsed" jdbcType="VARCHAR" />
+    <result column="MSG_NAME" property="msgName" jdbcType="VARCHAR" />
+    <result column="IS_NEEDREPLAY" property="isNeedreplay" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, MSG_ID, PATIENT_ID, CREATE_DATE, FLAG, IS_USED, MSG_NAME, IS_NEEDREPLAY
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.msg.domain.PipMsgTempExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_MSG_TEMP
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_MSG_TEMP
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PIP_MSG_TEMP
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.msg.domain.PipMsgTempExample" >
+    delete from PIP_MSG_TEMP
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.msg.domain.PipMsgTemp" >
+    insert into PIP_MSG_TEMP (ID, MSG_ID, PATIENT_ID, 
+      CREATE_DATE, FLAG, IS_USED, 
+      MSG_NAME, IS_NEEDREPLAY)
+    values (#{id,jdbcType=VARCHAR}, #{msgId,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{flag,jdbcType=VARCHAR}, #{isUsed,jdbcType=VARCHAR}, 
+      #{msgName,jdbcType=VARCHAR}, #{isNeedreplay,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.msg.domain.PipMsgTemp" >
+    insert into PIP_MSG_TEMP
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="msgId != null" >
+        MSG_ID,
+      </if>
+      <if test="patientId != null" >
+        PATIENT_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="flag != null" >
+        FLAG,
+      </if>
+      <if test="isUsed != null" >
+        IS_USED,
+      </if>
+      <if test="msgName != null" >
+        MSG_NAME,
+      </if>
+      <if test="isNeedreplay != null" >
+        IS_NEEDREPLAY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="msgId != null" >
+        #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null" >
+        #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="isUsed != null" >
+        #{isUsed,jdbcType=VARCHAR},
+      </if>
+      <if test="msgName != null" >
+        #{msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="isNeedreplay != null" >
+        #{isNeedreplay,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.msg.domain.PipMsgTempExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_MSG_TEMP
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_MSG_TEMP
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgId != null" >
+        MSG_ID = #{record.msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientId != null" >
+        PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.flag != null" >
+        FLAG = #{record.flag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isUsed != null" >
+        IS_USED = #{record.isUsed,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgName != null" >
+        MSG_NAME = #{record.msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isNeedreplay != null" >
+        IS_NEEDREPLAY = #{record.isNeedreplay,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_MSG_TEMP
+    set ID = #{record.id,jdbcType=VARCHAR},
+      MSG_ID = #{record.msgId,jdbcType=VARCHAR},
+      PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      FLAG = #{record.flag,jdbcType=VARCHAR},
+      IS_USED = #{record.isUsed,jdbcType=VARCHAR},
+      MSG_NAME = #{record.msgName,jdbcType=VARCHAR},
+      IS_NEEDREPLAY = #{record.isNeedreplay,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.msg.domain.PipMsgTemp" >
+    update PIP_MSG_TEMP
+    <set >
+      <if test="msgId != null" >
+        MSG_ID = #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null" >
+        PATIENT_ID = #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        FLAG = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="isUsed != null" >
+        IS_USED = #{isUsed,jdbcType=VARCHAR},
+      </if>
+      <if test="msgName != null" >
+        MSG_NAME = #{msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="isNeedreplay != null" >
+        IS_NEEDREPLAY = #{isNeedreplay,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.msg.domain.PipMsgTemp" >
+    update PIP_MSG_TEMP
+    set MSG_ID = #{msgId,jdbcType=VARCHAR},
+      PATIENT_ID = #{patientId,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      FLAG = #{flag,jdbcType=VARCHAR},
+      IS_USED = #{isUsed,jdbcType=VARCHAR},
+      MSG_NAME = #{msgName,jdbcType=VARCHAR},
+      IS_NEEDREPLAY = #{isNeedreplay,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

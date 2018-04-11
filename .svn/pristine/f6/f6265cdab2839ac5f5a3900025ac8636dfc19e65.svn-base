@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.dict.dao.DictManagerDao" >
+ 
+<select id="getTableStruct" parameterType="String" resultMap="columnResultMap">
+select * from COMM_INDEX_DICTMETADATA where  table_name='${tableName}'
+</select>
+<!--表实体映射-->
+<!-- <resultMap id="tableResultMap" type="com.bdcor.pip.dict.domain.TableVo">
+<id property="id" column="ID"/>
+<collection property="columns" resultMap="columnResultMap"/>
+</resultMap> -->
+
+<resultMap id="columnResultMap" type="com.bdcor.pip.dict.domain.ColumnVo">
+<id property="id" column="id"/>
+<result property="columnName"   column="col_name"/>
+<result property="tableName" column="table_name"/>
+<result property="columnType"  column="dict_type"/>
+<result property="columnLength"  column="col_lenght"/>
+<result property="is_required"  column="IS_REQUIRED"/>
+<result property="is_edit"  column="ISUPDATE"/>
+<result property="is_show"  column="ISSHOW"/>
+<result property="showName"  column="showname"/>
+</resultMap> 
+
+
+<select id="getAllDict"   parameterType="java.lang.String"   resultType="map" >
+   select  ind.DICT_CODE as TYPE_CODE , ind.DICT_NAME as CNNAME, cds.TABLE_NAME as TNAME   from  PIP_COMM_DICT_INDEX ind,PIP_COMM_DICT_SUMMARY cds where ind.TYPE_CODE=cds.TYPE_CODE
+    <if test="typeCode != null and typeCode != '' ">   
+             and cds.TYPE_CODE=#{typeCode}
+    </if>
+   order by CNNAME  
+</select> 
+
+<select id="getDictData" parameterType="com.bdcor.pip.dict.domain.RequestHandle" resultType="map" >
+   select t.* from ${tableName} t  where 1=1 
+   
+     <if test="dictTypeCode != null ">   
+             and upper(DICT_CODE)  = upper('${dictTypeCode}')
+     </if>
+     <if test="conditions != null ">   
+             ${conditions}
+     </if> 
+</select>   
+
+<select id="getQueryerCondition" parameterType="String" resultType="com.bdcor.pip.dict.domain.ConditionVo" >
+   select col_name  as colName , condition_type as conditionType , condition_show_type as condition_show_type, showname  from  COMM_INDEX_DICTMETADATA  where table_name='${tableName}' and condition_show_type is not null 
+</select>    
+
+<select id="isJoinType" parameterType="String" resultType="map" >
+   <!-- select count（t.*）as ct, s.table_name  from PIP_COMM_DICT_INDEX t , PIP_COMM_DICT_SUMMARY s  having  s.table_name='${tableName}' and s.TYPE_CODE=t.TYPE_CODE   group by (t.table_name)  -->
+    select count（1）as ct, s.table_name  as table_name from PIP_COMM_DICT_INDEX t , PIP_COMM_DICT_SUMMARY s  where  s.table_name='${tableName}' and s.TYPE_CODE=t.TYPE_CODE   group by (s.table_name)
+</select> 
+
+<update id="updateData" >
+    update ${tableName}  set 
+         <foreach collection="map"  index="index"  item="item"  separator=",">
+                  <if test="index != 'id' ">   
+                    ${index}=#{item}
+                  </if>
+         </foreach>  
+       where id=#{id}
+</update>
+
+<insert id="addData" > 
+      ${sql}   
+</insert>
+
+
+<!-- <update id="deleteData" >
+    update ${tableName}  set 
+        IS_REMOVED='1'
+       where id=#{id}
+</update> -->
+
+
+
+
+<!-- 字典工具类相关 -->
+<resultMap id="dictUtilsMap" type="com.bdcor.pip.dict.domain.DictCommDTO">
+	<result property="dictCode"   column="DICT_CODE"/>
+	<result property="vCode" column="VCODE"/>
+	<result property="vName"  column="VNAME"/>
+</resultMap> 
+
+<select id="getDictCVByCode" parameterType="java.lang.String" resultMap="dictUtilsMap">
+	select dict_code,vcode,vname from pip_comm_dict_cv where is_removed = 0 and dict_code = #{dictCode}
+</select>
+<select id="getDictDistrictByCode" parameterType="java.lang.String" resultMap="dictUtilsMap">
+	select dict_code,vcode,vname,HELP_CODE helpCode from pip_comm_dict_district where is_removed = 0 and dict_code like  '%${_parameter}%' and length(vcode)&lt;=6
+</select>
+<select id="getDictHISByCode" parameterType="java.lang.String" resultMap="dictUtilsMap">
+	select dict_code,vcode,vname from pip_comm_dict_his where is_removed = 0 and dict_code = #{dictCode}
+</select>
+<select id="getDictICDByCode" parameterType="java.lang.String" resultMap="dictUtilsMap">
+	select dict_code,vcode,vname from pip_comm_dict_icd where is_removed = 0 and dict_code = #{dictCode}
+</select>
+<select id="getDictPIByCode" parameterType="java.lang.String" resultMap="dictUtilsMap">
+	select dict_code,vcode,vname from pip_comm_dict_pi where is_removed = 0 and dict_code = #{dictCode}
+</select>
+<select id="getDictLccByCode" parameterType="java.lang.String" resultMap="dictUtilsMap">
+	select p.lcc_code vcode,p.lcc_name vname,HELP_CODE helpCode from pip_comm_lcc p
+</select>
+</mapper>

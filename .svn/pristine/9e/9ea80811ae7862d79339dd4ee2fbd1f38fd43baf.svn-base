@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.material.supp.dao.MaterlInfoDao">
+    <resultMap id="BaseResultMap" type="com.bdcor.pip.web.material.supp.domain.MaterlInfo">
+        <result column="MATERLINFO_CODE" property="materlInfoCode" jdbcType="VARCHAR"/>
+        <result column="MATERL_CODE" property="materlCode" jdbcType="VARCHAR"/>
+        <result column="MATERL_NAME" property="materlName" jdbcType="VARCHAR"/>
+        <result column="STORE_UNIT" property="storeUnit" jdbcType="VARCHAR"/>
+        <result column="MATERL_SPEC" property="materlSpec" jdbcType="VARCHAR"/>
+        <result column="SUPPLIER_CODE" property="supplierCode" jdbcType="VARCHAR"/>
+        <result column="HELP_CODE" property="helpCode" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="IS_REMOVED" property="isRemoved" jdbcType="INTEGER"/>
+        <result column="CLASS_CODE" property="classCode" jdbcType="VARCHAR"/>
+        <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+		MATERLINFO_CODE,MATERL_CODE,MATERL_NAME,STORE_UNIT,MATERL_SPEC,SUPPLIER_CODE,HELP_CODE,CREATE_DATE,CREATE_BY,IS_REMOVED,CLASS_CODE,PROJECT_ID
+    </sql>
+     <select id="materlInfoListByLimit" parameterType="string" resultType="map">
+    	select
+    	i.MATERLINFO_CODE,i.MATERL_CODE,i.MATERL_NAME,i.STORE_UNIT,i.MATERL_SPEC,i.SUPPLIER_CODE,i.HELP_CODE,i.CREATE_DATE,i.CREATE_BY,i.IS_REMOVED,i.CLASS_CODE,i.PROJECT_ID
+    	from PIP_MMS_DEVSTORE d 
+ 		left join PIP_MMS_MATERL_INFO i on i.materlinfo_code = d.materlinfo_code
+    	where i.IS_REMOVED = '0' 
+    		and d.lcc_code in ( select lcc_code from pip_sys_user_data_limit lt where lt.user_id =#{userId} )
+    	order by i.MATERLINFO_CODE
+    </select>
+    <select id="getAllMaterInfos" parameterType="com.bdcor.pip.web.material.supp.filter.MaterlInfoFilter" resultMap="BaseResultMap">
+    	select
+    	i.*, c.class_name as className, s.supplier_name as supplierName
+    	from pip_mms_materl_info i, pip_mms_materl_class c, pip_mms_supplier s where 1=1 and i.class_code = c.class_code
+    	and i.supplier_code = s.supplier_code
+    	<if test="materlName != null">
+        	<if test="materlName != null">
+				and MATERL_NAME like '%'||#{materlName}||'%'
+			</if>
+        </if>
+        <if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+    </select>
+    
+    <select id="getMaterInfoByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!-- 
+    	select
+    	i.*, c.class_name as className, s.supplier_name as supplierName
+    	from pip_mms_materl_info i, pip_mms_materl_class c, pip_mms_supplier s where 1=1 and i.class_code = c.class_code
+    	and i.supplier_code = s.supplier_code
+    	<if test="materlInfoCode != null">
+        	<if test="materlInfoCode != null">
+				and MATERLINFO_CODE like '%'||#{materlInfoCode}||'%'
+			</if>
+        </if>
+         -->
+        select
+    	<include refid="Base_Column_List"/>
+    	from pip_mms_materl_info where 1=1 
+    	<if test="materlInfoCode != null">
+        	<if test="materlInfoCode != null">
+				and MATERLINFO_CODE like '%'||#{materlInfoCode}||'%'
+			</if>
+        </if>
+    </select>
+    
+    <insert id="addMaterInfo" parameterType="com.bdcor.pip.web.material.supp.domain.MaterlInfo">
+    	insert into pip_mms_materl_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="materlInfoCode != null">
+				MATERLINFO_CODE,
+			</if>
+			<if test="materlCode != null">
+				MATERL_CODE,			
+			</if>
+			<if test="materlName != null">
+				MATERL_NAME,
+			</if>
+			<if test="storeUnit != null">
+				STORE_UNIT,
+			</if>
+			<if test="materlSpec != null">
+				MATERL_SPEC,
+			</if>
+			<if test="supplierCode != null">
+				SUPPLIER_CODE,
+			</if>
+			<if test="helpCode != null">
+				HELP_CODE,
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE,
+			</if>
+			<if test="createBy != null">
+				CREATE_BY,
+			</if>
+			<if test="isRemoved != null">
+				IS_REMOVED,
+			</if>
+			<if test="classCode != null">
+				CLASS_CODE,
+			</if>
+			<if test="projectId != null">
+				PROJECT_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="materlInfoCode != null">
+				#{materlInfoCode, jdbcType=VARCHAR},
+			</if>
+			<if test="materlCode != null">
+				#{materlCode, jdbcType=VARCHAR},		
+			</if>
+			<if test="materlName != null">
+				#{materlName, jdbcType=VARCHAR},
+			</if>
+			<if test="storeUnit != null">
+				#{storeUnit, jdbcType=VARCHAR},
+			</if>
+			<if test="materlSpec != null">
+				#{materlSpec, jdbcType=VARCHAR},
+			</if>
+			<if test="supplierCode != null">
+				#{supplierCode, jdbcType=VARCHAR},
+			</if>
+			<if test="helpCode != null">
+				#{helpCode, jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy != null">
+				#{createBy, jdbcType=VARCHAR},
+			</if>
+			<if test="isRemoved != null">
+				#{isRemoved, jdbcType=INTEGER},
+			</if>
+			<if test="classCode != null">
+				#{classCode, jdbcType=VARCHAR},
+			</if>
+			<if test="projectId != null">
+				#{projectId, jdbcType=VARCHAR},
+			</if>
+		</trim>
+    </insert>
+    
+    <update id="updateMaterlInfo" parameterType="com.bdcor.pip.web.material.supp.domain.MaterlInfo">
+    	update pip_mms_materl_info
+		<set>
+			<if test="materlCode != null">
+				MATERL_CODE = #{materlCode, jdbcType=VARCHAR},			
+			</if>
+			<if test="materlName != null">
+				MATERL_NAME = #{materlName, jdbcType=VARCHAR},
+			</if>
+			<if test="storeUnit != null">
+				STORE_UNIT = #{storeUnit, jdbcType=VARCHAR},
+			</if>
+			<if test="materlSpec != null">
+				MATERL_SPEC = #{materlSpec, jdbcType=VARCHAR},
+			</if>
+			<if test="supplierCode != null">
+				SUPPLIER_CODE = #{supplierCode, jdbcType=VARCHAR},
+			</if>
+			<if test="helpCode != null">
+				HELP_CODE = #{helpCode, jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE = #{createDate, jdbcType=VARCHAR},
+			</if>
+			<if test="createBy != null">
+				CREATE_BY = #{createBy, jdbcType=VARCHAR},
+			</if>
+			<if test="isRemoved != null">
+				IS_REMOVED = #{isRemoved, jdbcType=VARCHAR},
+			</if>
+			<if test="classCode != null">
+				CLASS_CODE = #{classCode, jdbcType=VARCHAR},
+			</if>
+		</set>
+		where MATERLINFO_CODE = #{materlInfoCode,jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.String">
+    <!-- 
+    	 delete from pip_mms_materl_info where MATERLINFO_CODE = #{materlInfoCode, jdbcType=VARCHAR}
+    	  -->
+    	  update pip_mms_materl_info set is_removed = 1 where MATERLINFO_CODE = #{materlInfoCode, jdbcType=VARCHAR}
+    </delete>
+    
+    <select id="getClassNameByCode" parameterType="java.lang.String" resultType="java.lang.String">
+    	select class_name from pip_mms_materl_class where class_code = #{classCode, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getSupplierNameByCode" parameterType="java.lang.String" resultType="java.lang.String">
+    	select supplier_name from pip_mms_supplier where supplier_code = #{supplierCode, jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.material.supp.dao.RepairDao">
+    <resultMap id="BaseResultMap" type="com.bdcor.pip.web.material.supp.domain.Repair">
+        <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR"/>
+        <result column="MATERLINFO_CODE" property="materlInfoCode" jdbcType="VARCHAR"/>
+        <result column="ARCHIVES_NO" property="archivesNo" jdbcType="VARCHAR"/>
+        <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR"/>
+        <result column="REPAIR_STATE" property="repairState" jdbcType="VARCHAR"/>
+        <result column="REPAIR_DATE" property="repairDate" jdbcType="VARCHAR"/>
+        <result column="IS_USABLE" property="isUsable" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="VARCHAR"/>
+        <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="UPDATE_DATE" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="UPDATE_BY" property="updateBy" jdbcType="TIMESTAMP"/>
+        <result column="IS_REMOVED" property="isRemoved" jdbcType="VARCHAR"/>
+        <result column="REPAIR_USER" property="repairUser" jdbcType="VARCHAR"/>
+        <result column="REPAIR_ORGANIZATION" property="repairOrganization" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+		PROJECT_ID,MATERIAL_CODE,MATERIAL_ID,LCC_CODE,REPAIR_STATE,REPAIR_DATE,IS_USABLE,CREATE_DATE,CREATE_BY,UPDATE_DATE,UPDATE_BY,IS_REMOVED,REPAIR_USER,REPAIR_ORGANIZATION
+    </sql>
+
+	<select id="getAllRepairs" parameterType="com.bdcor.pip.web.material.supp.filter.RepairFilter" resultMap="BaseResultMap">
+		select tt.*,sup.supplier_name as supplierName from (select r.*, s.STORE_UNIT as storeUnit, s.materl_spec as spec,s.STORE_AMOUNT,s.IS_MEASURE as isMeasure, l.lcc_name as lccName,i.materl_name as materlName,i.SUPPLIER_CODE  
+		from pip_mms_repair r left join pip_mms_devstore s on r.ARCHIVES_NO = s.ARCHIVES_NO left join pip_comm_lcc l on r.LCC_CODE = l.LCC_CODE left join pip_mms_materl_info i on r.MATERLINFO_CODE = i.MATERLINFO_CODE) tt 
+		left join pip_mms_supplier sup on tt.supplier_code = sup.supplier_code
+		where tt.project_id = #{projectId, jdbcType=VARCHAR} and tt.is_removed != 1
+		<if test="archivesNo != null and archivesNo != ''">
+			and tt.archives_no = #{archivesNo, jdbcType=VARCHAR}
+		</if>
+		<if test="repairState != null and repairState != ''">
+			and tt.repair_state = #{repairState, jdbcType=VARCHAR}
+		</if>
+		<if test="materlName != null and materlName != ''">
+			and tt.materlName like '%'||#{materlName}||'%'
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+
+	<select id="getRepairByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+	<!-- 
+		select 
+		<include refid="Base_Column_List"/>
+		from pip_mms_repair where project_id = #{projectId, jdbcType=VARCHAR} and archives_no = #{archivesNo, jdbcType=VARCHAR}
+		-->
+		select tt.*,sup.supplier_name as supplierName from 
+(select r.*, s.STORE_UNIT as storeUnit, s.materl_spec as spec,s.STORE_AMOUNT,
+s.IS_MEASURE as isMeasure, l.lcc_name as lccName,i.materl_name as materlName,i.SUPPLIER_CODE  
+		from pip_mms_repair r left join pip_mms_devstore s on r.ARCHIVES_NO = s.ARCHIVES_NO 
+    left join pip_comm_lcc l on r.LCC_CODE = l.LCC_CODE 
+    left join pip_mms_materl_info i on r.MATERLINFO_CODE = i.MATERLINFO_CODE) tt 
+		left join pip_mms_supplier sup on tt.supplier_code = sup.supplier_code
+		where tt.id=#{id}
+	</select>
+	
+	<insert id="addRepair" parameterType="com.bdcor.pip.web.material.supp.domain.Repair" >
+    	insert into pip_mms_repair
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			ID,
+			<if test="projectId != null">
+				PROJECT_ID,
+			</if>
+			<if test="materlInfoCode != null">
+				 MATERLINFO_CODE,
+			</if>
+			<if test="archivesNo != null">
+				ARCHIVES_NO,
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE,
+			</if>
+			<if test="repairState != null">
+				REPAIR_STATE,
+			</if>
+			<if test="repairDate != null">
+				REPAIR_DATE,
+			</if>
+			<if test="isUsable != null">
+				IS_USABLE,
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE,
+			</if>
+			<if test="createBy != null">
+				CREATE_BY,
+			</if>
+			<if test="updateDate != null">
+				UPDATE_DATE,
+			</if>
+			<if test="updateBy != null">
+				UPDATE_BY,
+			</if>
+			<if test="isRemoved != null">
+				IS_REMOVED,
+			</if>
+			<if test="repairUser != null">
+				REPAIR_USER,
+			</if>
+			<if test="repairOrganization != null">
+				REPAIR_ORGANIZATION,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			REPAIR_SEQ.NEXTVAL,
+			<if test="projectId != null">
+				#{projectId, jdbcType=VARCHAR},
+			</if>
+			<if test="materlInfoCode != null">
+				 #{materlInfoCode, jdbcType=VARCHAR},
+			</if>
+			<if test="archivesNo != null">
+				#{archivesNo, jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				#{lccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="repairState != null">
+				#{repairState, jdbcType=INTEGER},
+			</if>
+			<if test="repairDate != null">
+				#{repairDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="isUsable != null">
+				#{isUsable, jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				#{createDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy != null">
+				#{createBy, jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy, jdbcType=VARCHAR},
+			</if>
+			<if test="isRemoved != null">
+				#{isRemoved, jdbcType=INTEGER},
+			</if>
+			<if test="repairUser != null">
+				#{repairUser, jdbcType=VARCHAR},
+			</if>
+			<if test="repairOrganization != null">
+				#{repairOrganization, jdbcType=VARCHAR},
+			</if>
+		</trim>	
+	</insert>
+	
+	<update id="updateRepair" parameterType="com.bdcor.pip.web.material.supp.domain.Repair">
+	    update pip_mms_repair
+		<set>
+			<if test="materlInfoCode != null">
+				 MATERLINFO_CODE = #{materlInfoCode, jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE = #{lccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="repairState != null">
+				REPAIR_STATE = #{repairState, jdbcType=VARCHAR},
+			</if>
+			<if test="repairDate != null">
+				REPAIR_DATE = #{repairDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="isUsable != null">
+				IS_USABLE = #{isUsable, jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE = #{createDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy != null">
+				CREATE_BY = #{createBy, jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				UPDATE_DATE = #{updateDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				UPDATE_BY = #{updateBy, jdbcType=VARCHAR},
+			</if>
+			<if test="isRemoved != null">
+				IS_REMOVED = #{isRemoved, jdbcType=INTEGER},
+			</if>
+			<if test="repairUser != null">
+				REPAIR_USER = #{repairUser, jdbcType=VARCHAR},
+			</if>
+			<if test="repairOrganization != null">
+				REPAIR_ORGANIZATION = #{repairOrganization, jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID=#{id, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.String">
+		delete from pip_mms_repair where id=#{id, jdbcType=VARCHAR}
+	</delete>
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdcor.pip.web.spem.dao.ScmStaticMapper">
+  
+  <select id="scmStatic" parameterType="com.bdcor.pip.web.spem.filter.ScmStaticFilter" resultType="com.bdcor.pip.web.spem.domain.ScmStaticVo"> 
+    select 
+	lcc.lcc_name as "lccName",
+	(select count(*) from pip_scm_frozenbox box where box.lcc_code = lcc.lcc_code and box.project_id=lcc.project_Id
+    <if test="startTime != null and startTime != '' ">
+		and to_char(box.create_date, 'yyyy-MM-dd') &gt;=  #{startTime}
+	</if>
+	<if test="endTime != null and endTime != '' ">
+		 and to_char(box.create_date, 'yyyy-MM-dd') &lt;=  #{endTime}
+	</if>
+	) as "boxCount_total",
+	
+	(select count(*) from pip_scm_frozenbox box where box.lcc_code = lcc.lcc_code and box.project_id=lcc.project_Id and is_checkin=1
+   	<if test="startTime != null and startTime != '' ">
+		and to_char(box.create_date, 'yyyy-MM-dd') &gt;=  #{startTime}
+	</if>
+	<if test="endTime != null and endTime != '' ">
+		 and to_char(box.create_date, 'yyyy-MM-dd') &lt;=  #{endTime}
+	</if>
+	) as "boxCount_center",
+	
+	(select count(*) from pip_scm_frozenbox box where box.lcc_code = lcc.lcc_code and box.project_id=lcc.project_Id and is_checkin=2
+	<if test="startTime != null and startTime != '' ">
+		and to_char(box.create_date, 'yyyy-MM-dd') &gt;=  #{startTime}
+	</if>
+	<if test="endTime != null and endTime != '' ">
+		 and to_char(box.create_date, 'yyyy-MM-dd') &lt;=  #{endTime}
+	</if>
+	) as "boxCount_lcc",
+	
+	(select count(*) from pip_scm_frozentube tube 
+	inner join pip_scm_frozenbox box on box.box_code=box.box_code and box.box_type=tube.box_type and box.project_id=tube.project_id
+	where tube.lcc_code = lcc.lcc_code and tube.project_id=lcc.project_Id 
+	<if test="startTime != null and startTime != '' ">
+		and to_char(tube.create_date, 'yyyy-MM-dd') &gt;=  #{startTime}
+	</if>
+	<if test="endTime != null and endTime != '' ">
+		 and to_char(tube.create_date, 'yyyy-MM-dd') &lt;=  #{endTime}
+	</if>
+	) as "tubeCount_total",
+	
+	(select count(*) from pip_scm_frozentube tube 
+	inner join pip_scm_frozenbox box on box.box_code=box.box_code and box.box_type=tube.box_type and box.project_id=tube.project_id
+	where tube.lcc_code = lcc.lcc_code and tube.project_id=lcc.project_Id and box.is_checkin=1
+	<if test="startTime != null and startTime != '' ">
+		and to_char(tube.create_date, 'yyyy-MM-dd') &gt;=  #{startTime}
+	</if>
+	<if test="endTime != null and endTime != '' ">
+		 and to_char(tube.create_date, 'yyyy-MM-dd') &lt;=  #{endTime}
+	</if>
+	) as "tubeCount_center",
+	
+	(select count(*) from pip_scm_frozentube tube
+	inner join pip_scm_frozenbox box on box.box_code=box.box_code and box.box_type=tube.box_type and box.project_id=tube.project_id
+	where tube.lcc_code = lcc.lcc_code and tube.project_id=lcc.project_Id and box.is_checkin=2
+		<if test="startTime != null and startTime != '' ">
+		and to_char(tube.create_date, 'yyyy-MM-dd') &gt;=  #{startTime}
+	</if>
+	<if test="endTime != null and endTime != '' ">
+		 and to_char(tube.create_date, 'yyyy-MM-dd') &lt;=  #{endTime}
+	</if>
+	) as "tubeCount_lcc",
+	
+	(select count(*) from pip_scm_wastetube tube where tube.lcc_code = lcc.lcc_code and tube.project_id=lcc.project_Id
+	<if test="startTime != null and startTime != '' ">
+		and to_char(tube.create_date, 'yyyy-MM-dd') &gt;=  #{startTime}
+	</if>
+	<if test="endTime != null and endTime != '' ">
+		 and to_char(tube.create_date, 'yyyy-MM-dd') &lt;=  #{endTime}
+	</if>
+	) as "wasteTubeCount"
+ 
+	from pip_comm_lcc lcc
+	where lcc.project_Id=#{projectId}
+	and lcc.lcc_code in ${lccCode}
+	<if test="areaCode != null and areaCode != '' ">
+		 and substr(lcc.lcc_code,0,2) = #{areaCode}
+	</if>
+	
+  </select> 
+  
+</mapper>

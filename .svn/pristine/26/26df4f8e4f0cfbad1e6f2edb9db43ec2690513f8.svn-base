@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.material.supp.dao.PipMmsScmarchivesMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.material.supp.domain.PipMmsScmarchives" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="ARCHIVES_NO" property="archivesNo" jdbcType="VARCHAR" />
+    <result column="BLOODPACKAGE_CODE" property="bloodpackageCode" jdbcType="VARCHAR" />
+    <result column="PERIOD_VALIDITY" property="periodValidity" jdbcType="TIMESTAMP" />
+    <result column="PACKAGE_STATE" property="packageState" jdbcType="DECIMAL" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="MATERL_BATCH" property="materlBatch" jdbcType="VARCHAR" />
+    <result column="STOCK_CODE" property="stockCode" jdbcType="VARCHAR" />
+    <result column="STOCK_NAME" property="stockName" jdbcType="VARCHAR" />
+    <result column="LCC_NAME" property="lccName" jdbcType="VARCHAR" />
+  	<result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <select id="selectByFilter"  resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.filter.PipMmsScmarchivesFilter">
+  	select
+  		t.*
+    from PIP_MMS_SCMARCHIVES t 
+    	where 1=1
+	    	<if test="projectId !=null">
+	    	  and t.PROJECT_ID =#{projectId}
+	    	</if>
+	    	<if test="archivesNo !=null and archivesNo !=''">
+	    	  and t.ARCHIVES_NO =#{archivesNo}
+	    	</if>
+		    <if test="bloodpackageCode != null and bloodpackageCode !=''" >
+		      and  t.BLOODPACKAGE_CODE=#{bloodpackageCode}
+		    </if>
+	        <if test="materlBatch != null" >
+	        	and t.materl_Batch=#{materlBatch}
+	      	</if>
+	      	<if test="periodValidity != null" >
+	        	and t.PERIOD_VALIDITY=#{periodValidity}
+	      	</if>
+		     <if test="packageState != null and packageState!=''" >
+		       and t.PACKAGE_STATE=#{packageState}
+		      </if>
+		      <if test="createBy != null" >
+		       and  t.CREATE_BY=#{createBy}
+		      </if>
+  </select> 
+  <select id="selectSimpleByFilter"  resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.filter.PipMmsScmarchivesFilter">
+  	select
+  		t.*,lcc.lcc_code,lcc.lcc_name, d.stock_code,d.stock_name
+    from PIP_MMS_SCMARCHIVES t 
+    left join PIP_MMS_IMSCMDETAL i on i.project_id =t.project_id and i.archives_no = t.archives_no
+	left join PIP_MMS_SCMSTOCK s on s.project_id = t.project_id and s.archives_no = t.archives_no and s.stock_num=1
+	left join PIP_MMS_DEFSTOREHOUSE d on d.project_id = t.project_id and d.stock_code = s.stock_code
+	left join PIP_COMM_LCC lcc on lcc.lcc_code = d.lcc_code  and lcc.project_id =t.project_id
+    	where 
+			d.lcc_code in (select lcc_code from pip_sys_user_data_limit  lt where lt.user_id = #{userId})
+      <!-- 设置过期时间过滤条件 -->
+    and  trunc(t.period_validity ) > trunc(sysdate)
+    and t.PACKAGE_STATE != 4 <!-- 已过期不能报损 -->
+      <if test="projectId !=null">
+        and t.PROJECT_ID =#{projectId}
+      </if>
+      <if test="stockCode !=null and stockCode !=''">
+          and d.STOCK_CODE =#{stockCode}
+      </if>
+      <if test="archivesNo !=null and archivesNo !=''">
+        and t.ARCHIVES_NO =#{archivesNo}
+      </if>
+      <if test="bloodpackageCode != null and bloodpackageCode !=''" >
+        and  t.BLOODPACKAGE_CODE=#{bloodpackageCode}
+      </if>
+      <if test="materlBatch != null" >
+          and t.materl_Batch=#{materlBatch}
+      </if>
+      <if test="periodValidity != null" >
+          and t.PERIOD_VALIDITY=#{periodValidity}
+      </if>
+       <if test="packageState != null and packageState!=''" >
+         and t.PACKAGE_STATE=#{packageState}
+        </if>
+        <if test="createBy != null" >
+         and  t.CREATE_BY=#{createBy}
+        </if>
+		 order by t.bloodpackage_code 
+  </select>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, PROJECT_ID, ARCHIVES_NO, BLOODPACKAGE_CODE, PERIOD_VALIDITY, PACKAGE_STATE, CREATE_BY, 
+    CREATE_DATE, MATERL_BATCH
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsScmarchivesExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_MMS_SCMARCHIVES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+   
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_MMS_SCMARCHIVES
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+    <select id="selectByPjIdAndArchNoAndPagCode" resultType="java.lang.Integer" parameterType="map" >
+    select count(*) 
+    from PIP_MMS_SCMARCHIVES
+    where 1=1 
+    and project_Id=#{projectId,jdbcType=VARCHAR}
+    and archives_No=#{bev.archivesNo,jdbcType=VARCHAR}
+    and bloodpackage_Code=#{bev.booldpackageCode,jdbcType=VARCHAR}
+    and materl_Batch=#{bev.materlBatch,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short" >
+    delete from PIP_MMS_SCMARCHIVES
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsScmarchivesExample" >
+    delete from PIP_MMS_SCMARCHIVES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsScmarchives" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_MMS_MATERL_BLOODBAG_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_MMS_SCMARCHIVES (ID, PROJECT_ID, ARCHIVES_NO, 
+      BLOODPACKAGE_CODE, PERIOD_VALIDITY, PACKAGE_STATE, 
+      CREATE_BY, CREATE_DATE, MATERL_BATCH
+      )
+    values (#{id,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{archivesNo,jdbcType=VARCHAR}, 
+      #{bloodpackageCode,jdbcType=VARCHAR}, #{periodValidity,jdbcType=TIMESTAMP}, #{packageState,jdbcType=DECIMAL}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{materlBatch,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsScmarchives" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_MMS_MATERL_BLOODBAG_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_MMS_SCMARCHIVES
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="archivesNo != null" >
+        ARCHIVES_NO,
+      </if>
+      <if test="bloodpackageCode != null" >
+        BLOODPACKAGE_CODE,
+      </if>
+      <if test="periodValidity != null" >
+        PERIOD_VALIDITY,
+      </if>
+      <if test="packageState != null" >
+        PACKAGE_STATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="materlBatch != null" >
+        MATERL_BATCH,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="archivesNo != null" >
+        #{archivesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bloodpackageCode != null" >
+        #{bloodpackageCode,jdbcType=VARCHAR},
+      </if>
+      <if test="periodValidity != null" >
+        #{periodValidity,jdbcType=TIMESTAMP},
+      </if>
+      <if test="packageState != null" >
+        #{packageState,jdbcType=DECIMAL},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="materlBatch != null" >
+        #{materlBatch,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsScmarchivesExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_MMS_SCMARCHIVES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateState" parameterType="string">
+  	update PIP_MMS_SCMARCHIVES
+  	set PACKAGE_STATE =#{state}
+  	where id in (${ids})
+  </update>
+  
+  <update id="updateStateByBloodCode" parameterType="string">
+  	update PIP_MMS_SCMARCHIVES
+  	set PACKAGE_STATE =#{packageState}
+  	where project_id =#{projectId} and bloodpackage_Code =#{bloodpackageCode}
+  </update>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_MMS_SCMARCHIVES
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.archivesNo != null" >
+        ARCHIVES_NO = #{record.archivesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bloodpackageCode != null" >
+        BLOODPACKAGE_CODE = #{record.bloodpackageCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.periodValidity != null" >
+        PERIOD_VALIDITY = #{record.periodValidity,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.packageState != null" >
+        PACKAGE_STATE = #{record.packageState,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.materlBatch != null" >
+        MATERL_BATCH = #{record.materlBatch,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_MMS_SCMARCHIVES
+    set ID = #{record.id,jdbcType=DECIMAL},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      ARCHIVES_NO = #{record.archivesNo,jdbcType=VARCHAR},
+      BLOODPACKAGE_CODE = #{record.bloodpackageCode,jdbcType=VARCHAR},
+      PERIOD_VALIDITY = #{record.periodValidity,jdbcType=TIMESTAMP},
+      PACKAGE_STATE = #{record.packageState,jdbcType=DECIMAL},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      MATERL_BATCH = #{record.materlBatch,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsScmarchives" >
+    update PIP_MMS_SCMARCHIVES
+    <set >
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="archivesNo != null" >
+        ARCHIVES_NO = #{archivesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bloodpackageCode != null" >
+        BLOODPACKAGE_CODE = #{bloodpackageCode,jdbcType=VARCHAR},
+      </if>
+      <if test="periodValidity != null" >
+        PERIOD_VALIDITY = #{periodValidity,jdbcType=TIMESTAMP},
+      </if>
+      <if test="packageState != null" >
+        PACKAGE_STATE = #{packageState,jdbcType=DECIMAL},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="materlBatch != null" >
+        MATERL_BATCH = #{materlBatch,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsScmarchives" >
+    update PIP_MMS_SCMARCHIVES
+    set PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      ARCHIVES_NO = #{archivesNo,jdbcType=VARCHAR},
+      BLOODPACKAGE_CODE = #{bloodpackageCode,jdbcType=VARCHAR},
+      PERIOD_VALIDITY = #{periodValidity,jdbcType=TIMESTAMP},
+      PACKAGE_STATE = #{packageState,jdbcType=DECIMAL},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      MATERL_BATCH = #{materlBatch,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <!-- 定时器设置采血包过期状态  未使用的过了保质期即设置为过期状态-->
+  <update id="scheduleChangeState">
+    update PIP_MMS_SCMARCHIVES set PACKAGE_STATE = 4
+    where trunc(PERIOD_VALIDITY) &lt; trunc(sysdate)
+    and PACKAGE_STATE = 2
+  </update>
+</mapper>

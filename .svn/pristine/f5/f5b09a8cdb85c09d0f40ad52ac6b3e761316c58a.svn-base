@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.msg.dao.MsgReplyDao">
+	
+	<select id="list" parameterType="com.bdcor.pip.web.msg.filter.MsgReplyFilter" resultType="com.bdcor.pip.web.msg.domain.MsgReplyVo">
+		select
+		r.LCC_CODE as lccId,
+		r.PATIENT_ID as patientId,
+		p.PATIENT_NAME as patientName,
+		p.id_number as idNumber,
+		r.mobile as mobile,
+		p.IS_DIABETES as isDiabetes,
+		p.belong_group as bGroup,
+		r.MSG_NAME as msgName,
+		r.REPLY_TIME as replyTime
+		
+		from PIP_MSG_REPLY r
+		left join PIP_COMM_PATIENT p on p.PROJECT_ID=r.PROJECT_ID and p.LCC_CODE=r.LCC_CODE and p.PATIENT_ID=r.PATIENT_ID
+		
+		where r.project_id=#{projectId} and 
+		r.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="lccCode != null and lccCode != ''">
+			and r.LCC_CODE=#{lccCode}
+		</if>
+		<if test="patientId != null and patientId != ''">
+			and r.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientIdEq != null and patientIdEq != ''">
+			and r.PATIENT_ID = #{patientIdEq}
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and p.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="group != null">
+			and p.belong_group =#{group}
+		</if>
+		<if test="replyTime != null and replyTime != ''">
+			and to_char(r.REPLY_TIME,'yyyy-MM-dd') = #{replyTime}
+		</if>
+		<if test="replyTimeStart != null and replyTimeStart != ''">
+			and to_char(r.REPLY_TIME,'yyyy-MM-dd') >= #{replyTimeStart}
+		</if>
+		<if test="replyTimeEnd != null and replyTimeEnd != ''">
+			and to_char(r.REPLY_TIME,'yyyy-MM-dd') &lt;= #{replyTimeEnd}
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+	
+	<select id="getPatient" resultType="map">
+		select p.* from PIP_COMM_PATIENT p where p.PROJECT_ID=#{projectId} and p.LCC_CODE=#{lccCode} and p.PATIENT_ID=#{patientId}
+	</select>
+	
+	<select id="showAllMsg" resultType="map">
+		select * from(
+		select 
+		1 as type,
+		SENDTIME_REAL as STIME,
+		MSG_NAME
+		from PIP_MSG_SEND s
+		where s.PROJECT_ID=#{projectId} and s.LCC_CODE = #{lccCode} and s.PATIENT_ID=#{patientId} and STATE=1
+		
+		union all 
+		
+		select 
+		2 as type,
+		REPLY_TIME as STIME,
+		MSG_NAME
+		from PIP_MSG_REPLY r
+		where r.PROJECT_ID=#{projectId} and r.LCC_CODE = #{lccCode} and r.PATIENT_ID=#{patientId})
+		order by STIME
+	</select>
+	
+	<select id="getPatientByMobile" resultType="map">
+		select p.* from PIP_COMM_PATIENT p where p.PROJECT_ID=#{projectId} and p.MOBILE=#{mobile}
+	</select>
+	
+	<select id="getSend" resultType="map">
+		select * from( 
+			select 
+			s.* 
+			from
+			PIP_MSG_SEND s
+			where s.PROJECT_ID=#{projectId} and s.PATIENT_ID=#{patientId}
+				  and s.STATE=1 and s.SENDTIME_REAL &lt; #{replyTime}
+			order by SENDTIME_REAL desc
+		)where rownum=1
+	</select>
+	
+	<select id="checkRepeat" parameterType="map" resultType="int">
+		select count(*) from PIP_MSG_REPLY where PROJECT_ID=#{PROJECT_ID} and MOBILE=#{MOBILE} and REPLY_TIME=#{REPLY_TIME}
+	</select>
+	
+	<insert id="insertReply" parameterType="map">
+		insert into PIP_MSG_REPLY(PROJECT_ID,LCC_CODE,SEND_ID,MSG_NAME,REPLY_TIME,PATIENT_ID,MOBILE)
+		values(#{PROJECT_ID},#{LCC_CODE,jdbcType=VARCHAR},#{SEND_ID,jdbcType=VARCHAR},#{MSG_NAME,jdbcType=VARCHAR},#{REPLY_TIME,jdbcType=TIMESTAMP},#{PATIENT_ID,jdbcType=VARCHAR},#{MOBILE,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateReportCode">
+		update PIP_MSG_SEND set REPORT_CODE=#{reportCode} where id=#{sendId}
+	</update>
+
+	<!-- 查询回复表 根据当天回复短信手机号关联到病人 且是参加短信项目/订阅的/随机分组之后的人 取最近的回复-->
+	<select id="getMsgForReply" resultType="map">
+		select * from (
+		select t.* , ROW_NUMBER() over  (PARTITION BY mobile ORDER BY reply_time asc) rw from
+		(
+		select
+		mr.reply_time, p.patient_id,mt.msg_type_code,
+		mr.mobile,mr.is_replythks,
+		mr.msg_name,
+		p.is_diabetes,
+		p.belong_group ,p.lcc_code ,p.sex , p.patient_name ,p.PROJECT_ID,
+		ms.is_needreply,ms.sendtime_real
+		from pip_msg_send ms
+		left join pip_msg_reply mr
+		on mr.mobile = ms.mobile and mr.reply_time >= ms.sendtime_real and  mr.reply_time &lt;= ms.sendtime_real+3
+		left join pip_comm_patient p
+		on p.mobile = ms.mobile
+		left join pip_msg_msgtmp mt
+		on ms.msg_id = mt.id
+		where ms.sendtime_real >= sysdate - 3
+		and ms.is_needreply = '1'
+		and mr.mobile is not null
+		and mr.reply_time is not null
+		) t
+		)
+		where rw = 1 and is_replythks != '1'
+	</select>
+
+	<select id="getReplyMsg" resultType="map">
+	select * from (
+			  select id msg_id, msg_name , msg_type_code from pip_msg_msgtmp
+        		where msg_type_code = #{dbtype}
+			  order by dbms_random.value
+		  ) where rownum = 1
+	</select>
+
+	<update id="updateReplySate">
+
+		update pip_msg_reply r
+			set r.is_replythks = '1'
+			where r.reply_time= #{replytime}
+			and r.mobile=#{mobile}
+
+	</update>
+	<select id="getMaplist" parameterType="com.bdcor.pip.web.msg.filter.MsgReplyFilter" resultType="map">
+		select
+		r.LCC_CODE as lccId,
+		r.PATIENT_ID as patientId,
+		p.PATIENT_NAME as patientName,
+		p.id_number as idNumber,
+		r.mobile as mobile,
+		decode(p.IS_DIABETES, 1, '是', 2, '否') as isDiabetes,
+		decode(p.belong_group, 01, '非糖尿病对照组', 02, '非糖尿病实验组', 11, '糖尿病对照组', 12, '糖尿病实验组') as bGroup,
+		r.MSG_NAME as msgName,
+		r.REPLY_TIME as replyTime
+		
+		from PIP_MSG_REPLY r
+		left join PIP_COMM_PATIENT p on p.PROJECT_ID=r.PROJECT_ID and p.LCC_CODE=r.LCC_CODE and p.PATIENT_ID=r.PATIENT_ID
+		
+		where r.project_id=#{projectId} and 
+		r.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="lccCode != null and lccCode != ''">
+			and r.LCC_CODE=#{lccCode}
+		</if>
+		<if test="patientId != null and patientId != ''">
+			and r.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientIdEq != null and patientIdEq != ''">
+			and r.PATIENT_ID = #{patientIdEq}
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and p.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="group != null">
+			and p.belong_group =#{group}
+		</if>
+		<if test="replyTime != null and replyTime != ''">
+			and to_char(r.REPLY_TIME,'yyyy-MM-dd') = #{replyTime}
+		</if>
+		<if test="replyTimeStart != null and replyTimeStart != ''">
+			and to_char(r.REPLY_TIME,'yyyy-MM-dd') >= #{replyTimeStart}
+		</if>
+		<if test="replyTimeEnd != null and replyTimeEnd != ''">
+			and to_char(r.REPLY_TIME,'yyyy-MM-dd') &lt;= #{replyTimeEnd}
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+	
+</mapper>

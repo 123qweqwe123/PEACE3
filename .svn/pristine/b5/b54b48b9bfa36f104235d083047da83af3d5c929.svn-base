@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.quality.dao.PreviewQuestionnaireDao">
+	<select id="getPatientQnList" parameterType="com.bdcor.pip.web.quality.filter.PatientQnFilter" resultType="com.bdcor.pip.web.quality.domain.PatientQn">
+		select 
+		p.LCC_CODE as lccId,
+		lcc.LCC_NAME as lccName,
+		p.PATIENT_ID as pId,
+		p.PATIENT_NAME as patientName,
+		p.SEX,
+		to_char(p.BIRTHDAY,'yyyy-MM-dd') as birthday,
+		p.ID_NUMBER as idNumber,
+		p.MOBILE,
+		p.PHONE,
+		p.ADDRESS
+		
+		from PIP_COMM_PATIENT p
+		left join PIP_COMM_LCC lcc on p.PROJECT_ID=lcc.PROJECT_ID and p.LCC_CODE=lcc.LCC_CODE
+		where p.PROJECT_ID=#{projectId}
+		and p.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="pIdLike != null and pIdLike!='' ">
+			and p.PATIENT_ID like '%'||#{pIdLike}||'%'
+		</if>
+		<if test="pIdEq != null and pIdEq!='' ">
+			and p.PATIENT_ID = #{pIdEq}
+		</if>
+		<if test="patientNameLike != null and patientNameLike !='' ">
+			and p.PATIENT_NAME like '%'||#{patientNameLike}||'%'
+		</if>
+		<if test="idNumberLike != null and idNumberLike !='' ">
+			and p.ID_NUMBER like '%'||#{idNumberLike}||'%'
+		</if>
+		<if test="lccCodeEq != null  and lccCodeEq !='' ">
+			and p.LCC_CODE = #{lccCodeEq}
+		</if>
+		
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+	
+	<select id="getQnList" parameterType="map" resultType="map">
+		select 
+		'-1' as id,
+		q.DISPLAY_NAME as paperName,
+<!--		l.UQS_VERSION as uqsVersion ,-->
+decode(instr(l.uqs_file,l.uqs_version),0,'004.002.001',l.uqs_version ) as uqsVersion ,
+
+		to_char(l.START_TIME,'yyyy-MM-dd hh24:mi:ss') as startTime,to_char(l.END_TIME,'yyyy-MM-dd hh24:mi:ss') as endTime,a.NAME as createBy
+		from PIP_UQS_ANSWERQN_LOG l
+		left join PIP_UQS_QUESTIONNAIRE q on l.UQS_VERSION = q.VERSION
+		left join PIP_SYS_ACCOUNT a on a.ID=l.CREATE_BY
+		where  l.STATE=1 and l.PATIENT_ID=#{patientId}
+		
+		union all
+		
+		select
+		m.id,
+		decode(m.UQS_TYPE_NAME,'12月随访','末次随访',m.UQS_TYPE_NAME)
+		||'血检结果',m.UQS_VERSION,to_char(m.START_TIME,'yyyy-MM-dd hh24:mi:ss'),to_char(m.END_TIME,'yyyy-MM-dd hh24:mi:ss'),a.NAME
+		from PIP_UQS_ANSWERQN_LOG_MIN m
+		left join PIP_SYS_ACCOUNT a on a.ID=m.CREATE_BY
+		where  m.PATIENT_ID=#{patientId} and substr(m.UQS_VERSION,5,3)='007'
+		order by uqsVersion,startTime
+	</select>
+	
+	<select id="getAnswerList" parameterType="map" resultType="map">
+		select answer.questionset_id||'_'||answer.question_id||'_'||answer.option_id as "id",answer.answer as "answer",dict_value as "dictvalue"
+		from PIP_UQS_ANSWER${min} answer
+		LEFT join PIP_UQS_OPTION o on answer.project_id = o.project_id and answer.questionnaire_id = o.VERSION
+		  and answer.questionset_id = o.questionset_id and answer.question_id = o.question_id and answer.option_id=o.option_id
+		where answer.project_id=#{projectId} and answer.questionnaire_id=#{version} and answer.patient_id=#{patientId}
+		<if test="logId != null  and logId !='' ">
+			and answer.LOG_MIN_ID = #{logId}
+		</if>
+	</select>
+	
+	<select id="getDictName_PUB" parameterType="map" resultType="String">
+		select VNAME 
+		from PIP_COMM_DICT_PUBLIC
+		where DICT_CODE=#{dictCode} and VCODE||'_'||V_ID=#{vCode}
+	</select>
+	
+	<select id="getDictName_DISTRICT" parameterType="map" resultType="String">
+		select VNAME 
+		from PIP_COMM_DICT_DISTRICT
+		where DICT_CODE=#{dictCode} and VCODE=#{vCode}
+	</select>
+	
+	<select id="getDictName_PI" parameterType="map" resultType="String">
+		select VNAME 
+		from PIP_COMM_DICT_PI
+		where DICT_CODE=#{dictCode} and VCODE=#{vCode}
+	</select>
+	
+	<select id="getDictName_ICD" parameterType="map" resultType="String">
+		select VNAME 
+		from PIP_COMM_DICT_ICD
+		where DICT_CODE=#{dictCode} and VCODE=#{vCode}
+	</select>
+</mapper>

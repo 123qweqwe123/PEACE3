@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.msg.dao.MsgSendDao">
+	
+	<select id="getMsgInfo" parameterType="string" resultType="map">
+		select * from pip_msg_dictionary where msg_flag = #{status}
+	</select>
+	
+	<select id="failReasorList" parameterType="com.bdcor.pip.web.msg.filter.MsgSendFilter" resultType="map">
+		select s.lcc_code, decode(s.send_reason, null, '空', s.send_reason) as send_reason, count(1) as sum 
+		from  pip_msg_send s
+		left join pip_comm_patient p 
+		on s.patient_id = p.patient_id and s.project_id = p.project_id
+		where s.is_delete=2 and s.state=1 and (s.send_result != 1 or s.send_result is null)
+		<if test="startDate !=null and startDate !=''">
+	 		and s.sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+	 	</if>
+	 	<if test="endDate !=null and endDate !=''">
+	 		and s.sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+	 	</if>
+	 	<if test="lccCode !=null and lccCode !=''">
+	 		and s.lcc_code = #{lccCode}
+	 	</if>
+	 	<if test="group !=null and group !=''">
+	 		and p.belong_group =#{group}
+	 	</if>
+		group by s.lcc_code, s.send_reason
+	</select>
+	
+	<select id="report" parameterType="com.bdcor.pip.web.msg.filter.MsgSendFilter" resultType="map">
+	with t1 as (select s.*, c.lcc_name, p.belong_group from pip_msg_send s left join pip_comm_lcc c on s.lcc_code = c.lcc_code and s.project_id = c.project_id left join pip_comm_patient p on s.patient_id = p.patient_id and s.project_id = p.project_id where s.is_delete = 2),
+     	 t2 as (
+              select s.*, c.lcc_name, p.belong_group
+                  from pip_msg_send s
+                  left join pip_comm_lcc c on s.lcc_code = c.lcc_code and s.project_id = c.project_id
+                  left join pip_comm_patient p on s.patient_id = p.patient_id and s.project_id = p.project_id
+                  /*left join  pip_msg_reply r on s.mobile = r.mobile
+                             and r.reply_time <![CDATA[<=]]> s.sendtime_real + 3
+                             and r.reply_time > s.sendtime_real
+                  and r.project_id is not null
+                  */
+                  where s.is_delete = 2 and s.is_needreply = 1
+                  and EXISTS ( select 1 from pip_msg_reply mr where mr.mobile = s.mobile
+                                and mr.patient_id = s.patient_id
+                                and mr.reply_time >= s.sendtime_real
+                                and mr.reply_time &lt;= (s.sendtime_real+3)
+                            )
+        ),
+     	 t3 as (select tt.* ,lag(tt.mobile, 1) over(order by tt.mobile , tt.sendtime_real desc) mobile_lag , lag(tt.isreply , 1) over(order by tt.mobile , tt.sendtime_real desc) isreply_lag from (select m.*, decode(r.msg_name , null , 0 , 1) isreply from (select s.*,c.lcc_name,p.belong_group from pip_msg_send s left join pip_comm_lcc c on s.lcc_code = c.lcc_code and s.project_id = c.project_id left join pip_comm_patient p on s.patient_id = p.patient_id and s.project_id = p.project_id where s.is_needreply = '1' and s.sendtime_real is not null and s.sendtime_real <![CDATA[<]]> sysdate -3
+     	 <if test="startDate !=null and startDate !=''">
+	 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+	 	 </if>
+	 	 <if test="endDate !=null and endDate !=''">
+	 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+	 	 </if> 
+	 	 <if test="lccCode !=null and lccCode !=''">
+	 		and s.lcc_code = #{lccCode}
+	 	 </if>
+	 	 <if test="group !=null and group !=''">
+	 		and belong_group =#{group}
+	 	 </if>
+     	 ) m left join  pip_msg_reply r on ( m.mobile = r.mobile and r.reply_time <![CDATA[<=]]> m.sendtime_real + 3 and r.reply_time > m.sendtime_real ) order by m.mobile , m.sendtime_real desc ) tt)
+
+	select t_zs.lcc_code, t_zs.lcc_name, decode(zs,null,0,zs) as zs, decode(yfs,null,0,yfs) as yfs, decode(wfs,null,0,wfs) as wfs, decode(fscg,null,0,fscg) as fscg, decode(fssb,null,0,fssb) as fssb, decode(fssb_null,null,0,fssb_null) as fssb_null, decode(xyhf,null,0,xyhf) as xyhf, decode(sjhf,null,0,sjhf) as sjhf, (decode(xyhf, null, 0, xyhf)-decode(sjhf, null, 0, sjhf)) as whf, decode(fkdxs,null,0,fkdxs) as fkdxs, decode(two_whf,null,0,two_whf) as two_whf , nvl(t4.randomcount,0) randomcount
+        from
+    (
+   		select lcc_code, max(lcc_name) as lcc_name, count(1) as zs 
+   		from t1 
+   		where 1=1
+   		<if test="startDate !=null and startDate !=''">
+	 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+	 	</if>
+	 	<if test="endDate !=null and endDate !=''">
+	 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+	 	</if>
+	 	<if test="lccCode !=null and lccCode !=''">
+	 		and lcc_code = #{lccCode}
+	 	</if>
+	 	<if test="group !=null and group !=''">
+	 		and belong_group =#{group}
+	 	</if>
+   		group by lcc_code
+   	) t_zs left join
+   	(
+   		select lcc_code, count(1) as yfs 
+   		from t1 
+   		where state = 1 
+   		<if test="startDate !=null and startDate !=''">
+	 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+	 	</if>
+	 	<if test="endDate !=null and endDate !=''">
+	 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+	 	</if> 
+	 	<if test="lccCode !=null and lccCode !=''">
+	 		and lcc_code = #{lccCode}
+	 	</if>
+	 	<if test="group !=null and group !=''">
+	 		and belong_group =#{group}
+	 	</if>
+   		group by lcc_code
+   	) t_yfs on t_zs.lcc_code = t_yfs.lcc_code left join
+  	(
+  		select lcc_code, count(1) as wfs 
+  		from t1 
+  		where state = 2 
+  		<if test="startDate !=null and startDate !=''">
+	 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+	 	</if>
+	 	<if test="endDate !=null and endDate !=''">
+	 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+	 	</if> 
+	 	<if test="lccCode !=null and lccCode !=''">
+	 		and lcc_code = #{lccCode}
+	 	</if>
+	 	<if test="group !=null and group !=''">
+	 		and belong_group =#{group}
+	 	</if>
+  		group by lcc_code
+  	) t_wfs on t_zs.lcc_code = t_wfs.lcc_code left join
+   	(
+   		select lcc_code, count(1) as fscg 
+   		from t1 
+   		where state = 1 and send_result = 1 
+   		<if test="startDate !=null and startDate !=''">
+	 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+	 	</if>
+	 	<if test="endDate !=null and endDate !=''">
+	 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+	 	</if> 
+	 	<if test="lccCode !=null and lccCode !=''">
+	 		and lcc_code = #{lccCode}
+	 	</if>
+	 	<if test="group !=null and group !=''">
+	 		and belong_group =#{group}
+	 	</if>
+   		group by lcc_code
+   	) t_fscg on t_zs.lcc_code = t_fscg.lcc_code left join
+   	(
+   		select lcc_code, count(1) as fssb 
+   		from t1 
+   		where send_result = 2
+   		<if test="startDate !=null and startDate !=''">
+	 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+	 	</if>
+	 	<if test="endDate !=null and endDate !=''">
+	 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+	 	</if> 
+	 	<if test="lccCode !=null and lccCode !=''">
+	 		and lcc_code = #{lccCode}
+	 	</if>
+	 	<if test="group !=null and group !=''">
+	 		and belong_group =#{group}
+	 	</if>
+   		group by lcc_code
+   	) t_fssb on t_zs.lcc_code = t_fssb.lcc_code left join
+   	(
+   		select lcc_code, count(1) as fssb_null 
+   		from t1 
+   		where state = 1 and send_result is null
+   		<if test="startDate !=null and startDate !=''">
+	 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+	 	</if>
+	 	<if test="endDate !=null and endDate !=''">
+	 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+	 	</if> 
+	 	<if test="lccCode !=null and lccCode !=''">
+	 		and lcc_code = #{lccCode}
+	 	</if>
+	 	<if test="group !=null and group !=''">
+	 		and belong_group =#{group}
+	 	</if>
+   		group by lcc_code
+   	) t_fssbnull on t_zs.lcc_code = t_fssbnull.lcc_code left join
+   	(
+   		select lcc_code, count(1) as xyhf 
+   		from t1 
+   		where is_needreply = 1 
+   		<if test="startDate !=null and startDate !=''">
+	 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+	 	</if>
+	 	<if test="endDate !=null and endDate !=''">
+	 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+	 	</if> 
+	 	<if test="lccCode !=null and lccCode !=''">
+	 		and lcc_code = #{lccCode}
+	 	</if>
+	 	<if test="group !=null and group !=''">
+	 		and belong_group =#{group}
+	 	</if>
+   		group by lcc_code
+   	) t_xyhf on t_zs.lcc_code = t_xyhf.lcc_code left join
+   	(
+   		select lcc_code, count(1) as sjhf 
+   		from t2 
+   		where 1=1
+   		<if test="startDate !=null and startDate !=''">
+	 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+	 	</if>
+	 	<if test="endDate !=null and endDate !=''">
+	 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+	 	</if> 
+	 	<if test="lccCode !=null and lccCode !=''">
+	 		and lcc_code = #{lccCode}
+	 	</if>
+	 	<if test="group !=null and group !=''">
+	 		and belong_group =#{group}
+	 	</if>
+   		group by lcc_code
+   	) t_sjhf on t_zs.lcc_code = t_sjhf.lcc_code left join
+   	(
+   		select lcc_code, count(1) as fkdxs 
+   		from (
+   			select max(lcc_code) lcc_code, count(1) as st 
+   			from t1 
+   			where is_needreply = 1
+   			<if test="startDate !=null and startDate !=''">
+		 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+		 	</if>
+		 	<if test="endDate !=null and endDate !=''">
+		 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+		 	</if> 
+		 	<if test="lccCode !=null and lccCode !=''">
+		 		and lcc_code = #{lccCode}
+		 	</if>
+		 	<if test="group !=null and group !=''">
+		 		and belong_group =#{group}
+		 	</if>
+   			group by patient_id
+   		) t4
+       	where st >= 2
+       	group by lcc_code
+    ) t_fkdxs on t_zs.lcc_code = t_fkdxs.lcc_code left join
+   	(
+   		select lcc_code, count(1) as two_whf 
+   		from (
+   			select min(lcc_code) as lcc_code, patient_id
+   			from t3 
+   			where decode( mobile , mobile_lag ,1 ,0 ) = 1 and decode( isreply , isreply_lag , decode(isreply , '0' , 1 , 0) , 0 ) = 1
+   			<if test="startDate !=null and startDate !=''">
+		 		and sendtime_real >= to_date(#{startDate}, 'yyyy-MM-dd hh24:mi:ss')
+		 	</if>
+		 	<if test="endDate !=null and endDate !=''">
+		 		and sendtime_real <![CDATA[<=]]> trunc(to_date(#{endDate}, 'yyyy-MM-dd')+1)-1/(24*3600)
+		 	</if> 
+		 	<if test="lccCode !=null and lccCode !=''">
+		 		and lcc_code = #{lccCode}
+		 	</if>
+		 	<if test="group !=null and group !=''">
+		 		and belong_group =#{group}
+		 	</if>
+		 	group by patient_id
+   		)
+   		group by lcc_code
+   	) t_two_whf on t_zs.lcc_code = t_two_whf.lcc_code
+	left join (
+	select lcc_code , count(1) randomcount
+	from pip_comm_patient where belong_group is not null group by lcc_code
+	) t4
+	on t4.lcc_code =  t_zs.lcc_code
+	</select>
+
+
+
+
+    <select id="export" resultType="map" parameterType="com.bdcor.pip.web.msg.filter.MsgSendNoFilter">
+		select
+	    s.ID as id,
+	    s.LCC_CODE as lccId,
+	    s.PATIENT_ID as patientId,
+	    p.PATIENT_NAME as patientName,
+	    p.id_number as idNumber,
+	    p.mobile as mobile,
+
+		decode(p.belong_group, '01' ,'非糖尿病实验组' ,
+		decode(p.belong_group , '02' , '非糖尿病对照组' ,
+		decode(p.belong_group , '11','糖尿病实验组',
+		decode(p.belong_group , '12' , '糖尿病对照组', '无分组')))
+		)
+
+		as bGroup,
+	    s.MSG_NAME as msgName,
+	    s.sendtime_preinstall as preSendTime,
+	    s.sendtime_real as realSendTime,
+	    case when s.STATE=1 then '已发送' else '未发送' end as state,
+	    case when s.is_delete=1 then '已删除' else '未删除' end as isDelete,
+	    s.create_date as createTime,
+	    a.NAME as creatorName,
+	    msg.MSG_TYPE_CODE as typeCode,
+	    s.MSG_ID as msgId,
+	    case when s.IS_NEEDREPLY=1 then '是' else '否' end as isNeedReply,
+	    lcc.LCC_NAME as lccName,
+	    s.SEND_COUNT as sendCount,
+	    case when s.SEND_RESULT=1 then '成功'when s.send_result=2 then '失败' else '' end as sendResult,
+	    s.SEND_REASON as sendReason
+	     from PIP_MSG_SEND s
+	    left join PIP_COMM_LCC lcc on lcc.PROJECT_ID=s.PROJECT_ID and lcc.LCC_CODE=s.LCC_CODE
+	    left join PIP_COMM_PATIENT p on p.PROJECT_ID=s.PROJECT_ID and p.LCC_CODE=s.LCC_CODE and p.PATIENT_ID=s.PATIENT_ID
+	    left join PIP_MSG_MSGTMP msg on msg.ID=s.MSG_ID
+	    left join PIP_SYS_ACCOUNT a on a.ID=s.CREATE_BY
+		where s.project_id=#{projectId} and 
+		s.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="lccCode != null and lccCode != ''">
+			and s.LCC_CODE=#{lccCode}
+		</if>
+		<if test="patientId != null and patientId != ''">
+			and s.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and p.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="group != null">
+			and p.belong_group =#{group}
+		</if>
+		<if test="realSendTimeStart != null and realSendTimeStart != ''">
+			and to_char(s.sendtime_real,'yyyy-MM-dd hh24:mi:ss') >= #{realSendTimeStart}
+		</if>
+		<if test="realSendTimeEnd != null and realSendTimeEnd != ''">
+			and to_char(s.sendtime_real,'yyyy-MM-dd hh24:mi:ss') &lt;= #{realSendTimeEnd}
+		</if>
+		<if test="preSendTimeStart != null and preSendTimeStart != ''">
+			and to_char(s.sendtime_preinstall,'yyyy-MM-dd hh24:mi:ss') >= #{preSendTimeStart}
+		</if>
+		<if test="preSendTimeStart != null and preSendTimeStart != ''">
+			and to_char(s.sendtime_preinstall,'yyyy-MM-dd hh24:mi:ss') &lt;= #{preSendTimeStart}
+		</if>
+		<if test="preSendTime != null and preSendTime != ''">
+			and to_char(s.sendtime_preinstall,'yyyy-MM-dd') = #{preSendTime}
+		</if>
+		<if test="realSendTime != null and realSendTime != ''">
+			and to_char(s.sendtime_real,'yyyy-MM-dd') = #{realSendTime}
+		</if>
+		<if test="state != null">
+			and s.STATE=#{state}
+		</if>
+		<if test="isDelete != null">
+			and s.is_delete=#{isDelete}
+		</if>
+		<if test="sendId != null and sendId !=''">
+			and s.ID = #{sendId}
+		</if>
+		<if test="sendResult != null and sendResult !=''">
+			and s.SEND_RESULT = #{sendResult}
+		</if>
+	</select>
+	<select id="list" parameterType="com.bdcor.pip.web.msg.filter.MsgSendFilter" resultType="com.bdcor.pip.web.msg.domain.MsgSendVo">
+		select
+		s.ID as id,
+		s.LCC_CODE as lccId,
+		s.PATIENT_ID as patientId,
+		p.PATIENT_NAME as patientName,
+		p.id_number as idNumber,
+		s.mobile as mobile,
+		p.belong_group as bGroup,
+		s.MSG_NAME as msgName,
+		s.sendtime_preinstall as preSendTime,
+		s.sendtime_real as realSendTime,
+		s.STATE as state,
+		s.is_delete as isDelete,
+		s.create_date as createTime,
+		nvl(a.NAME ,'system') as creatorName,
+		msg.MSG_TYPE_CODE as typeCode,
+		s.MSG_ID as msgId,
+		s.IS_NEEDREPLY as isNeedReply,
+		lcc.LCC_NAME as lccName,
+		s.SEND_COUNT as sendCount,
+		s.SEND_RESULT as sendResult,
+		s.SEND_REASON as sendReason
+ 		from PIP_MSG_SEND s
+		left join PIP_COMM_LCC lcc on lcc.PROJECT_ID=s.PROJECT_ID and lcc.LCC_CODE=s.LCC_CODE
+		left join PIP_COMM_PATIENT p on p.PROJECT_ID=s.PROJECT_ID and p.LCC_CODE=s.LCC_CODE and p.PATIENT_ID=s.PATIENT_ID
+		left join PIP_MSG_MSGTMP msg on msg.ID=s.MSG_ID
+		left join PIP_SYS_ACCOUNT a on a.ID=s.CREATE_BY
+		where s.project_id=#{projectId} and 
+		s.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		and ( s.is_delete is null or s.is_delete != 1 ) <!--//查询未删除的短信 -->
+		<if test="lccCode != null and lccCode != ''">
+			and s.LCC_CODE=#{lccCode}
+		</if>
+		<if test="patientId != null and patientId != ''">
+			and s.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and p.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="group != null">
+			and p.belong_group =#{group}
+		</if>
+		<if test="realSendTimeStart != null and realSendTimeStart != ''">
+			and to_char(s.sendtime_real,'yyyy-MM-dd hh24:mi:ss') >= #{realSendTimeStart}
+		</if>
+		<if test="realSendTimeEnd != null and realSendTimeEnd != ''">
+			and to_char(s.sendtime_real,'yyyy-MM-dd hh24:mi:ss') &lt;= #{realSendTimeEnd}
+		</if>
+		<if test="preSendTimeStart != null and preSendTimeStart != ''">
+			and to_char(s.sendtime_preinstall,'yyyy-MM-dd hh24:mi:ss') >= #{preSendTimeStart}
+		</if>
+		<if test="preSendTimeStart != null and preSendTimeStart != ''">
+			and to_char(s.sendtime_preinstall,'yyyy-MM-dd hh24:mi:ss') &lt;= #{preSendTimeStart}
+		</if>
+		<if test="preSendTime != null and preSendTime != ''">
+			and to_char(s.sendtime_preinstall,'yyyy-MM-dd') = #{preSendTime}
+		</if>
+		<if test="realSendTime != null and realSendTime != ''">
+			and to_char(s.sendtime_real,'yyyy-MM-dd') = #{realSendTime}
+		</if>
+		<if test="state != null">
+			and s.STATE=#{state}
+		</if>
+		
+		<if test="reportCode != null and reportCode == 'all'">
+			
+		</if>
+		<if test="reportCode != null and reportCode != 'all' and reportCode != ''">
+			and s.REPORT_CODE=#{reportCode}
+		</if>
+		<if test="reportCode != null and reportCode == ''">
+			and s.sendReason is null
+		</if>
+		
+		<if test="isDelete != null">
+			and s.is_delete=#{isDelete}
+		</if>
+		<if test="sendId != null and sendId !=''">
+			and s.ID = #{sendId}
+		</if>
+		<if test="sendResult != null and sendResult !=''">
+			and nvl(s.SEND_RESULT , 0) = #{sendResult}
+		</if>
+		order by trunc(s.sendtime_real,'hh') desc, s.lcc_code asc, s.patient_id asc
+		<!--<if test="sidx != null and sidx != ''">-->
+			<!--, ${sidx}-->
+			<!--<if test="sord!=null and sord!= ''">-->
+				<!--${sord}-->
+			<!--</if>-->
+		<!--</if>-->
+	</select>
+	
+	<select id="getPatient" parameterType="String" resultType="map">
+		select PATIENT_ID,PATIENT_NAME||decode(sex,'1','先生','女士') patient_name,
+		decode(round((trunc(sysdate) - trunc(group_date))/30) , '0' , '几',round((trunc(sysdate) - trunc(group_date))/30)) trial_month
+ 		from PIP_COMM_PATIENT where LCC_CODE=#{lccCode} and IS_SUBSCRIBE=1 and mobile is not null
+	</select>
+	
+	<select id="getMsgTypeList" resultType="map">
+		select * from PIP_MSG_MSGTYPE
+	</select>
+	
+	<select id="getReportCode" resultType="map">
+		select report_code,send_reason from pip_msg_send group by report_code,send_reason
+	</select>
+	
+	<select id="getMsgListByType" resultType="map" parameterType="String">
+		select * from PIP_MSG_MSGTMP where MSG_TYPE_CODE like '%'||#{type}||'%'
+	</select>
+	
+	<insert id="insertSend" parameterType="map">
+		insert into PIP_MSG_SEND(ID,PROJECT_ID,LCC_CODE,PATIENT_ID,SENDTIME_PREINSTALL,MSG_ID,MSG_NAME,CREATE_BY,CREATE_DATE , mobile)values
+		(PIP_MSG_SEND_SEQ.nextval,#{PROJECT_ID},#{LCC_CODE},#{PATIENT_ID},to_date(#{SENDTIME_PREINSTALL},'yyyy-MM-dd hh24:mi:ss'),#{MSG_ID},#{MSG_NAME},#{CREATE_BY},sysdate ,
+		( select mobile from pip_comm_patient where patient_id = #{PATIENT_ID} and rownum=1)
+		)
+	</insert>
+	
+	<update id="updateSend" parameterType="map">
+		update PIP_MSG_SEND set LCC_CODE=#{LCC_CODE},PATIENT_ID=#{PATIENT_ID},SENDTIME_PREINSTALL=to_date(#{SENDTIME_PREINSTALL},'yyyy-MM-dd hh24:mi:ss'),MSG_ID=#{MSG_ID}
+		,MSG_NAME=#{MSG_NAME} where ID=#{ID}
+	</update>
+	<update id="updateMsgInfo" parameterType="map">
+		update PIP_MSG_SEND 
+			set STATE = ${STATE},
+			SEND_RESULT =#{SEND_RESULT},
+			SEND_REASON=#{SEND_REASON}
+		where ID=#{ID}
+	</update>
+	
+	<update id="sendDelete">
+		update PIP_MSG_SEND set IS_DELETE=1 where ID in
+		<foreach collection="idArr" item="id" index="index"
+            open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+	</update>
+	
+	<select id="getSendList" resultType="map">
+		select 
+		s.ID,
+		s.MSG_NAME,
+		p.MOBILE
+		from PIP_MSG_SEND s
+		inner join PIP_COMM_PATIENT p on p.PROJECT_ID=s.PROJECT_ID and p.LCC_CODE=s.LCC_CODE and p.PATIENT_ID=s.PATIENT_ID
+		where s.STATE=2 and s.IS_DELETE=2 and p.MOBILE is not null  and sysdate>s.SENDTIME_PREINSTALL
+				and 3 > to_number(nvl(SEND_COUNT,0))
+	</select>
+	
+	<update id="updateStateById">
+		update
+			PIP_MSG_SEND
+		set STATE=#{STATE},
+		<if test=" SEND_RESULT != null and SEND_RESULT != ''" >
+			SEND_RESULT = #{SEND_RESULT},
+		</if>
+		<if test=" SEND_REASON != null and SEND_REASON != ''" >
+			SEND_REASON = #{SEND_REASON},
+		</if>
+			SEND_COUNT   = to_number(nvl(SEND_COUNT,0)) + 1,
+			SENDTIME_REAL=sysdate,
+			MOBILE=#{MOBILE}
+		where ID=#{ID}
+	</update>
+
+	<select id="getNewPatient" resultMap="com.bdcor.pip.web.data.dao.PipCommPatientMapper.BaseResultMap" >
+
+		SELECT * FROM PIP_COMM_PATIENT P
+		WHERE P.IS_JOIN_MSG = '1'
+		AND NOT EXISTS(
+			SELECT 1 FROM (SELECT DISTINCT PATIENT_ID FROM PIP_MSG_TEMP) T
+			WHERE T.PATIENT_ID = P.PATIENT_ID
+		)AND
+p.BELONG_GROUP in ('01','02','11','12')
+          and p.IS_SUBSCRIBE =1
+          and p.is_join_msg =1
+          and p.is_smoking in ('1','2')
+          and p.mobile is not null
+	</select>
+	
+	<select id="getCountByMobileAndType" resultType="int">
+		select 
+		count(*)
+		from PIP_MSG_SEND s
+		inner join PIP_MSG_MSGTMP t on t.id=s.MSG_ID
+		where s.STATE=1 and s.MOBILE=#{mobile} and t.MSG_TYPE_CODE like '%'||#{type}
+	</select>
+</mapper>

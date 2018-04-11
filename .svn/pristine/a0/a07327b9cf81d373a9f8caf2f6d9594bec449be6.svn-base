@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.spem.dao.BillEventMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.spem.domain.BillEventVo" >
+    <id column="EVENT_CODE" property="eventCode" jdbcType="VARCHAR" />
+    <id column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <id column="WAYBILL_NO" property="waybillNo" jdbcType="VARCHAR" />
+    <result column="EVENT_DATE" property="eventDate" jdbcType="TIMESTAMP" />
+    <result column="LIABLE_SB" property="liableSb" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="LESBNAME" property="liableSbName" jdbcType="VARCHAR" />
+    <result column="EVENT_NAME" property="event_name" jdbcType="VARCHAR" />
+    
+    
+  </resultMap>
+<!--   <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.eventDate != null" >
+         and EVENT_DATE = #{condition.eventDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="condition.liableSb != null" >
+         and LIABLE_SB = #{condition.liableSb,jdbcType=VARCHAR}
+      </if>
+      <if test="condition.createDate != null" >
+         and CREATE_DATE = #{condition.createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="condition.createBy != null" >
+         and CREATE_BY = #{condition.createBy,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="example.condition.eventDate != null" >
+         and EVENT_DATE = #{example.condition.eventDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="example.condition.liableSb != null" >
+         and LIABLE_SB = #{example.condition.liableSb,jdbcType=VARCHAR}
+      </if>
+      <if test="example.condition.createDate != null" >
+         and CREATE_DATE = #{example.condition.createDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="example.condition.createBy != null" >
+         and CREATE_BY = #{example.condition.createBy,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </sql>-->
+  <sql id="Base_Column_List" >
+    EVENT_CODE, PROJECT_ID, WAYBILL_NO, EVENT_DATE, LIABLE_SB, CREATE_DATE, CREATE_BY
+  </sql> 
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    ev.* , acct.LOGIN_NAME as LESBNAME,et.EVENT_NAME
+    from PIP_SCM_WAYBILL_EVENT ev
+    left join PIP_SYS_ACCOUNT acct on  ev.LIABLE_SB=acct.ID  
+    left join PIP_SCM_EVENTDICT et  on et.EVENT_CODE=ev.EVENT_CODE 
+    where  
+    ev.WAYBILL_NO = #{waybill_no,jdbcType=VARCHAR}
+    order by ev.EVENT_DATE
+  </select> 
+ <!--  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.spem.domain.BillEventVoKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_SCM_WAYBILL_EVENT
+    where EVENT_CODE = #{eventCode,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+      and WAYBILL_NO = #{waybillNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.bdcor.pip.web.spem.domain.BillEventVoKey" >
+    delete from PIP_SCM_WAYBILL_EVENT
+    where EVENT_CODE = #{eventCode,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+      and WAYBILL_NO = #{waybillNo,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.spem.domain.Criteria" >
+    delete from PIP_SCM_WAYBILL_EVENT
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete> -->
+
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.spem.domain.BillEventVo" >
+    insert into PIP_SCM_WAYBILL_EVENT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="eventCode != null" >
+        EVENT_CODE,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="waybillNo != null" >
+        WAYBILL_NO,
+      </if>
+      <if test="eventDate != null" >
+        EVENT_DATE,
+      </if>
+      <if test="liableSb != null" >
+        LIABLE_SB,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+    </trim>  
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="eventCode != null" >
+        #{eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="waybillNo != null" >
+        #{waybillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="eventDate != null" >
+        #{eventDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="liableSb != null" >
+        #{liableSb,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+ <!--  <select id="countByExample" parameterType="com.bdcor.pip.web.spem.domain.Criteria" resultType="java.lang.Integer" >
+    select count(*) from PIP_SCM_WAYBILL_EVENT
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_SCM_WAYBILL_EVENT
+    <set >
+      <if test="record.eventCode != null" >
+        EVENT_CODE = #{record.eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.waybillNo != null" >
+        WAYBILL_NO = #{record.waybillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eventDate != null" >
+        EVENT_DATE = #{record.eventDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.liableSb != null" >
+        LIABLE_SB = #{record.liableSb,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_SCM_WAYBILL_EVENT
+    set EVENT_CODE = #{record.eventCode,jdbcType=VARCHAR},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      WAYBILL_NO = #{record.waybillNo,jdbcType=VARCHAR},
+      EVENT_DATE = #{record.eventDate,jdbcType=TIMESTAMP},
+      LIABLE_SB = #{record.liableSb,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.spem.domain.BillEventVo" >
+    update PIP_SCM_WAYBILL_EVENT
+    <set >
+      <if test="eventDate != null" >
+        EVENT_DATE = #{eventDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="liableSb != null" >
+        LIABLE_SB = #{liableSb,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where EVENT_CODE = #{eventCode,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+      and WAYBILL_NO = #{waybillNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.spem.domain.BillEventVo" >
+    update PIP_SCM_WAYBILL_EVENT
+    set EVENT_DATE = #{eventDate,jdbcType=TIMESTAMP},
+      LIABLE_SB = #{liableSb,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR}
+    where EVENT_CODE = #{eventCode,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+      and WAYBILL_NO = #{waybillNo,jdbcType=VARCHAR}
+  </update> -->
+</mapper>

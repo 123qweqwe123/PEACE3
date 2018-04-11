@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.PatientReportDao">
+	<!-- 事件部分sql -->
+	<select id="getPatientReportList" parameterType="com.bdcor.pip.web.qn.filter.PatientReportFilter" resultType="map">
+		select 
+		substr(qn.VERSION,5,3) as "id",
+		count(b.PATIENT_ID) as totalCount,
+		count(b.ismian) as mianCount,
+		count(b.iscp) as cpCount,
+		count(b.isnotcp) as notCpCount
+		
+		from PIP_UQS_QUESTIONNAIRE qn
+		left join(
+		          select 
+		          l.PATIENT_ID,
+		          substr(l.UQS_VERSION,5,3) as qnId,
+		          max(p.is_dead)as IS_DEAD,
+		          max(case when (substr(a.QUESTIONNAIRE_ID,5,3)='001') or
+		                        (substr(a.QUESTIONNAIRE_ID,5,3)='002' and a.QUESTIONSET_ID='1' and a.QUESTION_ID='1' and OPTION_ID='1')
+		                        then 1 else null end) as ismian,
+		          max(case when (substr(a.QUESTIONNAIRE_ID,5,3)='002' and a.QUESTIONSET_ID='1' and a.QUESTION_ID='1' and OPTION_ID='1') or
+		                        (substr(a.QUESTIONNAIRE_ID,5,3)='003' and a.QUESTIONSET_ID='1' and a.QUESTION_ID='1' and OPTION_ID='1')
+		                        then 1 else null end) as iscp,
+		          max(case when (substr(a.QUESTIONNAIRE_ID,5,3)='002' and a.QUESTIONSET_ID='1' and a.QUESTION_ID='1' and OPTION_ID='2') or
+		                        (substr(a.QUESTIONNAIRE_ID,5,3)='003' and a.QUESTIONSET_ID='1' and a.QUESTION_ID='1' and OPTION_ID='2')
+		                        then 1 else null end) as isnotcp
+		          from PIP_UQS_ANSWERQN_LOG l
+		          inner join PIP_COMM_PATIENT p on p.PATIENT_ID=l.PATIENT_ID
+		          inner join PIP_UQS_ANSWER a on a.PATIENT_ID=l.PATIENT_ID and substr(a.QUESTIONNAIRE_ID,5,3)=substr(l.UQS_VERSION,5,3)
+		          where l.STATE=1 
+		          <if test="lccCode != null and lccCode != ''">
+				  	and p.lcc_code=#{lccCode}
+				  </if>
+		          group by l.PATIENT_ID,substr(l.UQS_VERSION,5,3)
+		          )b 
+		          on substr(qn.VERSION,5,3)=b.qnId
+		where substr(qn.VERSION,5,3) in('001','002','003','004','005') 
+		group by substr(qn.VERSION,5,3)
+		order by substr(qn.VERSION,5,3)
+	</select>
+	
+	<select id="getDeadCount" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.PatientReportFilter">
+		select 
+		c.uqsId,count(c.PATIENT_ID) deadCount
+		from(
+		select p.PATIENT_ID,'00'||max(nvl(substr(l.UQS_VERSION,7,1),0)+1) as uqsId
+		from PIP_COMM_PATIENT p
+		left join PIP_UQS_ANSWERQN_LOG l on p.PATIENT_ID=l.PATIENT_ID and l.STATE=1
+		where p.IS_DEAD=1
+		<if test="lccCode != null and lccCode != ''">
+	  		and p.lcc_code=#{lccCode}
+	    </if>
+		group by p.PATIENT_ID)c
+		group by c.uqsId
+	</select>
+
+
+	<select id="getGroupState" resultType="map">
+
+		SELECT
+		LCC_NAME,LCC_CODE,FIRSTVIEW,RANDOM,HASRANDOM,DEAD,ISKNOW,IS_DIABETES,NO_DIABETES,TELFVIEW,
+		DECODE( RANDOM - DEAD , 0 ,0, ROUND( HASRANDOM/(RANDOM -DEAD ) ,2 ) ) *100 || '%' as RANDOMRATE
+		FROM (
+			SELECT
+			'合计' LCC_NAME,'' LCC_CODE,SUM(FIRSTVIEW) FIRSTVIEW,SUM(RANDOM) RANDOM,
+			SUM(HASRANDOM) HASRANDOM,SUM(DEAD) DEAD,SUM(ISKNOW) ISKNOW,SUM(IS_DIABETES) IS_DIABETES,
+			SUM(NO_DIABETES) NO_DIABETES,SUM(TELFVIEW) TELFVIEW
+			FROM V_PIP_COMM_GROUP_STATE
+			)
+		UNION ALL
+		(
+			SELECT
+				LCC_NAME,LCC_CODE,FIRSTVIEW,RANDOM,HASRANDOM,DEAD,ISKNOW,IS_DIABETES,NO_DIABETES,
+				TELFVIEW,RANDOMRATE
+			FROM V_PIP_COMM_GROUP_STATE
+			where 1=1
+				<if test="lccCode != null and lccCode != ''">
+					and lcc_code = #{lccCode}
+				</if>
+		)
+		order by lcc_code
+	</select>
+</mapper>

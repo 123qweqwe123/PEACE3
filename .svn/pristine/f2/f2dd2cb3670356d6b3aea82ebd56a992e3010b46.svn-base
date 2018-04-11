@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.fee.dao.FeePlanDAO" >
+
+<!--表实体映射-->
+<!--  
+<resultMap id="feePlanResultMap" type="com.bdcor.pip.web.fee.domain.FeePlanVo">
+    <id property="id" column="ID"/>
+    <result property="organId"   column="ORGANID"/>
+    <result property="projectId" column="PROJECTID"/>
+    <result property="activat_time"  column="ACTIVATTIME"/> 
+    <result property="plan_complete_time"  column="PLAN_COMPLETE_TIME"/>
+    <result property="amount"  column="AMOUNT"/>
+    <result property="reg_time"  column="REG_TIME"/>
+    <result property="reg_person"  column="REG_PERSON"/>     
+</resultMap>  
+-->  
+
+<resultMap id="feePlanResultMap" type="com.bdcor.pip.web.fee.domain.FeePlanVo">
+   <constructor>
+            <arg column="ID" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="ORGANID" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="PROJECTID" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="ACTIVATTIME" jdbcType="TIMESTAMP"  javaType="java.util.Date" />
+            <arg column="PLAN_COMPLETE_TIME" jdbcType="TIMESTAMP"  javaType="java.util.Date" />
+            <arg column="AMOUNT" jdbcType="INTEGER" javaType="java.lang.Integer"  />
+            <arg column="REG_TIME" jdbcType="TIMESTAMP"  javaType="java.util.Date" />
+            <arg column="REG_PERSON" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="USEAMOUNT" jdbcType="VARCHAR" javaType="java.lang.String" />
+            
+  </constructor>  
+</resultMap>  
+
+
+
+
+<select id="list"  parameterType="java.lang.String"  resultMap="feePlanResultMap">
+     <!-- select ID id, ORGANID organId,PROJECTID projectId ,ACTIVATTIME activat_time, PLAN_COMPLETE_TIME plan_complete_time, AMOUNT amount,REG_TIME reg_time, REG_PERSON reg_person   from PIP_FEE_PLAN where 1=1 -->
+    <!--  
+       select  fp.ID,cl.LCC_NAME as ORGANID,fp.PROJECTID,fp.ACTIVATTIME,fp.PLAN_COMPLETE_TIME,fp.AMOUNT,fp.REG_TIME,fp.REG_PERSON   from PIP_FEE_PLAN fp,PIP_COMM_LCC cl where fp.IN_USE='1' and fp.ORGANID=cl.LCC_CODE and fp.PROJECTID=cl.PROJECT_ID 
+    -->
+      select  
+ fo.ID,cl.LCC_NAME as ORGANID,fo.PROJECTID,fo.ACTIVATTIME,fo.PLAN_COMPLETE_TIME,fo.AMOUNT,fo.REG_TIME,fo.REG_PERSON ,nvl(fio.useAmount/fo.amount,0) useAmount 
+ from  PIP_FEE_PLAN fo 
+ left join PIP_COMM_LCC cl 
+ on  fo.ORGANID=cl.LCC_CODE and fo.PROJECTID=cl.PROJECT_ID 
+ left join  
+        (
+        select fi.lcc_code,fi.project_id,sum(dc.group_cost) useAmount  from PIP_FEE_INFO fi 
+        left join PIP_FEE_PLAN fp 
+        on  fp.projectid =fi.project_id and fi.lcc_code=fp.organid
+        left join PIP_COMM_DICT_CHECKGROUP dc on fi.st_type=dc.group_id  
+         group by fi.lcc_code, fi.project_id
+        ) fio on fo.organid=fio.lcc_code and fo.projectid=fio.project_id 
+       where 1=1   
+     <if test="orgId != null">
+             and   fo.ORGANID in ${orgId}
+     </if>
+     <if test="projId != null">
+             and   fo.PROJECTID = #{projId,jdbcType=VARCHAR}
+     </if>
+</select>    
+
+<select id="getById" parameterType="java.lang.String" resultMap="feePlanResultMap">
+     select  ID,ORGANID,PROJECTID,ACTIVATTIME,PLAN_COMPLETE_TIME,AMOUNT,REG_TIME,REG_PERSON   from PIP_FEE_PLAN where IN_USE='1'
+      and id = #{id,jdbcType=VARCHAR}  
+</select>      
+
+
+<insert id="save" parameterType="com.bdcor.pip.web.fee.domain.FeePlanVo">
+            insert into PIP_FEE_PLAN
+        <trim prefix="(" suffix=")" suffixOverrides=",">  
+            <if test="id != null">
+                ID,
+            </if>
+             <if test="organId != null">
+                ORGANID,
+            </if>
+            <if test="projectId != null">
+                PROJECTID,
+            </if>
+            <if test="activat_time != null">
+                ACTIVATTIME,
+            </if>
+            <if test="plan_complete_time != null">
+                PLAN_COMPLETE_TIME,
+            </if>
+            <if test="amount != null">
+                AMOUNT,
+            </if>
+            <if test="reg_time != null">
+                REG_TIME,
+            </if>
+            <if test="reg_person != null">
+                REG_PERSON,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="organId != null">
+                #{organId,jdbcType=VARCHAR},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="activat_time != null">
+                #{activat_time,jdbcType=DATE},
+            </if>
+            <if test="plan_complete_time != null">
+                #{plan_complete_time,jdbcType=DATE},
+            </if>
+            <if test="amount != null">
+                #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="reg_time != null">
+                #{reg_time,jdbcType=DATE},
+            </if>
+            <if test="reg_person != null">
+                #{reg_person,jdbcType=VARCHAR}, 
+            </if>  
+        </trim>
+</insert>
+
+
+<update id="delete" >
+    <!-- 
+         update PIP_FEE_PLAN  set IN_USE='0' where id = #{id,jdbcType=VARCHAR} 
+    -->
+         delete from PIP_FEE_PLAN where id = #{id,jdbcType=VARCHAR}     
+</update> 
+     
+<!--     
+<delete id="delete" parameterType="java.lang.String">
+    delete from PIP_FEE_PLAN where id = #{id,jdbcType=VARCHAR}
+</delete> -->   
+
+
+</mapper>

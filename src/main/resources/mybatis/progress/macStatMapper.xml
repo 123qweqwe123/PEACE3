@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.progress.dao.MacStatDao">
+    <resultMap id="BaseResultMap" type="com.bdcor.pip.web.progress.domain.MacStat">
+        <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR"/>
+        <result column="LCC_NAME" property="lccName" jdbcType="VARCHAR"/>
+        <result column="UPLOADDATE" property="uploadDate" jdbcType="TIMESTAMP"/>
+        <result column="MACNAME" property="macName" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+	<select id="getMacStats" parameterType="com.bdcor.pip.web.progress.filter.ProgressFilter" resultMap="BaseResultMap">
+		select mac.lcc_code,
+     	  lt.lcc_name,
+    	  mac.uploaddate,
+       	  mac.macname
+  		  from (select lcc_code,
+               max(create_date) uploaddate,
+               substr(file_name, 6, instr(file_name, '_', 1, 2) - 6) macname
+          from pip_sys_upload_log
+         group by lcc_code,
+                  substr(file_name, 6, instr(file_name, '_', 1, 2) - 6)) mac,
+       pip_comm_lcc lt
+ 		where mac.lcc_code = lt.lcc_code
+		<if test="lccName != null">
+			and LT.LCC_NAME like '%'||#{lccName}||'%'
+		</if>
+		<if test="lccCode != null">
+			and MAC.lcc_code=${lccCode}
+		</if>
+		<if test='typeCode == "2" '>
+			<![CDATA[ and sysdate-to_date(to_char(mac.uploaddate,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')>30]]>
+		</if>
+		<if test='typeCode == "1" '>
+		<![CDATA[ and	sysdate-to_date(to_char(mac.uploaddate,'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24:mi:ss')<=30]]>
+		</if>
+		order by lcc_code, uploaddate
+	</select>
+
+</mapper>

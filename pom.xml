@@ -1,0 +1,503 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>BDCOR</artifactId>
+    <groupId>com.genertech</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>com.genertech</groupId>
+  <artifactId>CHINAPEACE3-web</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>CHINAPEACE3-web Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <repositories>
+        <repository>
+            <id>localNexus</id>
+            <name></name>
+            <url>http://127.0.0.1:8081/nexus/content/groups/public</url>
+        </repository>
+
+        <repository>
+                <id>182nexus</id>
+                <name></name>
+                <url>http://10.24.10.182:8081/nexus/content/groups/public</url>
+            </repository>
+    </repositories>
+
+  <dependencies>
+  
+  <!--<dependency>-->
+    <!--<groupId>com.genertech</groupId>-->
+    <!--<artifactId>BDCOR-core</artifactId>      -->
+    <!--<version>0.0.1-SNAPSHOT</version>-->
+  <!--</dependency>-->
+
+
+      <dependency>
+          <groupId>com.bdcor.BDCOR</groupId>
+          <artifactId>pip-base</artifactId>
+          <version>1.0</version>
+      </dependency>
+
+    <dependency>
+	    <groupId>org.apache.xmlbeans</groupId>
+	    <artifactId>xbean</artifactId>
+	    <version>2.5.0-r882429</version>
+	</dependency>	
+    	
+     <!-- SPRING basic begin -->
+        <!-- email/scheduler/freemarker -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <!-- SPRING basic end -->
+
+        <!-- AOP -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+        <!-- SPRING end -->
+
+        <!-- PERSISTENCE begin -->
+        <!-- mybatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+        </dependency>
+
+        <!-- spring data access -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+        </dependency>
+        <!-- hibernate-jpa -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- dbcp -->
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+        </dependency>
+        <!-- PERSISTENCE end -->
+
+        <!-- WEB begin -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+         <!-- TIMER -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>sitemesh</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+        <dependency>
+       		<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+        <!-- WEB end -->
+
+        <!-- SECURITY begin -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-ehcache</artifactId>
+        </dependency>
+        <!-- SECURITY end -->
+
+
+        <!-- CACHE begin -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core</artifactId>
+        </dependency>
+        <!-- CACHE end -->
+
+        <!-- JSR303 BeanValidator -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <!-- JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+        </dependency>
+
+        <!-- XML begin -->
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+        </dependency>
+        <!-- XML end -->
+        
+        <dependency>
+		  <groupId>com.bdcor</groupId>
+		  <artifactId>mobileClient</artifactId>
+		  <version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+        <!-- LOGGING begin -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+        </dependency>
+
+        <!-- log4jdbc -->
+        <dependency>
+            <groupId>com.googlecode.log4jdbc</groupId>
+            <artifactId>log4jdbc</artifactId>
+        </dependency>
+        
+        <dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+        <!-- LOGGING end -->
+
+        <!-- fileupload -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+        </dependency>
+
+        <!-- fileupload end -->
+
+        <!-- GENERAL UTILS begin -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-codec</artifactId>
+        </dependency>
+        
+        <!-- poi -->
+        <dependency>
+            <groupId>net.sf.jxls</groupId>
+            <artifactId>jxls-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jxls</groupId>
+            <artifactId>jxls-reader</artifactId>
+        </dependency>
+    	<dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>ooxml-schemas</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+			<artifactId>poi-excelant</artifactId>
+			<version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>3.9</version>
+        </dependency>
+    	 <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid</artifactId>
+        </dependency>
+      <dependency>
+          <groupId>com.alibaba</groupId>
+          <artifactId>fastjson</artifactId>
+          <version>1.2.14</version>
+      </dependency>
+      <dependency>
+          <groupId>UQSResult</groupId>
+          <artifactId>UQSResult</artifactId>
+          <version>1.0</version>
+      </dependency>
+
+      <dependency>
+          <groupId>UQSRuler</groupId>
+          <artifactId>UQSRuler</artifactId>
+          <version>1.0</version>
+      </dependency>
+
+      <dependency>
+          <groupId>UQSTemplate</groupId>
+          <artifactId>UQSTemplate</artifactId>
+          <version>1.0</version>
+      </dependency>
+      <!--<dependency>-->
+          <!--<groupId>joda-time</groupId>-->
+          <!--<artifactId>joda-time</artifactId>-->
+          <!--<version>2.9.4</version>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+          <!--<groupId>org.springframework</groupId>-->
+          <!--<artifactId>spring-test</artifactId>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+          <!--<groupId>org.springframework</groupId>-->
+          <!--<artifactId>org.springframework.test</artifactId>-->
+          <!--<version>3.2.4.RELEASE</version>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+          <!--<groupId>Junit</groupId>-->
+          <!--<artifactId>Junit</artifactId>-->
+          <!--<version>4.11</version>-->
+      <!--</dependency>-->
+  </dependencies>
+  
+<build>
+        <finalName>CHINAPEACE3-web</finalName>
+        <plugins>
+            <!-- test插件,设定內存 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Xmx512M</argLine>
+                </configuration>
+            </plugin>
+
+            <!-- jetty插件, 设定context path与spring profile -->
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration>
+                    <stopPort>9966</stopPort>
+                    <stopKey>foo</stopKey>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                    <resourceBases>src/main/resources</resourceBases>
+                    <webAppConfig>
+                        <contextPath>/cp3</contextPath>
+                    </webAppConfig>
+                </configuration>
+            </plugin>
+            <!-- Tomcat7 插件 -->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.tomcat.maven</groupId>-->
+                <!--<artifactId>tomcat7-maven-plugin</artifactId>-->
+            <!--</plugin>-->
+
+            <!-- enforcer, 规则统一定义在parent -->
+            <!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin> -->
+
+            <!--<plugin>-->
+                <!--<inherited>true</inherited>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-install-plugin</artifactId>-->
+                <!--<version>2.5.2</version>-->
+
+            <!--</plugin>-->
+
+            <!-- 更改打包路径 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <!--<warName>${profiles.activation}</warName>-->
+                    <!--<webResources>-->
+                        <!--<resource>-->
+                            <!--<filtering>true</filtering>-->
+                            <!--<directory>src/main/webapp</directory>-->
+                            <!--<includes>-->
+                                <!--<include>**/web.xml</include>-->
+                                <!--<include>**/answerQn.jsp</include>-->
+                            <!--</includes>-->
+                        <!--</resource>-->
+                    <!--</webResources>-->
+                    <!--<warSourceDirectory>src/main/webapp</warSourceDirectory>-->
+                    <!--<webXml>src/main/webapp/WEB-INF/web.xml</webXml>-->
+                    <outputDirectory>${basedir}</outputDirectory>
+                    <includeEmptyDirectories>true</includeEmptyDirectories>
+                </configuration>
+            </plugin>
+
+            <!-- MyBatis代码生成 -->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <overwrite>true</overwrite>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <!-- 刨除对mybatis数据文件的修改 cp3的mapper文件存在 ${id}等的情况 -->
+                    <exclude>src/main/resources/mybatis/</exclude>
+                </excludes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <profiles>
+        <!--<profile>-->
+            <!--<id>dev</id>-->
+            <!--<activation>-->
+                <!--<activeByDefault>true</activeByDefault>-->
+            <!--</activation>-->
+            <!--<properties>-->
+                <!--<profiles.activation>development</profiles.activation>-->
+                <!--<msg_server_ip>10.24.10.191</msg_server_ip>-->
+                <!--<msg_server_port>3212</msg_server_port>-->
+                <!--<msg_reply_ip>172.31.131.130</msg_reply_ip>-->
+                <!--<msg_reply_port>12302</msg_reply_port>-->
+                <!--<msg_send_status_ip>172.31.131.130</msg_send_status_ip>-->
+                <!--<msg_send_status_port>12303</msg_send_status_port>-->
+                <!--<connection.url>jdbc:oracle:thin:@10.8.8.158:1521:chinapeace3</connection.url>-->
+            <!--</properties>-->
+        <!--</profile>-->
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <msg_server_ip>10.24.10.191</msg_server_ip>
+                <msg_server_port>3212</msg_server_port>
+                <msg_reply_ip>10.8.8.158</msg_reply_ip>
+                <msg_reply_port>12302</msg_reply_port>
+                <msg_send_status_ip>10.8.8.158</msg_send_status_ip>
+                <msg_send_status_port>12303</msg_send_status_port>
+                <connection.url>jdbc:oracle:thin:@10.8.8.158:1521:chinapeace3</connection.url>
+            </properties>
+        </profile>
+        <!--<profile>-->
+            <!--<id>pro</id>-->
+            <!--<properties>-->
+                <!--<msg_server_ip>10.24.10.191</msg_server_ip>-->
+                <!--<msg_server_port>3212</msg_server_port>-->
+                <!--<msg_reply_ip>10.24.10.116</msg_reply_ip>-->
+                <!--<msg_reply_port>12302</msg_reply_port>-->
+                <!--<msg_send_status_ip>10.24.10.116</msg_send_status_ip>-->
+                <!--<msg_send_status_port>12303</msg_send_status_port>-->
+                <!--<connection.url>jdbc:oracle:thin:@10.24.10.190:1521:chinapeace3</connection.url>-->
+            <!--</properties>-->
+        <!--</profile>-->
+    </profiles>
+
+
+</project>

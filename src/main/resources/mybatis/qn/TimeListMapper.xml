@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.TimeListDao">
+	<select id="list" parameterType="com.bdcor.pip.web.qn.filter.TimeListFilter" resultType="map">
+		select
+		l.LCC_CODE,
+		l.PATIENT_ID,
+		round(USE_TIME) as USE_TIME,
+		to_char(l.START_TIME,'yyyy-MM-dd hh24:mi:ss') START_TIME,
+		to_char(l.END_TIME,'yyyy-MM-dd hh24:mi:ss') END_TIME,
+		a.NAME as OPERATOR
+		from (
+				select lcc_code, patient_id,(max(end_time)-min(start_time))*24*60 as USE_TIME,
+				min(start_time) as START_TIME , max(end_time) END_TIME , max(create_by) as CREATE_BY
+				from pip_uqs_answerqn_log nlog
+				where
+				substr(nlog.UQS_VERSION,5,3)=#{qnLabel}
+				and exists (
+				select * from pip_uqs_answerqn_log lg where nlog.patient_id = lg.patient_id
+				and substr(lg.UQS_VERSION,5,3)=#{qnLabel}
+				and state = '1'
+				)
+				group by patient_id,lcc_code
+			) l
+		left join PIP_SYS_ACCOUNT a on a.ID=l.CREATE_BY
+		where 1=1
+		<!-- where l.PROJECT_ID=#{projectId} and l.state=1 and substr(UQS_VERSION,5,3)=#{qnLabel}-->
+		<if test="lccCode !=null and lccCode !=''">
+	   		and l.lcc_code = #{lccCode}
+	    </if>
+	    <if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>	
+	</select>
+</mapper>

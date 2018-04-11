@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.PipCommEventMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.qn.domain.PipCommEvent" >
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="PATIENT_ID" property="patientId" jdbcType="VARCHAR" />
+    <result column="EVENT_CODE" property="eventCode" jdbcType="VARCHAR" />
+    <result column="PATIENT_NAME" property="patientName" jdbcType="VARCHAR" />
+    <result column="EVENT_NAME" property="eventName" jdbcType="VARCHAR" />
+    <result column="IN_HOS_DATE" property="inHosDate" jdbcType="DATE" />
+    <result column="OUT_HOS_DATE" property="outHosDate" jdbcType="DATE" />
+    <result column="HOS_NAME" property="hosName" jdbcType="VARCHAR" />
+    <result column="EVENT_DATE" property="eventDate" jdbcType="TIMESTAMP" />
+    <result column="QUESTIONNAIRE_ID" property="questionnaireId" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="IS_DEATH" property="isDeath" jdbcType="VARCHAR" />
+    <result column="EVENT_TYPE" property="eventType" jdbcType="VARCHAR" />
+    <result column="IS_DELETE" property="isDelete" jdbcType="DECIMAL" />
+    <result column="LOG_MIN_ID" property="logMinId" jdbcType="VARCHAR" />
+    <result column="UQS_NO" property="uqsNo" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CHECK_STATUS" property="checkStatus" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    LCC_CODE, PATIENT_ID, EVENT_CODE, PATIENT_NAME, EVENT_NAME, IN_HOS_DATE, OUT_HOS_DATE, 
+    HOS_NAME, EVENT_DATE, QUESTIONNAIRE_ID, PROJECT_ID, IS_DEATH, EVENT_TYPE, IS_DELETE, 
+    LOG_MIN_ID, UQS_NO, CREATE_BY, CREATE_DATE, CHECK_STATUS
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_COMM_EVENT
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventExample" >
+    delete from PIP_COMM_EVENT
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.qn.domain.PipCommEvent" >
+    insert into PIP_COMM_EVENT (LCC_CODE, PATIENT_ID, EVENT_CODE, 
+      PATIENT_NAME, EVENT_NAME, IN_HOS_DATE, 
+      OUT_HOS_DATE, HOS_NAME, EVENT_DATE, 
+      QUESTIONNAIRE_ID, PROJECT_ID, IS_DEATH, 
+      EVENT_TYPE, IS_DELETE, LOG_MIN_ID, 
+      UQS_NO, CREATE_BY, CREATE_DATE, 
+      CHECK_STATUS)
+    values (#{lccCode,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, #{eventCode,jdbcType=VARCHAR}, 
+      #{patientName,jdbcType=VARCHAR}, #{eventName,jdbcType=VARCHAR}, #{inHosDate,jdbcType=DATE}, 
+      #{outHosDate,jdbcType=DATE}, #{hosName,jdbcType=VARCHAR}, #{eventDate,jdbcType=TIMESTAMP}, 
+      #{questionnaireId,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{isDeath,jdbcType=VARCHAR}, 
+      #{eventType,jdbcType=VARCHAR}, #{isDelete,jdbcType=DECIMAL}, #{logMinId,jdbcType=VARCHAR}, 
+      #{uqsNo,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{checkStatus,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.qn.domain.PipCommEvent" >
+    insert into PIP_COMM_EVENT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="patientId != null" >
+        PATIENT_ID,
+      </if>
+      <if test="eventCode != null" >
+        EVENT_CODE,
+      </if>
+      <if test="patientName != null" >
+        PATIENT_NAME,
+      </if>
+      <if test="eventName != null" >
+        EVENT_NAME,
+      </if>
+      <if test="inHosDate != null" >
+        IN_HOS_DATE,
+      </if>
+      <if test="outHosDate != null" >
+        OUT_HOS_DATE,
+      </if>
+      <if test="hosName != null" >
+        HOS_NAME,
+      </if>
+      <if test="eventDate != null" >
+        EVENT_DATE,
+      </if>
+      <if test="questionnaireId != null" >
+        QUESTIONNAIRE_ID,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="isDeath != null" >
+        IS_DEATH,
+      </if>
+      <if test="eventType != null" >
+        EVENT_TYPE,
+      </if>
+      <if test="isDelete != null" >
+        IS_DELETE,
+      </if>
+      <if test="logMinId != null" >
+        LOG_MIN_ID,
+      </if>
+      <if test="uqsNo != null" >
+        UQS_NO,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="checkStatus != null" >
+        CHECK_STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null" >
+        #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="eventCode != null" >
+        #{eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName != null" >
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="eventName != null" >
+        #{eventName,jdbcType=VARCHAR},
+      </if>
+      <if test="inHosDate != null" >
+        #{inHosDate,jdbcType=DATE},
+      </if>
+      <if test="outHosDate != null" >
+        #{outHosDate,jdbcType=DATE},
+      </if>
+      <if test="hosName != null" >
+        #{hosName,jdbcType=VARCHAR},
+      </if>
+      <if test="eventDate != null" >
+        #{eventDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="questionnaireId != null" >
+        #{questionnaireId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeath != null" >
+        #{isDeath,jdbcType=VARCHAR},
+      </if>
+      <if test="eventType != null" >
+        #{eventType,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=DECIMAL},
+      </if>
+      <if test="logMinId != null" >
+        #{logMinId,jdbcType=VARCHAR},
+      </if>
+      <if test="uqsNo != null" >
+        #{uqsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkStatus != null" >
+        #{checkStatus,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_COMM_EVENT
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_COMM_EVENT
+    <set >
+      <if test="record.lccCode != null" >
+        LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientId != null" >
+        PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eventCode != null" >
+        EVENT_CODE = #{record.eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientName != null" >
+        PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eventName != null" >
+        EVENT_NAME = #{record.eventName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inHosDate != null" >
+        IN_HOS_DATE = #{record.inHosDate,jdbcType=DATE},
+      </if>
+      <if test="record.outHosDate != null" >
+        OUT_HOS_DATE = #{record.outHosDate,jdbcType=DATE},
+      </if>
+      <if test="record.hosName != null" >
+        HOS_NAME = #{record.hosName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eventDate != null" >
+        EVENT_DATE = #{record.eventDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.questionnaireId != null" >
+        QUESTIONNAIRE_ID = #{record.questionnaireId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDeath != null" >
+        IS_DEATH = #{record.isDeath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eventType != null" >
+        EVENT_TYPE = #{record.eventType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDelete != null" >
+        IS_DELETE = #{record.isDelete,jdbcType=DECIMAL},
+      </if>
+      <if test="record.logMinId != null" >
+        LOG_MIN_ID = #{record.logMinId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uqsNo != null" >
+        UQS_NO = #{record.uqsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.checkStatus != null" >
+        CHECK_STATUS = #{record.checkStatus,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_COMM_EVENT
+    set LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      EVENT_CODE = #{record.eventCode,jdbcType=VARCHAR},
+      PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      EVENT_NAME = #{record.eventName,jdbcType=VARCHAR},
+      IN_HOS_DATE = #{record.inHosDate,jdbcType=DATE},
+      OUT_HOS_DATE = #{record.outHosDate,jdbcType=DATE},
+      HOS_NAME = #{record.hosName,jdbcType=VARCHAR},
+      EVENT_DATE = #{record.eventDate,jdbcType=TIMESTAMP},
+      QUESTIONNAIRE_ID = #{record.questionnaireId,jdbcType=VARCHAR},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      IS_DEATH = #{record.isDeath,jdbcType=VARCHAR},
+      EVENT_TYPE = #{record.eventType,jdbcType=VARCHAR},
+      IS_DELETE = #{record.isDelete,jdbcType=DECIMAL},
+      LOG_MIN_ID = #{record.logMinId,jdbcType=VARCHAR},
+      UQS_NO = #{record.uqsNo,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      CHECK_STATUS = #{record.checkStatus,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+  <!--自定义 sql 开始-->
+
+  <resultMap id="QueryResultMap" type="com.bdcor.pip.web.qn.domain.PipCommEventVO" extends="BaseResultMap"/>
+  <select id="selectByFilter" resultMap="QueryResultMap" parameterType="com.bdcor.pip.web.qn.filter.EventCheckFilter">
+    select
+    e.*,
+    lcc.lcc_name lccName,
+    p.value currentdescStr,
+    p1.value reportstatusStr,
+    p2.value eventendingStr
+    from pip_comm_event e
+    left join pip_comm_lcc lcc
+    on e.lcc_code = lcc.lcc_code
+    left join pip_comm_event_check c
+    on e.event_code = c.event_code
+    left join pip_sys_parameter p
+    on c.current_desc = p.code and p.type='S001'
+    left join  pip_sys_parameter p1
+    on c.report_status = p1.code and p1.type='T002'
+    left join pip_sys_parameter p2
+    on c.event_ending = p2.code and p2.type ='T001'
+    where 1=1
+    <if test="isEnding == 1">
+      and e.check_status is not null
+    </if>
+    <if test="isEnding == 2">
+      and e.check_status is null
+    </if>
+    <if test="inHosDateBegin != null">
+      and e.in_hos_date >= #{inHosDateBegin}
+    </if>
+    <if test="inHosDateEnd != null">
+      <![CDATA[ and e.in_hos_date <= #{inHosDateEnd} ]]>
+    </if>
+    <if test="eventDateBegin != null">
+      and e.event_date >= #{eventDateBegin}
+    </if>
+    <if test="eventDateEnd != null">
+      <![CDATA[  and e.event_date <= #{eventDateEnd} ]]>
+    </if>
+    <if test="patientId != null and patientId != ''">
+      and e.patient_id = #{patientId}
+    </if>
+    <if test="eventCode != null and eventCode != ''">
+      and e.event_code = #{eventCode}
+    </if>
+    <if test="lccCode != null and lccCode != ''">
+      and e.lcc_code = #{lccCode}
+    </if>
+    <if test="eventending != null and eventending != ''">
+      and to_number(c.event_ending) = ${eventending}
+    </if>
+    <if test="reportstatus != null and reportstatus != ''">
+      and to_number(e.check_status) = ${reportstatus}
+    </if>
+    <if test="sidx != null and sidx != ''">
+      order by ${sidx}
+      <if test="sord!=null and sord!= ''">
+        ${sord}
+      </if>
+    </if>
+  </select>
+
+  <!--导出excel-->
+  <resultMap id="ExcelResultMap" type="com.bdcor.pip.web.qn.domain.PipCommEventExportVO" >
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="PATIENT_ID" property="patientId" jdbcType="VARCHAR" />
+    <result column="EVENT_CODE" property="eventCode" jdbcType="VARCHAR" />
+    <result column="PATIENT_NAME" property="patientName" jdbcType="VARCHAR" />
+    <result column="EVENT_NAME" property="eventName" jdbcType="VARCHAR" />
+    <result column="IN_HOS_DATE" property="inHosDate" jdbcType="DATE" />
+    <result column="OUT_HOS_DATE" property="outHosDate" jdbcType="DATE" />
+    <result column="HOS_NAME" property="hosName" jdbcType="VARCHAR" />
+    <result column="EVENT_DATE" property="eventDate" jdbcType="TIMESTAMP" />
+
+    <result column="ORIGIN_DESC" property="originDesc" jdbcType="VARCHAR" />
+    <result column="CURRENT_DESC" property="currentDesc" jdbcType="VARCHAR" />
+    <result column="IS_DEAD" property="isDead" jdbcType="DECIMAL" />
+    <result column="OCCUR_DATE" property="occurDate" jdbcType="DATE" />
+    <result column="OCCUR_DATE_TYPE" property="occurDateType" jdbcType="DECIMAL" />
+    <result column="ENDING_DATE" property="endingDate" jdbcType="DATE" />
+    <result column="ENDING_DATE_TYPE" property="endingDateType" jdbcType="DECIMAL" />
+    <result column="DEAD_DATE" property="deadDate" jdbcType="DATE" />
+    <result column="DEAD_DATE_TYPE" property="deadDateType" jdbcType="DECIMAL" />
+    <result column="EVENT_PLACE" property="eventPlace" jdbcType="DECIMAL" />
+    <result column="HOSPITAL_NAME" property="hospitalName" jdbcType="VARCHAR" />
+    <result column="IN_HOSPITAL_DAY" property="inHospitalDay" jdbcType="DECIMAL" />
+    <result column="REPORT_REMARK" property="reportRemark" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="ORIGIN_EVENT_ENDING" property="originEventEnding" jdbcType="VARCHAR" />
+    <result column="EVENT_ENDING" property="eventEnding" jdbcType="DECIMAL" />
+    <result column="REPORT_STATUS" property="reportStatus" jdbcType="DECIMAL" />
+    <result column="REPORT_DATE" property="reportDate" jdbcType="TIMESTAMP" />
+    <result column="REPORT_BY" property="reportBy" jdbcType="VARCHAR" />
+    <result column="CURRENT_REMARK" property="currentRemark" jdbcType="VARCHAR" />
+    <result column="ORIGIN_DEAD_DATE" property="originDeadDate" jdbcType="DATE" />
+
+    <result column="XJBZW" property="xjbzw" jdbcType="DECIMAL" />
+    <result column="XJBZWTYPE" property="xjbzwtype" jdbcType="DECIMAL" />
+    <result column="FZRESULT" property="fzresult" jdbcType="VARCHAR" />
+    <result column="FZUNIT" property="fzunit" jdbcType="DECIMAL" />
+    <result column="FZUPLIMIT" property="fzuplimit" jdbcType="VARCHAR" />
+    <result column="FZUPLIMITUNIT" property="fzuplimitunit" jdbcType="DECIMAL" />
+    <result column="ISXDT" property="isxdt" jdbcType="DECIMAL" />
+    <result column="XDTVERITY" property="xdtverity" jdbcType="DECIMAL" />
+    <result column="KILLIPRANK" property="killiprank" jdbcType="DECIMAL" />
+    <result column="GZXGCJ" property="gzxgcj" jdbcType="DECIMAL" />
+    <result column="ZCCD" property="zccd" jdbcType="DECIMAL" />
+    <result column="GSBW" property="gsbw" jdbcType="DECIMAL" />
+    <result column="CXTYPE" property="cxtype" jdbcType="DECIMAL" />
+    <result column="CXPLACE" property="cxplace" jdbcType="DECIMAL" />
+    <result column="NYHATYPE" property="nyhatype" jdbcType="DECIMAL" />
+  </resultMap>
+
+  <select id="select4export" resultMap="ExcelResultMap" parameterType="com.bdcor.pip.web.qn.filter.EventCheckFilter">
+    select e.LCC_CODE,
+    lcc.lcc_name   lccName,
+    e.PATIENT_ID,
+    e.EVENT_CODE,
+    e.PATIENT_NAME,
+    e.EVENT_NAME,
+    e.IN_HOS_DATE,
+    e.OUT_HOS_DATE,
+    e.HOS_NAME,
+    e.EVENT_DATE,
+
+    c.ORIGIN_DESC,
+    c.CURRENT_DESC,
+    c.IS_DEAD,
+    c.OCCUR_DATE,
+    c.OCCUR_DATE_TYPE,
+    c.ENDING_DATE,
+    c.ENDING_DATE_TYPE,
+    c.DEAD_DATE,
+    c.DEAD_DATE_TYPE,
+    c.EVENT_PLACE,
+    c.HOSPITAL_NAME,
+    c.IN_HOSPITAL_DAY,
+    c.REPORT_REMARK,
+    c.REMARK,
+    c.ORIGIN_EVENT_ENDING,
+    c.EVENT_ENDING,
+    c.REPORT_STATUS,
+    c.REPORT_DATE,
+    c.REPORT_BY,
+    c.CURRENT_REMARK,
+    c.ORIGIN_DEAD_DATE,
+
+    er.CURRENTDESC,
+    er.XJBZW,
+    er.XJBZWTYPE,
+    er.FZRESULT,
+    er.FZUNIT,
+    er.FZUPLIMIT,
+    er.FZUPLIMITUNIT,
+    er.ISXDT,
+    er.XDTVERITY,
+    er.KILLIPRANK,
+    er.GZXGCJ,
+    er.ZCCD,
+    er.GSBW,
+    er.CXTYPE,
+    er.CXPLACE,
+    er.NYHATYPE
+
+    from pip_comm_event e
+    left join pip_comm_lcc lcc
+    on e.lcc_code = lcc.lcc_code
+    left join pip_comm_event_check c
+    on c.event_code = e.event_code
+    left join pip_comm_event_check_er er
+    on e.event_code = er.event_code
+    where 1 = 1
+
+    <if test="inHosDateBegin != null">
+      and e.in_hos_date >= #{inHosDateBegin}
+    </if>
+    <if test="inHosDateEnd != null">
+      <![CDATA[ and e.in_hos_date <= #{inHosDateEnd} ]]>
+    </if>
+    <if test="eventDateBegin != null">
+      and e.event_date >= #{eventDateBegin}
+    </if>
+    <if test="eventDateEnd != null">
+      <![CDATA[  and e.event_date <= #{eventDateEnd} ]]>
+    </if>
+    <if test="patientId != null and patientId != ''">
+      and e.patient_id = #{patientId}
+    </if>
+    <if test="eventCode != null and eventCode != ''">
+      and e.event_code = #{eventCode}
+    </if>
+    <if test="lccCode != null and lccCode != ''">
+      and e.lcc_code = #{lccCode}
+    </if>
+    <if test="eventending != null and eventending != ''">
+      and to_number(c.event_ending) = ${eventending}
+    </if>
+    <if test="reportstatus != null and reportstatus != ''">
+      and to_number(e.check_status) = ${reportstatus}
+    </if>
+  </select>
+</mapper>

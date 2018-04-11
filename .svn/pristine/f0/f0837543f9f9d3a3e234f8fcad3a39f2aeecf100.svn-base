@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdcor.pip.web.data.dao.PipCommRccMapper">
+	<resultMap id="BaseResultMap" type="com.bdcor.pip.web.data.domain.PipCommRcc">
+		<id column="RCC_CODE" jdbcType="VARCHAR" property="rccCode" />
+		<id column="PROJECT_ID" jdbcType="VARCHAR" property="projectId" />
+		<result column="RCC_NAME" property="rccName" jdbcType="VARCHAR" />
+		<result column="COUNTRY_CODE" property="countryCode" jdbcType="VARCHAR" />
+		<result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR" />
+		<result column="ENGLISH_NAME" property="englishName" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="HELP_CODE" property="helpCode" jdbcType="VARCHAR" />
+		<result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="MANA_MAN" property="manaMan" jdbcType="VARCHAR" />
+		<result column="DEPARTMENT" property="departMent" jdbcType="VARCHAR" />
+		<result column="UNIT" property="unit" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		RCC_CODE,PROJECT_ID,RCC_NAME ,COUNTRY_CODE ,AREA_CODE
+		,ENGLISH_NAME ,ADDRESS ,HELP_CODE,ORG_CODE,MANA_MAN,DEPARTMENT,UNIT
+	</sql>
+	<select id="queryRccList" parameterType="com.bdcor.pip.web.data.filter.PipCommRccFilter"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from PIP_COMM_RCC
+		where
+		 PROJECT_ID = #{projectId}
+	</select>
+	
+	<select id="selectPipCommRcc" parameterType="string" resultMap="BaseResultMap" >
+		select
+		<include refid="Base_Column_List" />
+		from PIP_COMM_RCC
+		where 1=1
+		<if test="projectId != null" >
+	      	and  PROJECT_ID = #{projectId}
+	    </if>
+		<if test="rccCode != null" >
+			and rcc_code = #{rccCode}
+		</if>
+	</select>
+	<insert id="insert" parameterType="com.bdcor.pip.web.data.domain.PipCommRcc">
+		insert into PIP_COMM_RCC (PROJECT_ID, RCC_CODE, RCC_NAME, 
+	      COUNTRY_CODE, AREA_CODE, ENGLISH_NAME, 
+	      ADDRESS, HELP_CODE, ORG_CODE, 
+	      MANA_MAN,DEPARTMENT,UNIT)
+	    values (#{projectId,jdbcType=VARCHAR}, #{rccCode,jdbcType=VARCHAR}, #{rccName,jdbcType=VARCHAR}, 
+	      #{countryCode,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR}, #{englishName,jdbcType=VARCHAR}, 
+	      #{address,jdbcType=VARCHAR}, #{helpCode,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+	      #{manaMan,jdbcType=VARCHAR},#{departMent,jdbcType=VARCHAR}, 
+	      #{unit,jdbcType=VARCHAR})
+	</insert>
+	<delete id="deleteByRccCode" parameterType="string">
+		delete from 
+			PIP_COMM_RCC 
+		where 
+			project_id=#{projectId,jdbcType=VARCHAR}
+			and RCC_CODE = #{rccCode,jdbcType=VARCHAR}
+	</delete>
+	<update id="updateByRccCode" parameterType="com.bdcor.pip.web.data.domain.PipCommRcc" >
+	   update PIP_COMM_RCC
+	    set
+	      RCC_CODE = #{rccCode,jdbcType=VARCHAR},
+	      RCC_NAME = #{rccName,jdbcType=VARCHAR},
+	      COUNTRY_CODE = #{countryCode,jdbcType=VARCHAR},
+	      AREA_CODE = #{areaCode,jdbcType=VARCHAR},
+	      ENGLISH_NAME = #{englishName,jdbcType=VARCHAR},
+	      ADDRESS = #{address,jdbcType=VARCHAR},
+	      HELP_CODE = #{helpCode,jdbcType=VARCHAR},
+	      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+	      DEPARTMENT = #{departMent,jdbcType=VARCHAR},
+	      UNIT = #{unit,jdbcType=VARCHAR},
+	      MANA_MAN = #{manaMan,jdbcType=VARCHAR}
+	    
+	    where 
+	      PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+      	  and RCC_CODE = #{rccCode,jdbcType=VARCHAR}
+	</update>
+</mapper>

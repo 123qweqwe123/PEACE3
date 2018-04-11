@@ -1,0 +1,1352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.material.supp.dao.MaterialDao">
+	<!-- 物质管理 入库出库类别 -->
+   <resultMap id="ActiveTypeResultMap" type="com.bdcor.pip.web.material.supp.domain.MaterialActiveType" >
+    <id column="ACTIVECLASS_CODE" property="activeclassCode" jdbcType="VARCHAR" />
+    <id column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="ACTIVECLASS_NAME" property="activeclassName" jdbcType="VARCHAR" />
+    <result column="HELP_CODE" property="helpCode" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Actipe_Type_Column_List" >
+    ACTIVECLASS_CODE, PROJECT_ID, ACTIVECLASS_NAME, HELP_CODE, REMARK, STATE
+  </sql>
+  <!--物质管理,添加入库信息  -->
+   <resultMap id="ImportMasterResultMap" type="com.bdcor.pip.web.material.supp.domain.MasterImport" >
+    <id column="IMORDER_NO" property="imorderNo" jdbcType="VARCHAR" />
+    <id column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="ACTIVECLASS_CODE" property="activeclassCode" jdbcType="VARCHAR" />
+    <result column="ACTIVECLASS_NAME" property="activeclassName" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="IS_REMOVED" property="isRemoved" jdbcType="DECIMAL" />
+    <result column="STOCK_CODE" property="stockCode" jdbcType="VARCHAR" />
+    <result column="STOCK_NAME" property="stockName" jdbcType="VARCHAR" />
+    <result column="SUPPLIER_CODE" property="supplierCode" jdbcType="VARCHAR" />
+    <result column="SUPPLIER_NAME" property="supplierName" jdbcType="VARCHAR" />
+    <result column="IMPORT_STATE" property="importState" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Import_Master_Column_List" >
+    IMORDER_NO, PROJECT_ID, ACTIVECLASS_CODE, LCC_CODE, USER_CODE, USER_NAME, CREATE_DATE, 
+    CREATE_BY, IS_REMOVED, STOCK_CODE, SUPPLIER_CODE, IMPORT_STATE
+  </sql>
+  
+   <select id="selectActiveTypeByState" resultMap="ActiveTypeResultMap" parameterType="java.lang.String">
+    select 
+    <include refid="Actipe_Type_Column_List" />
+    from PIP_MMS_ACTIVE_TYPE 
+    where 1=1
+    <if test="state!=null">
+    	and state=#{state}
+    </if>
+    <if test="projectId!=null">
+    	and project_id=#{projectId}
+    </if>
+  </select>
+  <select id="selectImportMasterByPrimaryKey" resultMap="ImportMasterResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.MasterImport" >
+    select 
+	   	PM.*,
+    	PT.ACTIVECLASS_NAME,
+    	PS.SUPPLIER_NAME,
+    	MS.STOCK_NAME
+    from PIP_MMS_MATIMPORT_MASTER PM
+    LEFT JOIN PIP_MMS_ACTIVE_TYPE PT
+    	ON PM.ACTIVECLASS_CODE=PT.ACTIVECLASS_CODE
+    LEFT JOIN PIP_MMS_SUPPLIER PS
+    	ON PM.SUPPLIER_CODE=PS.SUPPLIER_CODE
+    LEFT JOIN PIP_MMS_STOREHOUSE MS
+    	ON PM.STOCK_CODE=MS.STOCK_CODE and PM.PROJECT_ID=MS.PROJECT_ID
+	where 1=1
+	<if test="imorderNo!=null">
+		and	PM.IMORDER_NO = #{imorderNo,jdbcType=VARCHAR}
+	</if>
+	<if test="projectId!=null">
+		and PM.PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+	</if>
+	<if test="stockCode!=null">
+		and MS.PROJECT_ID=  #{projectId,jdbcType=VARCHAR}
+	</if>     
+  </select>
+  
+  <select id="listByIds" parameterType="string" resultMap="ImportMasterResultMap">
+    select 
+	   	PM.*,
+    	PT.ACTIVECLASS_NAME,
+    	PS.SUPPLIER_NAME,
+    	MS.STOCK_NAME,
+    	PC.LCC_NAME lccName
+    from PIP_MMS_MATIMPORT_MASTER PM
+    LEFT JOIN PIP_MMS_ACTIVE_TYPE PT
+      ON PM.ACTIVECLASS_CODE=PT.ACTIVECLASS_CODE
+    LEFT JOIN PIP_MMS_SUPPLIER PS
+      ON PM.SUPPLIER_CODE=PS.SUPPLIER_CODE 
+    LEFT JOIN PIP_MMS_STOREHOUSE MS
+      ON PM.STOCK_CODE=MS.STOCK_CODE AND PM.PROJECT_ID=MS.PROJECT_ID 
+    LEFT JOIN PIP_COMM_LCC PC
+      ON PM.LCC_CODE=PC.LCC_CODE AND PM.PROJECT_ID=PC.PROJECT_ID AND PM.LCC_CODE=PC.LCC_CODE
+  where 1=1 
+  	and PM.IS_REMOVED=0
+  	and pm.IMORDER_NO in
+  	<foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+  		#{item}
+	</foreach>
+   </select>
+  
+  <select id="getAllMasterImports" parameterType="com.bdcor.pip.web.material.supp.filter.MaterImportFilter" resultMap="ImportMasterResultMap">
+    select 
+	   	PM.*,
+    	PT.ACTIVECLASS_NAME,
+    	PS.SUPPLIER_NAME,
+    	MS.STOCK_NAME,
+    	PC.LCC_NAME lccName
+    from PIP_MMS_MATIMPORT_MASTER PM
+    LEFT JOIN PIP_MMS_ACTIVE_TYPE PT
+      ON PM.ACTIVECLASS_CODE=PT.ACTIVECLASS_CODE
+    LEFT JOIN PIP_MMS_SUPPLIER PS
+      ON PM.SUPPLIER_CODE=PS.SUPPLIER_CODE 
+    LEFT JOIN PIP_MMS_STOREHOUSE MS
+      ON PM.STOCK_CODE=MS.STOCK_CODE AND PM.PROJECT_ID=MS.PROJECT_ID 
+    LEFT JOIN PIP_COMM_LCC PC
+      ON PM.LCC_CODE=PC.LCC_CODE AND PM.PROJECT_ID=PC.PROJECT_ID AND PM.LCC_CODE=PC.LCC_CODE
+  where 1=1 
+  	and pm.lcc_code in (select lcc_code from pip_sys_user_data_limit  lt where lt.user_id = #{userId})
+  	and PM.IS_REMOVED=0
+	<if test="imorderNo!=null">
+		and	PM.IMORDER_NO like '%${imorderNo}%'
+	</if>
+	<if test="projectId!=null">
+		and PM.PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+	</if> 
+	<if test="orderStartDate !=null and orderStartDate !=''">
+		and to_char(PM.CREATE_DATE,'yyyy-MM-dd') >= '${orderStartDate}'
+	</if>
+	<if test="orderEndDate !=null and orderEndDate !=''">
+		and to_char(PM.CREATE_DATE,'yyyy-MM-dd') <![CDATA[<=]]> '${orderEndDate}'
+	</if>
+	
+	
+	<if test="stockName!=null &amp;stockName!=''">
+		and MS.STOCK_NAME like '%${stockName}%'
+	</if>
+	<if test="activeclassCode!=null &amp;activeclassCode!=''">
+		and PM.ACTIVECLASS_CODE=#{activeclassCode}
+	</if>
+	<if test="sidx!=null and sord!=null"> 
+	order by PM.${sidx} ${sord} 
+	</if>
+    </select>
+  
+  
+   <delete id="deleteImportMaster" parameterType="com.bdcor.pip.web.material.supp.domain.MasterImport" >
+   	update PIP_MMS_MATIMPORT_MASTER
+   	set is_removed=1
+   	where IMORDER_NO = #{imorderNo,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </delete>
+    <insert id="saveImportMaster" parameterType="com.bdcor.pip.web.material.supp.domain.MasterImport" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Sat Sep 06 10:43:49 CST 2014.
+    -->
+    insert into PIP_MMS_MATIMPORT_MASTER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="imorderNo != null" >
+        IMORDER_NO,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="activeclassCode != null" >
+        ACTIVECLASS_CODE,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="userCode != null" >
+        USER_CODE,
+      </if>
+      <if test="userName != null" >
+        USER_NAME,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="isRemoved != null" >
+        IS_REMOVED,
+      </if>
+      <if test="stockCode != null" >
+        STOCK_CODE,
+      </if>
+      <if test="supplierCode != null" >
+        SUPPLIER_CODE,
+      </if>
+      <if test="importState != null" >
+        IMPORT_STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="imorderNo != null" >
+        #{imorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="activeclassCode != null" >
+        #{activeclassCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isRemoved != null" >
+        #{isRemoved,jdbcType=DECIMAL},
+      </if>
+      <if test="stockCode != null" >
+        #{stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null" >
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="importState != null" >
+        #{importState,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+   <update id="updateImportMaster" parameterType="com.bdcor.pip.web.material.supp.domain.MasterImport" >
+    update PIP_MMS_MATIMPORT_MASTER
+    <set >
+      <if test="activeclassCode != null" >
+        ACTIVECLASS_CODE = #{activeclassCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        USER_CODE = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=DATE},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isRemoved != null" >
+        IS_REMOVED = #{isRemoved,jdbcType=DECIMAL},
+      </if>
+      <if test="stockCode != null" >
+        STOCK_CODE = #{stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null" >
+        SUPPLIER_CODE = #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="importState != null" >
+        IMPORT_STATE = #{importState,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where IMORDER_NO = #{imorderNo,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </update>
+  <!--  入库明细信息 -->
+  <resultMap id="ImportMasterDetailResultMap" type="com.bdcor.pip.web.material.supp.domain.MasterImportDetail" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="IMORDER_NO" property="imorderNo" jdbcType="VARCHAR" />
+    <result column="MATERLINFO_CODE" property="materlinfoCode" jdbcType="VARCHAR" />
+    <result column="MATERL_BATCH" property="materlBatch" jdbcType="VARCHAR" />
+    <result column="MATERL_PRICE" property="materlPrice" jdbcType="DECIMAL" />
+    <result column="WHOLESALE_PRICE" property="wholesalePrice" jdbcType="DECIMAL" />
+    <result column="IMPORT_UNIT" property="importUnit" jdbcType="VARCHAR" />
+    <result column="IMPORT_AMOUNT" property="importAmount" jdbcType="DECIMAL" />
+    <result column="STORE_UNIT" property="storeUnit" jdbcType="VARCHAR" />
+    <result column="COEFFICIENT_CHANGE" property="coefficientChange" jdbcType="DECIMAL" />
+    <result column="PERIOD_VALIDITY" property="periodValidity" jdbcType="DATE" />
+    <result column="SUPPLIER_CODE" property="supplierCode" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <insert id="saveImportMasterDetail" parameterType="com.bdcor.pip.web.material.supp.domain.MasterImportDetail" >
+    insert into PIP_MMS_MATIMPORT_DETAIL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        ID,
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="imorderNo != null" >
+        IMORDER_NO,
+      </if>
+      <if test="materlinfoCode != null" >
+        MATERLINFO_CODE,
+      </if>
+      <if test="materlBatch != null" >
+        MATERL_BATCH,
+      </if>
+      <if test="materlPrice != null" >
+        MATERL_PRICE,
+      </if>
+      <if test="wholesalePrice != null" >
+        WHOLESALE_PRICE,
+      </if>
+      <if test="importUnit != null" >
+        IMPORT_UNIT,
+      </if>
+      <if test="importAmount != null" >
+        IMPORT_AMOUNT,
+      </if>
+      <if test="storeUnit != null" >
+        STORE_UNIT,
+      </if>
+      <if test="coefficientChange != null" >
+        COEFFICIENT_CHANGE,
+      </if>
+      <if test="periodValidity != null" >
+        PERIOD_VALIDITY,
+      </if>
+      <if test="supplierCode != null" >
+        SUPPLIER_CODE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        MAD_SEQUENCE.NEXTVAL,
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="imorderNo != null" >
+        #{imorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materlinfoCode != null" >
+        #{materlinfoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="materlBatch != null" >
+        #{materlBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="materlPrice != null" >
+        #{materlPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wholesalePrice != null" >
+        #{wholesalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="importUnit != null" >
+        #{importUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="importAmount != null" >
+        #{importAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="storeUnit != null" >
+        #{storeUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="coefficientChange != null" >
+        #{coefficientChange,jdbcType=DECIMAL},
+      </if>
+      <if test="periodValidity != null" >
+        #{periodValidity,jdbcType=DATE},
+      </if>
+      <if test="supplierCode != null" >
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateImportMasterDetail" parameterType="com.bdcor.pip.web.material.supp.domain.MasterImportDetail" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Tue Sep 09 10:13:05 CST 2014.
+    -->
+     update PIP_MMS_MATIMPORT_DETAIL
+      set PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      IMORDER_NO = #{imorderNo,jdbcType=VARCHAR},
+      MATERLINFO_CODE = #{materlinfoCode,jdbcType=VARCHAR},
+      MATERL_BATCH = #{materlBatch,jdbcType=VARCHAR},
+      MATERL_PRICE = #{materlPrice,jdbcType=DECIMAL},
+      WHOLESALE_PRICE = #{wholesalePrice,jdbcType=DECIMAL},
+      IMPORT_UNIT = #{importUnit,jdbcType=VARCHAR},
+      IMPORT_AMOUNT = #{importAmount,jdbcType=DECIMAL},
+      STORE_UNIT = #{storeUnit,jdbcType=VARCHAR},
+      COEFFICIENT_CHANGE = #{coefficientChange,jdbcType=DECIMAL},
+      PERIOD_VALIDITY = #{periodValidity,jdbcType=DATE},
+      SUPPLIER_CODE = #{supplierCode,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=DATE},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <delete id="deleteImportMasterDetail" parameterType="com.bdcor.pip.web.material.supp.domain.MasterImportDetail" >
+    delete from PIP_MMS_MATIMPORT_DETAIL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <select id="selectImportMasterDetail" resultMap="ImportMasterDetailResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.MasterImportDetail">
+  	  select MD.*,MI.MATERL_NAME materlName,MI.CLASS_CODE classCode,MS.SUPPLIER_NAME supplierName
+		from
+		PIP_MMS_MATIMPORT_DETAIL MD
+		left join PIP_MMS_MATERL_INFO MI
+		on MD.MATERLINFO_CODE=MI.MATERLINFO_CODE
+		left join PIP_MMS_SUPPLIER MS
+		ON MD.SUPPLIER_CODE=MS.SUPPLIER_CODE
+	  where 1=1
+	  <if test="id != null" >
+       and MD.ID= #{id,jdbcType=DECIMAL}
+      </if>
+	  <if test="projectId != null" >
+       and MD.PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+      </if>
+      <if test="imorderNo != null" >
+       and MD.IMORDER_NO = #{imorderNo,jdbcType=VARCHAR}
+      </if>
+      <if test="materlinfoCode != null" >
+       and MD.MATERLINFO_CODE = #{materlinfoCode,jdbcType=VARCHAR}
+      </if>
+  </select>
+  <select id="getAllMasterDetail" resultMap="ImportMasterDetailResultMap" parameterType="com.bdcor.pip.web.material.supp.filter.MaterImportDetailFilter">
+  	  select MD.*,MI.MATERL_NAME materlName,MI.CLASS_CODE classCode,MS.SUPPLIER_NAME supplierName
+		from
+		PIP_MMS_MATIMPORT_DETAIL MD
+		left join PIP_MMS_MATERL_INFO MI
+		on MD.MATERLINFO_CODE=MI.MATERLINFO_CODE
+		left join PIP_MMS_SUPPLIER MS
+		ON MD.SUPPLIER_CODE=MS.SUPPLIER_CODE
+	  where 1=1
+	  <if test="id != null" >
+       and MD.ID = = #{id,jdbcType=DECIMAL}
+      </if>
+	  <if test="projectId != null" >
+       and MD.PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+      </if>
+      <if test="imorderNo != null" >
+       and MD.IMORDER_NO = #{imorderNo,jdbcType=VARCHAR}
+      </if>
+      <if test="materlinfoCode != null" >
+       and MD.MATERLINFO_CODE = #{materlinfoCode,jdbcType=VARCHAR}
+      </if>
+      <if test="sidx!=null and sord!=null"> 
+		order by MD.${sidx} ${sord} 
+	  </if>
+  </select>
+  <!--查询入库单下是否关联资产-->
+  <select id="countImportMasterDetail" parameterType="String" resultType="Integer">
+	 select count(*)
+	 from PIP_MMS_MATIMPORT_DETAIL PD
+	 where PD.IMORDER_NO=#{imorderNo}
+  </select>
+  <!-- 删除入库单号下对应的资产明细 -->
+  <delete id="deleteImportMasterDetailWithImorderId" parameterType="com.bdcor.pip.web.material.supp.domain.MasterImport">
+	delete from PIP_MMS_MATIMPORT_DETAIL PD
+	where PD.IMORDER_NO=#{imorderNo} and PD.PROJECT_ID=#{projectId}
+  </delete>
+  <!-- 库存信息 -->
+   <resultMap id="MasterStoreResultMap" type="com.bdcor.pip.web.material.supp.domain.MaterStore" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Wed Sep 10 09:47:34 CST 2014.
+    -->
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="STOCK_CODE" property="stockCode" jdbcType="VARCHAR" />
+    <result column="MATERLINFO_CODE" property="materlinfoCode" jdbcType="VARCHAR" />
+    <result column="MATERL_BATCH" property="materlBatch" jdbcType="VARCHAR" />
+    <result column="MATERL_PRICE" property="materlPrice" jdbcType="DECIMAL" />
+    <result column="WHOLESALE_PRICE" property="wholesalePrice" jdbcType="DECIMAL" />
+    <result column="STORE_AMOUNT" property="storeAmount" jdbcType="DECIMAL" />
+    <result column="STORE_UNIT" property="storeUnit" jdbcType="VARCHAR" />
+    <result column="PERIOD_VALIDITY" property="periodValidity" jdbcType="DATE" />
+    <result column="SUPPLIER_CODE" property="supplierCode" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="PRODUCE_DATE" property="produceDate" jdbcType="DATE" />
+    <result column="MATERL_SPEC" property="materlSpec" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectMasterStore2" resultMap="MasterStoreResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.MaterStore" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Wed Sep 10 09:47:34 CST 2014.
+    -->
+    select
+    PS.*,
+    PM.MATERL_NAME materlName,
+    PM.HELP_CODE helpCode,
+    cd.ratio
+    from PIP_MMS_MATSTORE PS
+    left join PIP_MMS_MATERL_INFO PM
+  ON PS.MATERLINFO_CODE=PM.MATERLINFO_CODE
+  left join pip_mms_matexport_combi_detail cd
+  on PS.id=cd.matstore_id
+  where 1=1
+    <if test="projectId!=null"> and  PS.PROJECT_ID=#{projectId}</if>
+    <if test="lccCode!=null"> and  PS.LCC_CODE=#{lccCode}</if>
+    <if test="stockCode!=null"> and  PS.STOCK_CODE=#{stockCode}</if>
+    <if test="materlinfoCode!=null"> and  PS.MATERLINFO_CODE=#{materlinfoCode}</if>
+    <if test="materlBatch!=null"> and  PS.MATERL_BATCH=#{materlBatch}</if>
+    <if test="periodValidity!=null"> and  PS.PERIOD_VALIDITY=#{periodValidity,jdbcType=DATE}</if>
+  	order by ps.id
+  </select>
+   <select id="selectMasterStore" resultMap="MasterStoreResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.MaterStore" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Wed Sep 10 09:47:34 CST 2014.
+    -->
+    select
+    PS.*,
+    PM.MATERL_NAME materlName,
+    PM.HELP_CODE helpCode,
+    cd.ratio
+    from PIP_MMS_MATSTORE PS
+    left join PIP_MMS_MATERL_INFO PM
+  ON PS.MATERLINFO_CODE=PM.MATERLINFO_CODE
+  left join pip_mms_matexport_combi_detail cd
+  on PS.id=cd.matstore_id
+  where 1=1
+  	<if test="id!=null">and PS.id=#{id}</if>
+    <if test="projectId!=null"> and  PS.PROJECT_ID=#{projectId}</if>
+    <if test="lccCode!=null"> and  PS.LCC_CODE=#{lccCode}</if>
+    <if test="stockCode!=null"> and  PS.STOCK_CODE=#{stockCode}</if>
+    <if test="materlinfoCode!=null"> and  PS.MATERLINFO_CODE=#{materlinfoCode}</if>
+    <if test="materlBatch!=null"> and  PS.MATERL_BATCH=#{materlBatch}</if>
+    <if test="wholesalePrice!=null"> and  PS.WHOLESALE_PRICE=#{wholesalePrice}</if>
+    <if test="periodValidity!=null"> and  PS.PERIOD_VALIDITY=#{periodValidity,jdbcType=DATE}</if>
+    <if test="combId!=null">and cd.pip_mms_matexport_combi_id=#{combId}</if>
+    
+  </select>
+  <!-- 插入库存信息 -->
+  <insert id="insertMaterStore" parameterType="com.bdcor.pip.web.material.supp.domain.MaterStore" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Wed Sep 10 09:47:34 CST 2014.
+    -->
+    insert into PIP_MMS_MATSTORE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        ID,
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="stockCode != null" >
+        STOCK_CODE,
+      </if>
+      <if test="materlinfoCode != null" >
+        MATERLINFO_CODE,
+      </if>
+      <if test="materlBatch != null" >
+        MATERL_BATCH,
+      </if>
+      <if test="materlPrice != null" >
+        MATERL_PRICE,
+      </if>
+      <if test="wholesalePrice != null" >
+        WHOLESALE_PRICE,
+      </if>
+      <if test="storeAmount != null" >
+        STORE_AMOUNT,
+      </if>
+      <if test="storeUnit != null" >
+        STORE_UNIT,
+      </if>
+      <if test="periodValidity != null" >
+        PERIOD_VALIDITY,
+      </if>
+      <if test="supplierCode != null" >
+        SUPPLIER_CODE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="produceDate != null" >
+        PRODUCE_DATE,
+      </if>
+      <if test="materlSpec != null" >
+        MATERL_SPEC,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      MATSTORE.NEXTVAL,
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stockCode != null" >
+        #{stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="materlinfoCode != null" >
+        #{materlinfoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="materlBatch != null" >
+        #{materlBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="materlPrice != null" >
+        #{materlPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wholesalePrice != null" >
+        #{wholesalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="storeAmount != null" >
+        #{storeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="storeUnit != null" >
+        #{storeUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="periodValidity != null" >
+        #{periodValidity,jdbcType=DATE},
+      </if>
+      <if test="supplierCode != null" >
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="produceDate != null" >
+        #{produceDate,jdbcType=DATE},
+      </if>
+      <if test="materlSpec != null" >
+        #{materlSpec,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!-- 更新库存信息 -->
+   <update id="updateMaterStore" parameterType="com.bdcor.pip.web.material.supp.domain.MaterStore" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Wed Sep 10 09:47:34 CST 2014.
+    -->
+    update PIP_MMS_MATSTORE
+    <set >
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stockCode != null" >
+        STOCK_CODE = #{stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="materlinfoCode != null" >
+        MATERLINFO_CODE = #{materlinfoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="materlBatch != null" >
+        MATERL_BATCH = #{materlBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="materlPrice != null" >
+        MATERL_PRICE = #{materlPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wholesalePrice != null" >
+        WHOLESALE_PRICE = #{wholesalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="storeAmount != null" >
+        STORE_AMOUNT = #{storeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="storeUnit != null" >
+        STORE_UNIT = #{storeUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="periodValidity != null" >
+        PERIOD_VALIDITY = #{periodValidity,jdbcType=DATE},
+      </if>
+      <if test="supplierCode != null" >
+        SUPPLIER_CODE = #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=DATE},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="produceDate != null" >
+        PRODUCE_DATE = #{produceDate,jdbcType=DATE},
+      </if>
+      <if test="materlSpec != null" >
+        MATERL_SPEC = #{materlSpec,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where 1=1 
+    <if test="id!=null">and ID=#{id}</if>
+    <if test="projectId!=null">and  PROJECT_ID=#{projectId}</if>
+    <if test="lccCode!=null">and  LCC_CODE=#{lccCode}</if>
+    <if test="stockCode!=null">and  STOCK_CODE=#{stockCode}</if>
+    <if test="materlinfoCode!=null">and  MATERLINFO_CODE=#{materlinfoCode}</if>
+    <if test="materlBatch!=null">and  MATERL_BATCH=#{materlBatch}</if>
+    <if test="wholesalePrice!=null">and  WHOLESALE_PRICE=#{wholesalePrice}</if>
+    <if test="periodValidity!=null">and  PERIOD_VALIDITY=#{periodValidity}</if>
+  </update>
+  <!-- 由入库单号和项目id找到库房编码 -->
+  <select id="getStockCodeByImorderNo" resultType="String" parameterType="Map">
+  	select distinct(PM.STOCK_CODE)STOCK_CODE  from PIP_MMS_MATIMPORT_MASTER PM
+		left join PIP_MMS_MATIMPORT_DETAIL PD
+		ON PM.PROJECT_ID=PD.PROJECT_ID AND PM.IMORDER_NO=PD.IMORDER_NO
+	where 1=1
+	<if test="projectId!=null">and PM.PROJECT_ID=#{projectId}</if>
+	<if test="imorderNo!=null">and PM.IMORDER_NO=#{imorderNo}</if>
+	<if test="id!=null">and PD.ID=#{id}</if>
+  </select>
+  <!--出库基本信息  -->
+   <resultMap id="MaterExportResultMap" type="com.bdcor.pip.web.material.supp.domain.MaterExport" >
+    <id column="EXORDER_NO" property="exorderNo" jdbcType="VARCHAR" />
+    <id column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="ACTIVECLASS_CODE" property="activeclassCode" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="IS_REMOVED" property="isRemoved" jdbcType="DECIMAL" />
+    <result column="STOCK_CODE" property="stockCode" jdbcType="VARCHAR" />
+    <result column="EXPORT_STOCK_CODE" property="exportStockCode" jdbcType="VARCHAR" />
+    <result column="SUPPLIER_CODE" property="supplierCode" jdbcType="VARCHAR" />
+    <result column="EXPORT_DATE" property="exportDate" jdbcType="DATE" />
+    <result column="EXPORT_LCC_CODE" property="exportLccCode" jdbcType="VARCHAR" />
+  </resultMap>
+  
+    <select id="checkExportMasterIsExists" parameterType="String" resultMap="MaterExportResultMap">
+  	select PM.* from PIP_MMS_MATEXPORT_MASTER PM
+	where PM.EXORDER_NO=#{exorderNo,jdbcType=VARCHAR}
+  </select>
+  <!-- 由主键得到入库信息 -->
+  <select id="selectExportMasterByPrimaryKey" resultMap="MaterExportResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.MaterExport" >
+       select 
+     PM.*,
+      PT.ACTIVECLASS_NAME activeclassName,
+      PS.SUPPLIER_NAME supplierName,
+      PCI.LCC_NAME exportLccName,
+      PC.LCC_NAME lccName,
+      MS.STOCK_NAME stockName
+    from PIP_MMS_MATEXPORT_MASTER PM
+    LEFT JOIN PIP_MMS_ACTIVE_TYPE PT
+      ON PM.ACTIVECLASS_CODE=PT.ACTIVECLASS_CODE and PM.PROJECT_ID=PT.PROJECT_ID
+    LEFT JOIN PIP_MMS_SUPPLIER PS
+      ON PM.SUPPLIER_CODE=PS.SUPPLIER_CODE
+    LEFT JOIN PIP_MMS_STOREHOUSE MS
+      ON PM.STOCK_CODE=MS.STOCK_CODE and PM.PROJECT_ID=MS.PROJECT_ID
+    LEFT JOIN PIP_COMM_LCC PC
+      ON PM.LCC_CODE=PC.LCC_CODE AND PM.PROJECT_ID=PC.PROJECT_ID
+    LEFT JOIN PIP_COMM_LCC PCI
+      ON PM.EXPORT_LCC_CODE=PCI.LCC_CODE AND PM.PROJECT_ID=PCI.PROJECT_ID
+  where 1=1
+  and PM.IS_REMOVED=0
+	<if test="exorderNo!=null">
+		and	PM.EXORDER_NO = #{exorderNo,jdbcType=VARCHAR}
+	</if>
+	<if test="projectId!=null">
+		and PM.PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+	</if>
+	<if test="stockCode!=null">
+		and MS.PROJECT_ID=  #{projectId,jdbcType=VARCHAR}
+	</if>     
+  </select>
+  <!-- 打印出库列表信息 -->
+   <select id="getAllMaterExportsByExportNo" parameterType="string" resultMap="MaterExportResultMap">
+    select 
+	   	PM.*,
+    	PT.ACTIVECLASS_NAME activeclassName,
+    	PS.SUPPLIER_NAME supplierName,
+    	PCI.LCC_NAME exportLccName,
+    	PC.LCC_NAME lccName,
+    	MS.STOCK_NAME stockName,
+    	MSS.STOCK_NAME exportStockName
+    from PIP_MMS_MATEXPORT_MASTER PM
+    LEFT JOIN PIP_MMS_ACTIVE_TYPE PT
+    	ON PM.ACTIVECLASS_CODE=PT.ACTIVECLASS_CODE
+    LEFT JOIN PIP_MMS_SUPPLIER PS
+    	ON PM.SUPPLIER_CODE=PS.SUPPLIER_CODE
+    LEFT JOIN PIP_MMS_STOREHOUSE MS
+    	ON PM.STOCK_CODE=MS.STOCK_CODE  AND PM.PROJECT_ID=MS.PROJECT_ID
+    LEFT JOIN PIP_MMS_STOREHOUSE MSS
+    	ON PM.EXPORT_STOCK_CODE=MSS.STOCK_CODE AND PM.PROJECT_ID=MSS.PROJECT_ID
+    LEFT JOIN PIP_COMM_LCC PC
+    	ON PM.LCC_CODE=PC.LCC_CODE AND PM.PROJECT_ID=PC.PROJECT_ID
+    LEFT JOIN PIP_COMM_LCC PCI
+    	ON PM.EXPORT_LCC_CODE=PCI.LCC_CODE AND PM.PROJECT_ID=PCI.PROJECT_ID
+	where 1=1
+	<if test="exportNos!=null and exportNos !=''">
+		and	PM.EXORDER_NO in 
+		<foreach collection="exportNos" item="item" index="index" open="(" separator="," close=")">
+  			#{item}
+		</foreach>
+	</if>
+  </select>
+  <!-- 得到出库列表信息 -->
+   <select id="getAllMasterExports" parameterType="com.bdcor.pip.web.material.supp.filter.MaterExportFilter" resultMap="MaterExportResultMap">
+    select 
+	   	PM.*,
+    	PT.ACTIVECLASS_NAME activeclassName,
+    	PS.SUPPLIER_NAME supplierName,
+    	PCI.LCC_NAME exportLccName,
+    	PC.LCC_NAME lccName,
+    	MS.STOCK_NAME stockName,
+    	MSS.STOCK_NAME exportStockName
+    from PIP_MMS_MATEXPORT_MASTER PM
+    LEFT JOIN PIP_MMS_ACTIVE_TYPE PT
+    	ON PM.ACTIVECLASS_CODE=PT.ACTIVECLASS_CODE
+    LEFT JOIN PIP_MMS_SUPPLIER PS
+    	ON PM.SUPPLIER_CODE=PS.SUPPLIER_CODE
+    LEFT JOIN PIP_MMS_STOREHOUSE MS
+    	ON PM.STOCK_CODE=MS.STOCK_CODE  AND PM.PROJECT_ID=MS.PROJECT_ID
+    LEFT JOIN PIP_MMS_STOREHOUSE MSS
+    	ON PM.EXPORT_STOCK_CODE=MSS.STOCK_CODE AND PM.PROJECT_ID=MSS.PROJECT_ID
+    LEFT JOIN PIP_COMM_LCC PC
+    	ON PM.LCC_CODE=PC.LCC_CODE AND PM.PROJECT_ID=PC.PROJECT_ID
+    LEFT JOIN PIP_COMM_LCC PCI
+    	ON PM.EXPORT_LCC_CODE=PCI.LCC_CODE AND PM.PROJECT_ID=PCI.PROJECT_ID
+	where 1=1
+	and PM.LCC_CODE in (select lcc_code from pip_sys_user_data_limit  lt where lt.user_id = #{userId})
+	and PM.IS_REMOVED=0
+	
+	<if test="exportLccName != null and exportLccName != ''">
+		and PCI.LCC_NAME like '%${exportLccName}%'
+	</if>
+	<if test="exportStartDate != null and exportStartDate != ''">
+		and to_char(PM.EXPORT_DATE,'yyyy-MM-dd') >= '${exportStartDate}'
+	</if>
+	<if test="exportEndDate != null and exportEndDate != ''">
+		and to_char(PM.EXPORT_DATE,'yyyy-MM-dd') <![CDATA[<=]]>  '${exportEndDate}'
+	</if>
+	<if test="orderStartDate != null and orderStartDate != ''">
+		and to_char(PM.CREATE_DATE,'yyyy-MM-dd') >= '${orderStartDate}'
+	</if>
+	<if test="orderEndDate != null and orderEndDate != ''">
+		and to_char(PM.CREATE_DATE,'yyyy-MM-dd') <![CDATA[<=]]>  '${orderEndDate}'
+	</if>
+	
+	
+	
+	<if test="exorderNo!=null">
+		and	PM.EXORDER_NO like '%${exorderNo}%'
+	</if>
+	<if test="projectId!=null">
+		and PM.PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+	</if> 
+	<if test="stockName!=null &amp;stockName!=''">
+		and MS.STOCK_NAME like '%${stockName}%'
+	</if>
+	<if test="sidx!=null and sord!=null"> 
+	order by PM.${sidx} ${sord} 
+	</if>
+    </select>
+    <!-- 添加出库单信息 -->
+    <insert id="saveExportMaster" parameterType="com.bdcor.pip.web.material.supp.domain.MaterExport" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Thu Sep 11 19:23:15 CST 2014.
+    -->
+    insert into PIP_MMS_MATEXPORT_MASTER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="exorderNo != null" >
+        EXORDER_NO,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="activeclassCode != null" >
+        ACTIVECLASS_CODE,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="userCode != null" >
+        USER_CODE,
+      </if>
+      <if test="userName != null" >
+        USER_NAME,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="isRemoved != null" >
+        IS_REMOVED,
+      </if>
+      <if test="stockCode != null" >
+        STOCK_CODE,
+      </if>
+      <if test="exportStockCode != null" >
+        EXPORT_STOCK_CODE,
+      </if>
+      <if test="supplierCode != null" >
+        SUPPLIER_CODE,
+      </if>
+      <if test="exportDate != null" >
+        EXPORT_DATE,
+      </if>
+      <if test="exportLccCode != null" >
+        EXPORT_LCC_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="exorderNo != null" >
+        #{exorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="activeclassCode != null" >
+        #{activeclassCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isRemoved != null" >
+        #{isRemoved,jdbcType=DECIMAL},
+      </if>
+      <if test="stockCode != null" >
+        #{stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exportStockCode != null" >
+        #{exportStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null" >
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exportDate != null" >
+        #{exportDate,jdbcType=DATE},
+      </if>
+      <if test="exportLccCode != null" >
+        #{exportLccCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+    <!-- 更新出库信息 -->
+     <update id="updateExportMaster" parameterType="com.bdcor.pip.web.material.supp.domain.MaterExport" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Thu Sep 11 19:23:15 CST 2014.
+    -->
+    update PIP_MMS_MATEXPORT_MASTER
+    <set >
+      <if test="activeclassCode != null" >
+        ACTIVECLASS_CODE = #{activeclassCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        USER_CODE = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=DATE},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isRemoved != null" >
+        IS_REMOVED = #{isRemoved,jdbcType=DECIMAL},
+      </if>
+      <if test="stockCode != null" >
+        STOCK_CODE = #{stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exportStockCode != null" >
+        EXPORT_STOCK_CODE = #{exportStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierCode != null" >
+        SUPPLIER_CODE = #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exportDate != null" >
+        EXPORT_DATE = #{exportDate,jdbcType=DATE},
+      </if>
+      <if test="exportLccCode != null" >
+        EXPORT_LCC_CODE = #{exportLccCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where EXORDER_NO = #{exorderNo,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </update>
+   <resultMap id="MaterExportDetailResultMap" type="com.bdcor.pip.web.material.supp.domain.MaterExportDetail" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Thu Sep 11 19:29:49 CST 2014.
+    -->
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="EXORDER_NO" property="exorderNo" jdbcType="VARCHAR" />
+    <result column="MATERLINFO_CODE" property="materlinfoCode" jdbcType="VARCHAR" />
+    <result column="MATERL_BATCH" property="materlBatch" jdbcType="VARCHAR" />
+    <result column="MATERL_PRICE" property="materlPrice" jdbcType="DECIMAL" />
+    <result column="WHOLESALE_PRICE" property="wholesalePrice" jdbcType="DECIMAL" />
+    <result column="EXPORT_UNIT" property="exportUnit" jdbcType="VARCHAR" />
+    <result column="EXPORT_AMOUNT" property="exportAmount" jdbcType="DECIMAL" />
+    <result column="PERIOD_VALIDITY" property="periodValidity" jdbcType="DATE" />
+    <result column="SUPPLIER_CODE" property="supplierCode" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 插入出库明细 -->
+  <insert id="saveMaterExportDetail" parameterType="com.bdcor.pip.web.material.supp.domain.MaterExportDetail" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Thu Sep 11 19:29:49 CST 2014.
+    -->
+    insert into PIP_MMS_MATEXPORT_DETAIL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        ID,
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="exorderNo != null" >
+        EXORDER_NO,
+      </if>
+      <if test="materlinfoCode != null" >
+        MATERLINFO_CODE,
+      </if>
+      <if test="materlBatch != null" >
+        MATERL_BATCH,
+      </if>
+      <if test="materlPrice != null" >
+        MATERL_PRICE,
+      </if>
+      <if test="wholesalePrice != null" >
+        WHOLESALE_PRICE,
+      </if>
+      <if test="exportUnit != null" >
+        EXPORT_UNIT,
+      </if>
+      <if test="exportAmount != null" >
+        EXPORT_AMOUNT,
+      </if>
+      <if test="periodValidity != null" >
+        PERIOD_VALIDITY,
+      </if>
+      <if test="supplierCode != null" >
+        SUPPLIER_CODE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    	MATEXPORTDETAIL.NEXTVAL,
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="exorderNo != null" >
+        #{exorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materlinfoCode != null" >
+        #{materlinfoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="materlBatch != null" >
+        #{materlBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="materlPrice != null" >
+        #{materlPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wholesalePrice != null" >
+        #{wholesalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="exportUnit != null" >
+        #{exportUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="exportAmount != null" >
+        #{exportAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="periodValidity != null" >
+        #{periodValidity,jdbcType=DATE},
+      </if>
+      <if test="supplierCode != null" >
+        #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+   <update id="updateMaterExportDetail" parameterType="com.bdcor.pip.web.material.supp.domain.MaterExportDetail" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Thu Sep 11 19:29:49 CST 2014.
+    -->
+    update PIP_MMS_MATEXPORT_DETAIL
+    <set >
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="exorderNo != null" >
+        EXORDER_NO = #{exorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="materlinfoCode != null" >
+        MATERLINFO_CODE = #{materlinfoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="materlBatch != null" >
+        MATERL_BATCH = #{materlBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="materlPrice != null" >
+        MATERL_PRICE = #{materlPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wholesalePrice != null" >
+        WHOLESALE_PRICE = #{wholesalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="exportUnit != null" >
+        EXPORT_UNIT = #{exportUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="exportAmount != null" >
+        EXPORT_AMOUNT = #{exportAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="periodValidity != null" >
+        PERIOD_VALIDITY = #{periodValidity,jdbcType=DATE},
+      </if>
+      <if test="supplierCode != null" >
+        SUPPLIER_CODE = #{supplierCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=DATE},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="selectExportMaterDetailByPrimaryKey" resultMap="MaterExportDetailResultMap" 
+  		parameterType="com.bdcor.pip.web.material.supp.domain.MaterExportDetail">
+  select
+    PD.*,
+    PMI.MATERL_NAME materlName,
+    PM.STOCK_CODE stockCode
+  from PIP_MMS_MATEXPORT_DETAIL PD
+  left join PIP_MMS_MATEXPORT_MASTER PM
+  on PD.EXORDER_NO=PM.EXORDER_NO and PD.PROJECT_ID=PM.PROJECT_ID
+  left join PIP_MMS_MATERL_INFO PMI
+  on PD.MATERLINFO_CODE=PMI.MATERLINFO_CODE and PD.PROJECT_ID=PMI.PROJECT_ID
+  where 1=1
+	<if test="projectId != null" >
+        and PD.PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+    </if>
+    <if test="exorderNo != null" >
+        and PD.EXORDER_NO = #{exorderNo,jdbcType=VARCHAR}
+    </if>
+    <if test="id !=null">
+    	and PD.ID = #{id,jdbcType=DECIMAL}
+    </if>
+  </select>
+  <!-- 得到唯一库房记录 -->
+  <select id="getStoreCodeByExorderNo" resultType="String" 
+  		parameterType="Map">
+  select
+    DISTINCT PM.STOCK_CODE stockCode
+  from PIP_MMS_MATEXPORT_DETAIL PD
+  left join PIP_MMS_MATEXPORT_MASTER PM
+  on PD.EXORDER_NO=PM.EXORDER_NO and PD.PROJECT_ID=PM.PROJECT_ID
+  where 1=1
+	<if test="projectId != null" >
+        and PD.PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+    </if>
+    <if test="exorderNo != null" >
+        and PD.EXORDER_NO = #{exorderNo,jdbcType=VARCHAR}
+    </if>
+    <if test="id !=null">
+    	and PD.ID = #{id,jdbcType=DECIMAL}
+    </if>
+  </select>
+  <select id="getAllMasterExportDetail" resultMap="MaterExportDetailResultMap" parameterType="com.bdcor.pip.web.material.supp.filter.MaterExportDetailFilter">
+  	  select MD.*,MI.MATERL_NAME materlName,MI.CLASS_CODE classCode,MS.SUPPLIER_NAME supplierName
+		from
+		PIP_MMS_MATEXPORT_DETAIL MD
+		left join PIP_MMS_MATERL_INFO MI
+		on MD.MATERLINFO_CODE=MI.MATERLINFO_CODE
+		left join PIP_MMS_SUPPLIER MS
+		ON MD.SUPPLIER_CODE=MS.SUPPLIER_CODE
+	  where 1=1
+	  <if test="id != null" >
+       and MD.ID = = #{id,jdbcType=DECIMAL}
+      </if>
+	  <if test="projectId != null" >
+       and MD.PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+      </if>
+      <if test="exorderNo != null" >
+       and MD.EXORDER_NO = #{exorderNo,jdbcType=VARCHAR}
+      </if>
+      <if test="materlinfoCode != null" >
+       and MD.MATERLINFO_CODE = #{materlinfoCode,jdbcType=VARCHAR}
+      </if>
+      <if test="sidx!=null and sord!=null"> 
+		order by MD.${sidx} ${sord} 
+	  </if>
+  </select>
+  
+  <select id="countExportMasterDetail" parameterType="String" resultType="Integer">
+  	select count(*)
+	 from PIP_MMS_MATEXPORT_DETAIL PD
+	 where PD.EXORDER_NO=#{exorderNo}
+  </select>
+  
+  <delete id="deleteExportMaterDetail" parameterType="com.bdcor.pip.web.material.supp.domain.MaterExportDetail">
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Thu Sep 11 19:29:49 CST 2014.
+    -->
+    delete from PIP_MMS_MATEXPORT_DETAIL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <select id="getStockCodeByExorderNo"  resultType="String" parameterType="Map">
+  	select PM.STOCK_CODE from PIP_MMS_MATIMPORT_MASTER PM
+		left join PIP_MMS_MATIMPORT_DETAIL PD
+		ON PM.PROJECT_ID=PD.PROJECT_ID AND PM.IMORDER_NO=PD.IMORDER_NO
+	where 1=1
+	<if test="projectId!=null">and PM.PROJECT_ID=#{projectId}</if>
+	<if test="imorderNo!=null">and PM.IMORDER_NO=#{imorderNo}</if>
+	<if test="id!=null">and PD.ID=#{id}</if>
+  </select>
+  
+  <!-- 查询有权限的数据  -->
+  <select id="selectMaterStoreLimit" resultMap="MasterStoreResultMap" parameterType="com.bdcor.pip.web.material.supp.filter.StockFilter" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Wed Sep 10 09:47:34 CST 2014.
+    -->
+    select PS.*,
+       PM.MATERL_NAME materlName,
+       PM.HELP_CODE helpCode,
+       PH.STOCK_NAME stockName,
+       PL.LCC_NAME lccName,
+       PMS.SUPPLIER_NAME supplierName
+  from PIP_MMS_MATSTORE PS
+  left join PIP_MMS_MATERL_INFO PM on PS.MATERLINFO_CODE =
+                                      PM.MATERLINFO_CODE
+                                  and PS.PROJECT_ID = PM.PROJECT_ID
+  left join PIP_MMS_STOREHOUSE PH on PS.STOCK_CODE = PH.Stock_Code
+                                 and PH.PROJECT_ID = PS.PROJECT_ID
+  left join PIP_COMM_LCC PL on PS.LCC_CODE = PL.Lcc_Code
+                           and PS.PROJECT_ID = PL.PROJECT_ID
+  left join PIP_MMS_SUPPLIER PMS on PM.SUPPLIER_CODE=PMS.SUPPLIER_CODE
+ where 1 = 1
+ 	and PS.LCC_CODE in (select lcc_code from pip_sys_user_data_limit  lt where lt.user_id = #{userId})
+    <if test="projectId!=null"> and  PM.PROJECT_ID=#{projectId}</if>
+    <if test="lccCode!=null"> and  PM.LCC_CODE=#{lccCode}</if>
+    <!--  
+    <if test="materlBatch!=null"> and  PM.MATERL_BATCH=#{materlBatch}</if>
+    <if test="wholesalePrice!=null"> and  PM.WHOLESALE_PRICE=#{wholesalePrice}</if>
+    <if test="periodValidity!=null"> and  PM.PERIOD_VALIDITY=#{periodValidity,jdbcType=DATE}</if>
+    -->
+    <if test="stockName!=null">
+		and	PH.STOCK_NAME like  '%${stockName}%'
+	</if>
+	<if test="materlName!=null">
+		and	PM.MATERL_NAME like '%${materlName}%'
+	</if>
+    <if test="sidx!=null and sord!=null"> 
+		order by PS.${sidx} ${sord} 
+	</if>
+  </select>
+  
+  
+  
+  
+  <!-- 查询所有的库存信息  -->
+  <select id="selectAllMaterStore" resultMap="MasterStoreResultMap" parameterType="com.bdcor.pip.web.material.supp.filter.StockFilter" >
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Wed Sep 10 09:47:34 CST 2014.
+    -->
+    select PS.*,
+       PM.MATERL_NAME materlName,
+       PM.HELP_CODE helpCode,
+       PH.STOCK_NAME stockName,
+       PL.LCC_NAME lccName,
+       PMS.SUPPLIER_NAME supplierName
+  from PIP_MMS_MATSTORE PS
+  left join PIP_MMS_MATERL_INFO PM on PS.MATERLINFO_CODE =
+                                      PM.MATERLINFO_CODE
+                                  and PS.PROJECT_ID = PM.PROJECT_ID
+  left join PIP_MMS_STOREHOUSE PH on PS.STOCK_CODE = PH.Stock_Code
+                                 and PH.PROJECT_ID = PS.PROJECT_ID
+  left join PIP_COMM_LCC PL on PS.LCC_CODE = PL.Lcc_Code
+                           and PS.PROJECT_ID = PL.PROJECT_ID
+  left join PIP_MMS_SUPPLIER PMS on PM.SUPPLIER_CODE=PMS.SUPPLIER_CODE
+ where 1 = 1
+    <if test="projectId!=null"> and  PM.PROJECT_ID=#{projectId}</if>
+    <if test="lccCode!=null"> and  PM.LCC_CODE=#{lccCode}</if>
+    <!--  
+    <if test="materlBatch!=null"> and  PM.MATERL_BATCH=#{materlBatch}</if>
+    <if test="wholesalePrice!=null"> and  PM.WHOLESALE_PRICE=#{wholesalePrice}</if>
+    <if test="periodValidity!=null"> and  PM.PERIOD_VALIDITY=#{periodValidity,jdbcType=DATE}</if>
+    -->
+    <if test="stockName!=null">
+		and	PH.STOCK_NAME like  '%${stockName}%'
+	</if>
+	<if test="materlName!=null">
+		and	PM.MATERL_NAME like '%${materlName}%'
+	</if>
+    <if test="sidx!=null and sord!=null"> 
+		order by PS.${sidx} ${sord} 
+	</if>
+  </select>
+  
+</mapper>

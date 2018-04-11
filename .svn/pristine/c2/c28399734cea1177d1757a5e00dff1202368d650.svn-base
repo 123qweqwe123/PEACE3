@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.reserve.dao.PipCommReserveMapper">
+	<!-- 物质管理 入库出库类别 -->
+   <resultMap id="BaseResultMap" type="com.bdcor.pip.web.reserve.domain.PipCommReserve" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="patient_name" property="patientName" jdbcType="VARCHAR" />
+    <result column="patient_id" property="patientId" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="lcc_code" property="lccCode" jdbcType="VARCHAR" />
+    <result column="v_time" property="vTime" jdbcType="TIMESTAMP" />
+    <result column="plan_time" property="planTime" jdbcType="TIMESTAMP" />
+    <result column="real_time" property="realTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="exit_reseach" property="exitReseach" jdbcType="VARCHAR" />
+    <result column="counts" property="counts" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <sql id="List" >
+    id, patient_name, patient_id, project_id, lcc_code,v_time,plan_time, real_time, version, exit_reseach,counts , status,result
+  </sql>
+ 
+   <resultMap id="PipCommReserveFilterMap" type="com.bdcor.pip.web.reserve.filter.PipCommReserveFilter" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="patient_name" property="patientName" jdbcType="VARCHAR" />
+    <result column="patient_id" property="patientId" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="lcc_code" property="lccCode" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="v_time" property="vTime" jdbcType="TIMESTAMP" />
+    <result column="plan_time" property="planTime" jdbcType="TIMESTAMP" />
+    <result column="real_time" property="realTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="exit_reseach" property="exitReseach" jdbcType="VARCHAR" />
+    <result column="counts" property="counts" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="VARCHAR" />
+    <result column="lcc_code" property="lccCode" jdbcType="VARCHAR" />
+    <result column="lcc_name" property="lccName" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 
+   select
+    t.id id, t.patient_name patient_name,t.patient_id patient_id, t.project_id project_id, b.mobile mobile, t.v_time v_time,t.plan_time plan_time, t.real_time real_time, t.version version, 
+    t.exit_reseach exit_reseach ,TRUNC(sysdate)-TRUNC(t.plan_time) counts ,t.status status,t.result result,t.remark remark
+    ,b.lcc_code lcc_code,c.lcc_name lcc_name ,TRUNC(sysdate)-t.plan_time ff 
+    from (select row_number()over(partition by patient_id order by version desc)rn, pcr.* from pip_comm_reserve pcr)t
+    ,pip_comm_patient  b ,PIP_COMM_LCC c
+    where t.rn=1 and t.patient_id= b.patient_id and b.lcc_code = c.lcc_code 
+ 
+   -->
+  
+  
+   <select id="getPipCommReserveList"  parameterType="com.bdcor.pip.web.reserve.filter.PipCommReserveFilter" resultMap="PipCommReserveFilterMap">
+   
+   select * from 
+    (
+       select
+        t.id id, t.patient_name patient_name,t.patient_id patient_id, t.project_id project_id, b.mobile mobile, t.v_time v_time,t.plan_time plan_time, t.real_time real_time, t.version version, 
+        t.exit_reseach exit_reseach ,TRUNC(sysdate)-TRUNC(t.plan_time) counts ,t.status status,t.result result,t.remark remark,
+        b.lcc_code lcc_code,c.lcc_name lcc_name ,TRUNC(sysdate)-t.plan_time ff,
+       case  
+             when  t.real_time is not null  then '1'
+             when (TRUNC(to_date(#{jisuandate,jdbcType=VARCHAR},'yyyy-MM-dd')) >=TRUNC(t.v_time-30) and  TRUNC(t.plan_time)-TRUNC(to_date(#{jisuandate,jdbcType=VARCHAR},'yyyy-MM-dd'))>=0
+                  and TRUNC(t.v_time+30) -TRUNC(to_date(#{jisuandate,jdbcType=VARCHAR},'yyyy-MM-dd'))>=0
+                  ) then '1'
+             when ((TRUNC(to_date(#{jisuandate,jdbcType=VARCHAR},'yyyy-MM-dd'))-TRUNC(t.plan_time)>0 and TRUNC(t.v_time+30)-TRUNC(to_date(#{jisuandate,jdbcType=VARCHAR},'yyyy-MM-dd'))>=0) 
+    			        or 
+    			        (TRUNC(t.plan_time)-TRUNC(t.v_time+30)>=0 and TRUNC(t.plan_time)-TRUNC(to_date(#{jisuandate,jdbcType=VARCHAR},'yyyy-MM-dd'))>=0
+    			            and TRUNC(t.v_time+90) -TRUNC(to_date(#{jisuandate,jdbcType=VARCHAR},'yyyy-MM-dd')) >=0
+    			        )) then '2'
+           when   (TRUNC(to_date(#{jisuandate,jdbcType=VARCHAR},'yyyy-MM-dd'))-TRUNC(t.plan_time)>0 and TRUNC(to_date(#{jisuandate,jdbcType=VARCHAR},'yyyy-MM-dd'))-TRUNC(t.v_time+30)>0 and TRUNC(t.v_time+90)-TRUNC(to_date(#{jisuandate,jdbcType=VARCHAR},'yyyy-MM-dd'))>0 )            
+           then '3' 
+           else '' end  as color
+       from (select row_number()over(partition by patient_id order by version desc)rn , pcr.* from pip_comm_reserve pcr)t
+       ,pip_comm_patient  b ,PIP_COMM_LCC c 
+       where t.rn=1  and t.patient_id= b.patient_id and b.lcc_code = c.lcc_code 
+   
+    <if test="id!=null and id!=0 ">
+    	and t.id=#{id}
+    </if>
+    <if test="projectId!=null  and projectId!=''">
+    	and t.project_id=#{projectId}
+    </if>
+    <if test="patientId!=null  and patientId!=''">
+    	and t.patient_id=#{patientId}
+    </if>
+    <if test="version!=null  and version!=''">
+    	and t.version=#{version}
+    </if>
+    <if test="mobile!=null  and mobile!=''">
+    	and b.mobile=#{mobile}
+    </if>  
+    <!-- 
+     <if test="status!=null and status!=''">
+    	 and  t.real_time is null
+     </if>
+   -->
+    <!-- 
+         <if test=" status!=null and status!='' and ( status=='1'.toString() or status=='2'.toString()  or status=='3'.toString()) ">
+    	  and t.status=#{status}
+    	</if>
+    	 <if test=" status!=null and status!='' and status=='4'.toString() ">
+    	  and t.status in ('2','3')
+    	</if>
+    -->
+     <if test="lccCode!=null and lccCode!=''">
+    	and b.lcc_code=#{lccCode,jdbcType=VARCHAR}
+    </if>
+    <if test="planTime2!=null and planTime2!=''">
+    	 and to_date(to_char(t.plan_time,'yyyy-mm-dd'),'yyyy-mm-dd'  ) = to_date(#{planTime2,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+    </if>
+     )
+     <!-- 
+      <if test="status!=null and status!=''">
+    	  where color=#{status,jdbcType=VARCHAR}
+     </if>
+     -->
+         <if test=" status!=null and status!='' and ( status=='1'.toString() or status=='2'.toString()  or status=='3'.toString()) ">
+    	  where color=#{status,jdbcType=VARCHAR}
+    	</if>
+    	 <if test=" status!=null and status!='' and status=='4'.toString() ">
+    	  where color in ('2','3')
+    	</if>
+
+    
+     order by status desc , ff desc
+  </select>
+
+   <select id="selectPipCommReserveListForPatientId"  parameterType="com.bdcor.pip.web.reserve.domain.PipCommReserve" resultMap="BaseResultMap">
+    	select  * from pip_comm_reserve 
+     	where 1=1 
+       <if test="patientId!=null  and patientId!=''">
+    	and patient_id=#{patientId,jdbcType=VARCHAR}
+       </if>
+        order by version asc
+    </select>
+
+   <resultMap id="ReserveResultMap" type="com.bdcor.pip.web.reserve.domain.ReserveResult" >
+    <result column="green" property="green" jdbcType="INTEGER" />
+    <result column="yellow" property="yellow" jdbcType="INTEGER" />
+    <result column="red" property="red" jdbcType="INTEGER" />
+  </resultMap>
+  <select id="reserveResult"  parameterType="map" resultMap="ReserveResultMap">
+       select 
+           count(case  when tt.color='1' then '1' ELSE '' END)as green,
+           count(case  when tt.color='2' then '2' ELSE '' END)as yellow,
+           count(case  when tt.color='3' then '3' ELSE '' END)as red
+       from (
+       select
+       t.patient_name,t.plan_time,t.v_time,
+       case  
+            when t.real_time is not null  then '1'
+            when (TRUNC(to_date(#{day,jdbcType=VARCHAR},'yyyy-MM-dd')) >=TRUNC(t.v_time-30) and  TRUNC(t.plan_time)-TRUNC(to_date(#{day,jdbcType=VARCHAR},'yyyy-MM-dd'))>=0
+                  and TRUNC(t.v_time+30) -TRUNC(to_date(#{day,jdbcType=VARCHAR},'yyyy-MM-dd'))>=0
+                  ) then '1' 
+             when ((TRUNC(to_date(#{day,jdbcType=VARCHAR},'yyyy-MM-dd'))-TRUNC(t.plan_time)>0 and TRUNC(t.v_time+30)-TRUNC(to_date(#{day,jdbcType=VARCHAR},'yyyy-MM-dd'))>=0) 
+    			        or 
+    			        (TRUNC(t.plan_time)-TRUNC(t.v_time+30)>=0 and TRUNC(t.plan_time)-TRUNC(to_date(#{day,jdbcType=VARCHAR},'yyyy-MM-dd'))>=0
+    			            and TRUNC(t.v_time+90) -TRUNC(to_date(#{day,jdbcType=VARCHAR},'yyyy-MM-dd')) >=0
+    			        )) then '2'
+           when   (TRUNC(to_date(#{day,jdbcType=VARCHAR},'yyyy-MM-dd'))-TRUNC(t.plan_time)>0 and TRUNC(to_date(#{day,jdbcType=VARCHAR},'yyyy-MM-dd'))-TRUNC(t.v_time+30)>0 and TRUNC(t.v_time+90)-TRUNC(to_date(#{day,jdbcType=VARCHAR},'yyyy-MM-dd'))>0 )            
+           then '3' 
+           else '' end  as color
+       from (select row_number()over(partition by patient_id order by version desc)rn , pcr.* from pip_comm_reserve pcr)t
+        ,pip_comm_patient  b ,PIP_COMM_LCC c 
+       where t.rn=1  and t.patient_id= b.patient_id and b.lcc_code = c.lcc_code 
+       <if test="lccCode!=null  and lccCode!=''">
+    		and t.lcc_code =#{lccCode,jdbcType=VARCHAR}
+       </if>
+       )tt
+
+    	<!-- and real_time is null -->
+  </select>
+
+  
+  
+  <update id="updatePipCommReserve"  parameterType="com.bdcor.pip.web.reserve.domain.PipCommReserve"  >
+		update pip_comm_reserve 
+		set  
+         <if test="result!=null  and result!=''">
+    	   result=#{result,jdbcType=VARCHAR},
+         </if> 
+    	 <if test="status!=null  and status !=''">
+    	   status=#{status,jdbcType=VARCHAR},
+         </if> 
+          <if test="planTime!=null">
+    	   plan_time=#{planTime,jdbcType=TIMESTAMP},
+         </if>  
+          remark=#{remark,jdbcType=VARCHAR}
+		where 1=1 
+    	and patient_id=#{patientId,jdbcType=VARCHAR}
+    	and version=#{version,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 
+	
+
+ select
+   count(case  when (TRUNC(sysdate) >=TRUNC(t.v_time-30) and TRUNC(t.v_time-30)> TRUNC(sysdate) ) then '1' ELSE '' END)as green,
+   count(case  when ((TRUNC(sysdate)-TRUNC(t.plan_time)>0 and TRUNC(t.v_time+30)-TRUNC(sysdate)>=0) 
+			       or 
+			       (TRUNC(t.plan_time)-TRUNC(t.v_time+30)>=0 and TRUNC(t.plan_time)-TRUNC(sysdate)>=0
+			            and TRUNC(t.v_time+90) -TRUNC(sysdate) >=0
+			        )) then '2'  ELSE '' END  )as yellow ,
+   count(case    when   (TRUNC(sysdate)-TRUNC(t.plan_time)>0 and TRUNC(sysdate)-TRUNC(t.v_time+30)>0 and TRUNC(t.v_time+90)-TRUNC(sysdate)>0 )            
+           then '3' ELSE '' END ) as red
+    from (select row_number()over(partition by patient_id order by version desc)rn, pcr.* from pip_comm_reserve pcr)t
+    ,pip_comm_patient  b ,PIP_COMM_LCC c
+    where t.rn=1 and t.patient_id= b.patient_id and b.lcc_code = c.lcc_code
+	
+	
+	 -->
+	
+	  <update id="updatePipCommReserveForQuartzYellow" >
+		          update pip_comm_reserve set status='2'
+			      where id in( select id  from (
+					  select t.id id
+					 from (select row_number()over(partition by patient_id order by version desc)rn, pcr.* from pip_comm_reserve pcr)t
+					 where t.rn=1 and (
+			            (TRUNC(sysdate)-TRUNC(t.plan_time)>0 and TRUNC(t.v_time+30)-TRUNC(sysdate)>=0) 
+			            or 
+			            (TRUNC(t.plan_time)-TRUNC(t.v_time+30)>=0 and TRUNC(t.plan_time)-TRUNC(sysdate)>=0
+			            and TRUNC(t.v_time+90) -TRUNC(sysdate) >=0
+			            )) and t.real_time is null
+					
+					 ))
+	</update>
+	  <update id="updatePipCommReserveForQuartzRed" >
+	 update pip_comm_reserve set status='3'
+			     where id in( select id  from (
+					 select t.id id
+					 from (select row_number()over(partition by patient_id order by version desc)rn, pcr.* from pip_comm_reserve pcr)t
+					 where t.rn=1 and (TRUNC(sysdate)-TRUNC(t.plan_time)>0 and TRUNC(sysdate)-TRUNC(t.v_time+30)>0 and TRUNC(t.v_time+90)-TRUNC(sysdate)>0 )and t.real_time is null
+					 ))
+	</update>
+	
+	 <update id="creatPipCommReserveForQuartzRed" >
+	  insert into pip_comm_reserve
+     (patient_name,patient_id,project_id,plan_time,version,exit_reseach,counts,status,v_time,lcc_code)
+
+    select
+    t.patient_name,t.patient_id,t.project_id,t.v_time+180,to_number(t.version)+1,'0',0,'1',v_time+180,t.lcc_code
+    from (select row_number()over(partition by patient_id order by version desc)rn, pcr.* from pip_comm_reserve pcr)t
+    ,pip_comm_patient  b ,PIP_COMM_LCC c
+    where t.rn=1 and t.patient_id= b.patient_id and b.lcc_code = c.lcc_code 
+    and TRUNC(sysdate)-TRUNC(t.v_time+90)>0 and t.real_time is null
+		</update>
+	
+
+
+<!--以上历史代码不管 估计作废 start at 20160726  zhang.rw-->
+
+<select id="getGroupData" parameterType="map" resultType="map">
+
+    select to_char(t1.datetime , 'fm mm_dd') day, nvl(yel,0) blue <!-- yel -->
+          ,nvl(red,0) red <!-- red -->
+          ,nvl(green,0) green <!-- green -->
+          ,nvl(num ,0) value <!-- num -->
+    from (
+    select nvL(sum(yelnum),0) yel, nvL(sum(rednum),0) red, nvl(sum(greennum),0) green , datetime
+<!--    , sum(yelnum) + sum(rednum) + sum(greennum)-->
+    from (
+    select
+    case col when 'yel' then num end as yelnum,
+    case col when 'red' then num end as rednum,
+    case col when 'green' then num end as greennum,datetime
+    from (
+    select
+    col , datetime ,count(1) num
+    from  (
+    select decode( plandate , null , 'red' , case when datetime >= yelmin and datetime &lt;= yelmax then 'yel'
+    when datetime >= redmin and datetime &lt;= redmax then 'red'
+    else 'green' end ) as col
+    ,datetime , plandate,
+    last_followview_date
+    from (
+    select * from (
+    select to_date(#{startdate},'yyyymmdd') + rownum -1 as datetime
+    from dual
+    connect by rownum &lt;= to_date(#{enddate},'yyyymmdd') - to_date(#{startdate},'yyyymmdd') + 1
+    ) t , (select
+    decode( is_in , '1' , trunc(plandate) , trunc(last_followview_date+210) ) yelmin,
+    decode( is_in , '1' , trunc(last_followview_date+210),trunc(plandate)  ) yelmax,
+    decode( is_in , '1' , trunc(last_followview_date+210),trunc(plandate)  ) redmin,
+    trunc(last_followview_date+270) redmax,
+    LAST_FOLLOWVIEW_DATE,VIEWNAME,PLANDATE,PROJECT_ID,PATIENT_ID,PATIENT_NAME,LXSJ,XJTS,IS_IN
+    from (
+    SELECT p.last_followview_date , n.* ,
+    (p.last_followview_date + 180) lxsj ,
+    <!-- (trunc(p.last_followview_date) + 180 - trunc(sysdate,'dd'))  xjts , -->
+    (trunc(plandate,'dd') - trunc(sysdate, 'dd')) xjts,
+    decode( sign( p.last_followview_date + 210 - plandate) , -1 ,'0', '1' ) is_in
+    FROM PIP_COMM_PATIENT P
+    left join V_PATIETN_DATE_NEXTVIEW n
+    on p.patient_id = n.PATIENT_ID
+    WHERE EXISTS(
+    SELECT 1 FROM (
+    SELECT DISTINCT PATIENT_ID FROM PIP_UQS_ANSWERQN_LOG
+    WHERE STATE ='1'
+    ) T
+    WHERE P.PATIENT_ID = T.PATIENT_ID
+    )
+    and exists( select 1 from pip_sys_user_data_limit l
+      where l.user_id = #{userid}
+            and l.lcc_code = p.lcc_code )
+    <choose>
+        <when test='ismsg != null and ismsg == "1" '>
+            AND p.IS_JOIN_MSG = '1'
+        </when>
+        <otherwise>
+            AND ( P.IS_JOIN_MSG != '1' or p.IS_JOIN_MSG is null )
+        </otherwise>
+    </choose>
+    <!--<if test='ismsg == "1"'> &lt;!&ndash;  "ismsg eq '1' " &ndash;&gt;-->
+        <!--AND p.IS_JOIN_MSG = '1'-->
+    <!--</if>-->
+    <!--<if test='ismsg == "0"'>-->
+        <!--AND ( P.IS_JOIN_MSG != '1' or p.IS_JOIN_MSG is null )-->
+    <!--</if>-->
+    and p.last_followview_date is not null
+    and p.is_dead is null
+    )) tx
+    )
+    )
+    group by col , datetime
+    )
+    )
+    group by datetime
+    ) t1
+    left join (
+    select plandate , count(1) num from V_PATIETN_DATE_NEXTVIEW n
+    where plandate >= to_date(#{startdate},'yyyymmdd') and plandate &lt;= to_date(#{enddate},'yyyymmdd')
+    and exists( select 1 from pip_sys_user_data_limit l where l.user_id = #{userid} and l.lcc_code = n.lcc_code )
+    and exists( select 1 from pip_comm_patient p2
+        where p2.patient_id = n.PATIENT_ID
+        and p2.is_dead is null
+        and p2.last_followview_date is not null
+        <choose>
+            <when test='ismsg != null and ismsg == "1" '>
+                AND p2.IS_JOIN_MSG = '1'
+            </when>
+            <otherwise>
+                AND ( P2.IS_JOIN_MSG != '1' or p2.IS_JOIN_MSG is null )
+            </otherwise>
+        </choose>
+    )
+    group by plandate ) t2
+    on t1.datetime = t2.plandate
+    order by datetime
+
+</select>
+
+    <select id="getDataInfo" parameterType="com.bdcor.pip.web.reserve.dao.PipCommReserveMapper" resultType="map">
+
+        select tt.* , l.lcc_name from (
+        select decode(plandate,
+        null,
+        'red',
+        case
+        when datetime >= yelmin and datetime &lt;= yelmax then
+        'yel'
+        when datetime >= redmin and datetime &lt;= redmax then
+        'red'
+        else
+        'green'
+        end) as col,
+        t2.*
+        from (select *
+        from (select to_date(#{startdate}, 'yyyymmdd') + rownum - 1 as datetime  <!-- 1-->
+        from dual
+        connect by rownum &lt;= to_date(#{enddate}, 'yyyymmdd') - <!--2 -->
+        to_date(#{startdate}, 'yyyymmdd') + 1) t, <!--3 -->
+        (select decode(is_in,
+        '1',
+        trunc(plandate),
+        trunc(last_followview_date + 210)) yelmin,
+        decode(is_in,
+        '1',
+        trunc(last_followview_date + 210),
+        trunc(plandate)) yelmax,
+        decode(is_in,
+        '1',
+        trunc(last_followview_date + 210),
+        trunc(plandate)) redmin,
+        trunc(last_followview_date + 270) redmax,
+        LAST_FOLLOWVIEW_DATE,
+        VIEWNAME,
+        PLANDATE,
+        PROJECT_ID,
+        PATIENT_ID,
+        PATIENT_NAME,
+        LXSJ,
+        XJTS,
+        IS_IN ,id_number,mobile,link_man1_mobile ,lcc_code
+        from (SELECT p.last_followview_date, p.id_number , p.mobile ,
+        p.link_man1_mobile,
+        nvl(viewname , '无预约时间') viewname,
+        plandate,
+        nvl(p.PROJECT_ID , n.PROJECT_ID) PROJECT_ID,
+        nvl(p.PATIENT_ID , n.PATIENT_ID)PATIENT_ID,
+        nvl(p.PATIENT_NAME ,n.PATIENT_NAME ) PATIENT_NAME,
+        nvl(p.lcc_code,n.lcc_code)  lcc_code,
+        (p.last_followview_date + 180) lxsj,
+        <!--(trunc(p.last_followview_date) + 180 - trunc(sysdate, 'dd')) xjts,-->
+        (trunc(plandate,'dd') - trunc(sysdate, 'dd')) xjts,
+        decode(sign(p.last_followview_date + 210 -
+        plandate),
+        -1,
+        '0',
+        '1') is_in
+        FROM PIP_COMM_PATIENT P
+        left join V_PATIETN_DATE_NEXTVIEW n
+        on p.patient_id = n.PATIENT_ID
+        WHERE EXISTS (SELECT 1
+        FROM (SELECT DISTINCT PATIENT_ID
+        FROM PIP_UQS_ANSWERQN_LOG
+        WHERE STATE = '1') T
+        WHERE P.PATIENT_ID = T.PATIENT_ID)
+        and exists
+        (select 1
+        from pip_sys_user_data_limit l
+        where l.user_id = #{userid} <!-- 4  -->
+        and l.lcc_code = p.lcc_code)
+        <choose>
+            <when test='ismsg != null and ismsg == "1" '>
+                AND p.IS_JOIN_MSG = '1'
+            </when>
+            <otherwise>
+                AND ( P.IS_JOIN_MSG != '1' or p.IS_JOIN_MSG is null )
+            </otherwise>
+        </choose>
+        and p.last_followview_date is not null
+        and p.is_dead is null
+        )   ) tx) t2
+        ) tt
+        left join pip_comm_lcc l
+        on tt.lcc_code = l.lcc_code
+        where 1=1
+        <if test="pid != null and pid != '' " >
+            and patient_id like '%${pid}%' <!-- 5 -->
+        </if>
+        <if test="pname != null and pname != ''" >
+            and patient_name like '%${pname}%'  <!-- 6-->
+        </if>
+        <if test="lcccode != null and lcccode != ''" >
+        and tt.lcc_code = #{lcccode}   <!-- 7-->
+        </if>
+        <if test="status != null and status != ''" >
+        and col = #{status}   <!--8 -->
+        </if>
+        <if test="rightday != null and rightday != '' ">
+        and plandate = to_date(#{rq},'yyyymmdd') <!--9 -->
+        </if>
+        and datetime = to_date(#{rq},'yyyymmdd')  <!--10 -->
+
+    </select>
+
+<select id="getViewColumn" resultType="map" parameterType="string">
+
+    select decode(end_plan_date,
+              null,
+              decode(eighteen_plan_date,
+                     null,
+                     decode(twelve_plan_date,
+                            null,
+                            decode(six_plan_date, null, 'SIX_PLAN_DATE', 'SIX_PLAN_DATE'),
+                            'TWELVE_PLAN_DATE'),
+                     'EIGHTEEN_PLAN_DATE'),
+              'EIGHTEEN_PLAN_DATE') as viewname
+  from pip_comm_patient_date d
+  where patient_id = #{pid}
+
+</select>
+
+<update id="updatePlandate">
+  update pip_comm_patient_date set ${col} = to_date(#{colvalue} , 'yyyy-mm-dd')
+  where patient_id = #{pid}
+</update>
+
+<select id="getPlanViewInfo" resultType="map">
+    select * from (
+        select
+        VIEWNAME,VIEWSTATE,PLANDATE,
+        to_char(PLANDATE,'yyyy-MM-dd') PLANDATE_EXPORT,-- 导出用这个字段
+        PROJECT_ID,PATIENT_ID,PATIENT_NAME,LCC_CODE,LCC_NAME,LINK_MAN1_MOBILE,ID_NUMBER,last_followview_date,
+        MOBILE,to_char(LXSJ,'yyyy-MM-dd') LXSJ,BELONG_GROUP,IS_JOIN_MSG,IS_DEAD,XJTS,WCQK,
+        decode(IS_DEAD,'1',
+        decode(wcqk,'已完成','已完成','已死亡'),
+        wcqk
+        ) wcqk2,
+        decode(BELONG_GROUP,'01','非糖尿病实验组','02','非糖尿病对照组','11','糖尿病实验组', '12','糖尿病对照组','') groupName
+        from (
+            select t.*,
+            decode(t.viewstate,'2',state12,state6) wcqk
+            from ( select t0.*,trunc(t0.plandate -sysdate) xjts from (
+            select decode(viewstate,
+            '1',
+            '6月随访',
+            decode(viewstate, '2', '末次随访', '无预约时间')) as viewName,
+            viewstate,
+            decode(viewstate,
+            '1',
+            six_plan_date,
+            decode(viewstate, '2', twelve_plan_date, null)) as plandate,
+            PROJECT_ID,
+            PATIENT_ID,
+            PATIENT_NAME,
+            lcc_code,lcc_name,link_man1_mobile,id_number,mobile,(last_followview_date + 180) as lxsj,
+            belong_group,is_join_msg,last_followview_date,is_dead
+            from (select decode(twelve_plan_date,
+            null,
+            decode(six_plan_date, null, '-1', '1'),
+            '2') as viewstate,
+            d.PROJECT_ID,d.PATIENT_ID,d.FIRST_DATE,SIX_PLAN_DATE,SIX_REAL_DATE,TWELVE_PLAN_DATE,TWELVE_REAL_DATE,
+            EIGHTEEN_PLAN_DATE,EIGHTEEN_REAL_DATE,END_PLAN_DATE,END_REAL_DATE,NOW_REMARK,FIRST_PLAN_DATE
+            ,p.patient_name,p.lcc_code,lcc.lcc_name,p.link_man1_mobile,p.id_number,p.mobile,p.last_followview_date
+            ,p.belong_group,p.is_join_msg,p.is_dead
+            from pip_comm_patient_date d
+            left join pip_comm_patient p
+            on d.patient_id = p.patient_id
+            left join pip_comm_lcc lcc on p.lcc_code = lcc.lcc_code
+
+            <if test="suifangType == 1 ">
+                where twelve_plan_date is null and six_plan_date is not null
+            </if>
+            <if test="suifangType == 2 ">
+                where twelve_plan_date is not null
+            </if>
+
+            )
+            ) t0
+            ) t
+            left join(
+            select
+            p.patient_id ,
+            decode(p.is_join_msg,'1',decode(belong_group , null ,
+            decode(t1.pid6continue , null , '未完成','继续答卷'),
+            '已完成'),
+            decode(state6_002,null,'未完成',state6_002))
+            state6 ,
+            nvl(state12,'未完成') state12
+            from pip_comm_patient p
+            left join (
+            <!-- CHAT研究:6月未分组的人中继续答卷部分 -->
+            select distinct patient_id as pid6continue from pip_uqs_answerqn_log
+            where uqs_version in ( '004.010.001','004.011.001','004.012.001')
+            ) t1 on p.patient_id = t1.pid6continue
+            left join (
+            select patient_id,
+            <!-- 非干预面访6月份情况 -->
+            decode(min(state) ,'1','已完成','继续答卷') state6_002
+            from pip_uqs_answerqn_log where uqs_version = '004.002.002'
+            group by patient_id
+            ) t002
+            on t002.patient_id = p.patient_id
+            left join (
+            select  patient_id,
+            decode(min(state),'1','已完成',decode(min(state),'2','继续答卷',
+            '')) as state12
+            from pip_uqs_answerqn_log
+            where uqs_version in ( '004.014.001','004.015.001')
+            group by patient_id -- uqs_version ,
+            ) t2 on p.patient_Id = t2.patient_id
+            where 1=1
+            )  t3 on t.patient_id = t3.patient_id
+        ) result
+        where 1=1
+        and exists (select 1 from pip_sys_user_data_limit l
+        where l.user_id = #{userid}
+        and l.lcc_code = result.lcc_code
+        )
+
+    ) res
+    where 1=1
+    <!-- 应项目组要求过滤掉已完成末次随访的患者 -->
+    and not exists(
+        select 1 from pip_uqs_answerqn_log ql where res.patient_id = ql.patient_id and ql.state=1
+        and ql.uqs_version in ('004.015.001','004.014.001')
+    )
+    <if test="pid!=null  and pid!=''">
+        and patient_id=#{pid}
+    </if>
+    <if test="lcccode!=null and lcccode!=''">
+        and lcc_code=#{lcccode,jdbcType=VARCHAR}
+    </if>
+    <if test="pname!=null and pname!=''">
+        and patient_name like '%'||trim(#{pname,jdbcType=VARCHAR})||'%'
+    </if>
+    <if test="belongGroup!=null and belongGroup!=''">
+      and BELONG_GROUP = #{belongGroup}
+    </if>
+    <!--<if test="suifangType!=null and suifangType!=''"> &lt;!&ndash; 随访类型 &ndash;&gt;-->
+        <!--and viewstate=#{suifangType,jdbcType=VARCHAR}-->
+    <!--</if>-->
+    <choose>
+        <when test='ismsg != null and ismsg == "1" '>
+            AND IS_JOIN_MSG = '1'
+        </when>
+        <otherwise>
+            AND ( IS_JOIN_MSG != '1' or IS_JOIN_MSG is null )
+        </otherwise>
+    </choose>
+    <if test="wcqk != null and wcqk != '' ">
+        <choose>
+            <when test='wcqk == "1" '>
+                and wcqk2 = '已完成'
+            </when>
+            <when test='wcqk == "2" '>
+                and wcqk2 = '继续答卷'
+            </when>
+            <when test='wcqk == "3" '>
+                and wcqk2 = '未完成'
+            </when>
+            <when test='wcqk == "4" '>
+                and wcqk2 = '已死亡'
+            </when>
+        </choose>
+    </if>
+    <!-- viewname desc,lcc_code asc , plandate asc -->
+    <if test="sidx != null and sidx != ''">
+        order by ${sidx}
+        <if test="sord!=null and sord!= ''">
+            ${sord}
+        </if>
+    </if>
+</select>
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.core.persistence.keymgt.dao.IDTableDao" >
+ 
+	<resultMap type="com.bdcor.pip.core.persistence.keymgt.domain.IDTableVo" id="idTableMap">
+		<id property="id" column="id_id"/>
+		<result property="value" column="id_value"/>
+		<result property="name" column="id_name"/>
+		<result property="cacheSize" column="id_cache_size"/>
+		<result property="prefix" column="id_prefix"/>
+		<result property="isPrefix" column="is_prefix"/>
+		<result property="suffix" column="id_suffix"/>
+		<result property="isSuffix" column="is_suffix"/>
+		<result property="step" column="step"/>
+		<result property="length" column="id_length"/>
+		<result property="tableName" column="table_name"/>
+		<result property="tableField" column="table_field"/>
+	</resultMap>
+	
+	<select id="getIDTables" resultMap="idTableMap" parameterType="String">
+		select * from pip_idtable where id_prefix = #{prefix}
+	</select>
+	
+	<select id="getAllIDTable" resultMap="idTableMap">
+		select * from pip_idtable
+	</select>
+	
+	<update id="updateIDTableValue" parameterType="com.bdcor.pip.core.persistence.keymgt.domain.IDTableVo">
+		update pip_idtable set id_value=${value} where id_id=#{id}
+	</update>
+	
+</mapper>
+
+
+
+
+

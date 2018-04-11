@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<questionnaire xmlns="http://www.gener-health.com/uqsPaper">
+
+
+  <title>China PEACE3 mHealth研究患者入选问卷</title>
+  <doctype projectid="006" projectname="冠心病及合并糖尿病患者长期自我管理的适宜信息化辅助工具评价研究" UQSid="004009" UQSName="研究患者入选问卷" UQSVersion="004.009.001" VersionCreateDate="2016-06-12 14:52:01"/>
+
+  <QuestionSet id="1" displayname="A.入选第一部份" order="10">
+    <question id="1" type="Single" displayname="1.年龄≥18岁" order="10" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="2" type="Single" displayname="2.明确诊断冠状动脉粥样硬化性心脏病" order="20" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否；" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="3" type="Single" displayname="3.是否符合下列任一个条件：1）既往因急性心肌梗死住院治疗；2）具有冠状动脉介入治疗或旁路移植术病史；3）既往冠造显示冠状动脉至少一支主要分支血管狭窄≥50%" order="30" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="4" type="Single" displayname="4.具备阅读和发送短信能力" order="40" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="5" type="Single" displayname="5.书面同意参加本项研究" order="50" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="6" type="Single" displayname="6.文盲或视力、听力障碍等，导致难以阅读手机短信或收听电话语音信息" order="60" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="7" type="Single" displayname="7.存在认知、交流等功能障碍" order="70" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="8" type="Single" displayname="8.罹患先天性心脏病、冠状动脉发育畸形、炎症等非动脉粥样硬化性冠脉疾病：" order="80" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="9" type="Single" displayname="9.已知对研究随访和短信干预依从性差：" order="90" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+      <Attribute id="3" type="helptext" value="该题由研究医生根据与患者交流情况进行判断。"/>
+    </question>
+    <question id="10" type="Single" displayname="10.目前正在参加未上市药物或设备的临床试验" order="100" code="">
+      <option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+  </QuestionSet>
+
+  <QuestionSet id="2" displayname="B.入选第二部份" order="20">
+    <question id="1" type="Single" displayname="1.您的性别" order="10" code="">
+      <option id="1" displayname="男" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="女" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="2" type="Single" displayname="2.您的年龄所在区间" order="20" code="">
+      <option id="1" displayname="55岁以下" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="55岁至64岁；" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <option id="3" displayname="65岁及以上；" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="3" type="Single" displayname="3.有无心肌梗心病史" order="30" code="">
+      <option id="1" displayname="有" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="无" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="4" type="Single" displayname="4.您的教育程序" order="40" code="">
+      <option id="1" displayname="初中及以下" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="初中到高中" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <option id="3" displayname="高中及以上" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+    <question id="5" type="Single" displayname="5.您的医保类型是？" order="50" code="">
+      <option id="1" displayname="城镇居民/职工医疗保险/公费医疗" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+      </option>
+      <option id="2" displayname="农村合作医疗" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+      </option>
+      <option id="3" displayname="完全自费" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+      </option>
+      <Attribute id="1" type="isnull" value="1"/>
+      <Attribute id="2" type="sethidden" value="0"/>
+    </question>
+  </QuestionSet>
+</questionnaire>

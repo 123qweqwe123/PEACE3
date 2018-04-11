@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.PipCommEventCheck1Mapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.qn.domain.PipCommEventCheck1" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="EVENT_CODE" property="eventCode" jdbcType="VARCHAR" />
+    <result column="PID" property="pid" jdbcType="VARCHAR" />
+    <result column="ORIGIN_DESC" property="originDesc" jdbcType="VARCHAR" />
+    <result column="CURRENT_DESC" property="currentDesc" jdbcType="VARCHAR" />
+    <result column="IS_DEAD" property="isDead" jdbcType="DECIMAL" />
+    <result column="OCCUR_DATE" property="occurDate" jdbcType="DATE" />
+    <result column="OCCUR_DATE_TYPE" property="occurDateType" jdbcType="DECIMAL" />
+    <result column="ENDING_DATE" property="endingDate" jdbcType="DATE" />
+    <result column="ENDING_DATE_TYPE" property="endingDateType" jdbcType="DECIMAL" />
+    <result column="DEAD_DATE" property="deadDate" jdbcType="DATE" />
+    <result column="DEAD_DATE_TYPE" property="deadDateType" jdbcType="DECIMAL" />
+    <result column="EVENT_PLACE" property="eventPlace" jdbcType="DECIMAL" />
+    <result column="HOSPITAL_NAME" property="hospitalName" jdbcType="VARCHAR" />
+    <result column="IN_HOSPITAL_DAY" property="inHospitalDay" jdbcType="DECIMAL" />
+    <result column="REPORT_REMARK" property="reportRemark" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="ORIGIN_EVENT_ENDING" property="originEventEnding" jdbcType="VARCHAR" />
+    <result column="EVENT_ENDING" property="eventEnding" jdbcType="DECIMAL" />
+    <result column="REPORT_STATUS" property="reportStatus" jdbcType="DECIMAL" />
+    <result column="REPORT_DATE" property="reportDate" jdbcType="TIMESTAMP" />
+    <result column="REPORT_BY" property="reportBy" jdbcType="VARCHAR" />
+    <result column="CURRENT_REMARK" property="currentRemark" jdbcType="VARCHAR" />
+    <result column="ORIGIN_DEAD_DATE" property="originDeadDate" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, EVENT_CODE, PID, ORIGIN_DESC, CURRENT_DESC, IS_DEAD, OCCUR_DATE, OCCUR_DATE_TYPE, 
+    ENDING_DATE, ENDING_DATE_TYPE, DEAD_DATE, DEAD_DATE_TYPE, EVENT_PLACE, HOSPITAL_NAME, 
+    IN_HOSPITAL_DAY, REPORT_REMARK, REMARK, CREATE_TIME, CREATE_BY, UPDATE_TIME, UPDATE_BY, 
+    ORIGIN_EVENT_ENDING, EVENT_ENDING, REPORT_STATUS, REPORT_DATE, REPORT_BY, CURRENT_REMARK, 
+    ORIGIN_DEAD_DATE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheck1Example" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_COMM_EVENT_CHECK1
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_COMM_EVENT_CHECK1
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short" >
+    delete from PIP_COMM_EVENT_CHECK1
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheck1Example" >
+    delete from PIP_COMM_EVENT_CHECK1
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheck1" >
+    insert into PIP_COMM_EVENT_CHECK1 (ID, EVENT_CODE, PID, 
+      ORIGIN_DESC, CURRENT_DESC, IS_DEAD, 
+      OCCUR_DATE, OCCUR_DATE_TYPE, ENDING_DATE, 
+      ENDING_DATE_TYPE, DEAD_DATE, DEAD_DATE_TYPE, 
+      EVENT_PLACE, HOSPITAL_NAME, IN_HOSPITAL_DAY, 
+      REPORT_REMARK, REMARK, CREATE_TIME, 
+      CREATE_BY, UPDATE_TIME, UPDATE_BY, 
+      ORIGIN_EVENT_ENDING, EVENT_ENDING, REPORT_STATUS, 
+      REPORT_DATE, REPORT_BY, CURRENT_REMARK, 
+      ORIGIN_DEAD_DATE)
+    values (#{id,jdbcType=DECIMAL}, #{eventCode,jdbcType=VARCHAR}, #{pid,jdbcType=VARCHAR}, 
+      #{originDesc,jdbcType=VARCHAR}, #{currentDesc,jdbcType=VARCHAR}, #{isDead,jdbcType=DECIMAL}, 
+      #{occurDate,jdbcType=DATE}, #{occurDateType,jdbcType=DECIMAL}, #{endingDate,jdbcType=DATE}, 
+      #{endingDateType,jdbcType=DECIMAL}, #{deadDate,jdbcType=DATE}, #{deadDateType,jdbcType=DECIMAL}, 
+      #{eventPlace,jdbcType=DECIMAL}, #{hospitalName,jdbcType=VARCHAR}, #{inHospitalDay,jdbcType=DECIMAL}, 
+      #{reportRemark,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{originEventEnding,jdbcType=VARCHAR}, #{eventEnding,jdbcType=DECIMAL}, #{reportStatus,jdbcType=DECIMAL}, 
+      #{reportDate,jdbcType=TIMESTAMP}, #{reportBy,jdbcType=VARCHAR}, #{currentRemark,jdbcType=VARCHAR}, 
+      #{originDeadDate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheck1" >
+    insert into PIP_COMM_EVENT_CHECK1
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="eventCode != null" >
+        EVENT_CODE,
+      </if>
+      <if test="pid != null" >
+        PID,
+      </if>
+      <if test="originDesc != null" >
+        ORIGIN_DESC,
+      </if>
+      <if test="currentDesc != null" >
+        CURRENT_DESC,
+      </if>
+      <if test="isDead != null" >
+        IS_DEAD,
+      </if>
+      <if test="occurDate != null" >
+        OCCUR_DATE,
+      </if>
+      <if test="occurDateType != null" >
+        OCCUR_DATE_TYPE,
+      </if>
+      <if test="endingDate != null" >
+        ENDING_DATE,
+      </if>
+      <if test="endingDateType != null" >
+        ENDING_DATE_TYPE,
+      </if>
+      <if test="deadDate != null" >
+        DEAD_DATE,
+      </if>
+      <if test="deadDateType != null" >
+        DEAD_DATE_TYPE,
+      </if>
+      <if test="eventPlace != null" >
+        EVENT_PLACE,
+      </if>
+      <if test="hospitalName != null" >
+        HOSPITAL_NAME,
+      </if>
+      <if test="inHospitalDay != null" >
+        IN_HOSPITAL_DAY,
+      </if>
+      <if test="reportRemark != null" >
+        REPORT_REMARK,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="originEventEnding != null" >
+        ORIGIN_EVENT_ENDING,
+      </if>
+      <if test="eventEnding != null" >
+        EVENT_ENDING,
+      </if>
+      <if test="reportStatus != null" >
+        REPORT_STATUS,
+      </if>
+      <if test="reportDate != null" >
+        REPORT_DATE,
+      </if>
+      <if test="reportBy != null" >
+        REPORT_BY,
+      </if>
+      <if test="currentRemark != null" >
+        CURRENT_REMARK,
+      </if>
+      <if test="originDeadDate != null" >
+        ORIGIN_DEAD_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="eventCode != null" >
+        #{eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="originDesc != null" >
+        #{originDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="currentDesc != null" >
+        #{currentDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isDead != null" >
+        #{isDead,jdbcType=DECIMAL},
+      </if>
+      <if test="occurDate != null" >
+        #{occurDate,jdbcType=DATE},
+      </if>
+      <if test="occurDateType != null" >
+        #{occurDateType,jdbcType=DECIMAL},
+      </if>
+      <if test="endingDate != null" >
+        #{endingDate,jdbcType=DATE},
+      </if>
+      <if test="endingDateType != null" >
+        #{endingDateType,jdbcType=DECIMAL},
+      </if>
+      <if test="deadDate != null" >
+        #{deadDate,jdbcType=DATE},
+      </if>
+      <if test="deadDateType != null" >
+        #{deadDateType,jdbcType=DECIMAL},
+      </if>
+      <if test="eventPlace != null" >
+        #{eventPlace,jdbcType=DECIMAL},
+      </if>
+      <if test="hospitalName != null" >
+        #{hospitalName,jdbcType=VARCHAR},
+      </if>
+      <if test="inHospitalDay != null" >
+        #{inHospitalDay,jdbcType=DECIMAL},
+      </if>
+      <if test="reportRemark != null" >
+        #{reportRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="originEventEnding != null" >
+        #{originEventEnding,jdbcType=VARCHAR},
+      </if>
+      <if test="eventEnding != null" >
+        #{eventEnding,jdbcType=DECIMAL},
+      </if>
+      <if test="reportStatus != null" >
+        #{reportStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="reportDate != null" >
+        #{reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reportBy != null" >
+        #{reportBy,jdbcType=VARCHAR},
+      </if>
+      <if test="currentRemark != null" >
+        #{currentRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="originDeadDate != null" >
+        #{originDeadDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheck1Example" resultType="java.lang.Integer" >
+    select count(*) from PIP_COMM_EVENT_CHECK1
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_COMM_EVENT_CHECK1
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.eventCode != null" >
+        EVENT_CODE = #{record.eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pid != null" >
+        PID = #{record.pid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.originDesc != null" >
+        ORIGIN_DESC = #{record.originDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currentDesc != null" >
+        CURRENT_DESC = #{record.currentDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDead != null" >
+        IS_DEAD = #{record.isDead,jdbcType=DECIMAL},
+      </if>
+      <if test="record.occurDate != null" >
+        OCCUR_DATE = #{record.occurDate,jdbcType=DATE},
+      </if>
+      <if test="record.occurDateType != null" >
+        OCCUR_DATE_TYPE = #{record.occurDateType,jdbcType=DECIMAL},
+      </if>
+      <if test="record.endingDate != null" >
+        ENDING_DATE = #{record.endingDate,jdbcType=DATE},
+      </if>
+      <if test="record.endingDateType != null" >
+        ENDING_DATE_TYPE = #{record.endingDateType,jdbcType=DECIMAL},
+      </if>
+      <if test="record.deadDate != null" >
+        DEAD_DATE = #{record.deadDate,jdbcType=DATE},
+      </if>
+      <if test="record.deadDateType != null" >
+        DEAD_DATE_TYPE = #{record.deadDateType,jdbcType=DECIMAL},
+      </if>
+      <if test="record.eventPlace != null" >
+        EVENT_PLACE = #{record.eventPlace,jdbcType=DECIMAL},
+      </if>
+      <if test="record.hospitalName != null" >
+        HOSPITAL_NAME = #{record.hospitalName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inHospitalDay != null" >
+        IN_HOSPITAL_DAY = #{record.inHospitalDay,jdbcType=DECIMAL},
+      </if>
+      <if test="record.reportRemark != null" >
+        REPORT_REMARK = #{record.reportRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.originEventEnding != null" >
+        ORIGIN_EVENT_ENDING = #{record.originEventEnding,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eventEnding != null" >
+        EVENT_ENDING = #{record.eventEnding,jdbcType=DECIMAL},
+      </if>
+      <if test="record.reportStatus != null" >
+        REPORT_STATUS = #{record.reportStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="record.reportDate != null" >
+        REPORT_DATE = #{record.reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.reportBy != null" >
+        REPORT_BY = #{record.reportBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currentRemark != null" >
+        CURRENT_REMARK = #{record.currentRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.originDeadDate != null" >
+        ORIGIN_DEAD_DATE = #{record.originDeadDate,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_COMM_EVENT_CHECK1
+    set ID = #{record.id,jdbcType=DECIMAL},
+      EVENT_CODE = #{record.eventCode,jdbcType=VARCHAR},
+      PID = #{record.pid,jdbcType=VARCHAR},
+      ORIGIN_DESC = #{record.originDesc,jdbcType=VARCHAR},
+      CURRENT_DESC = #{record.currentDesc,jdbcType=VARCHAR},
+      IS_DEAD = #{record.isDead,jdbcType=DECIMAL},
+      OCCUR_DATE = #{record.occurDate,jdbcType=DATE},
+      OCCUR_DATE_TYPE = #{record.occurDateType,jdbcType=DECIMAL},
+      ENDING_DATE = #{record.endingDate,jdbcType=DATE},
+      ENDING_DATE_TYPE = #{record.endingDateType,jdbcType=DECIMAL},
+      DEAD_DATE = #{record.deadDate,jdbcType=DATE},
+      DEAD_DATE_TYPE = #{record.deadDateType,jdbcType=DECIMAL},
+      EVENT_PLACE = #{record.eventPlace,jdbcType=DECIMAL},
+      HOSPITAL_NAME = #{record.hospitalName,jdbcType=VARCHAR},
+      IN_HOSPITAL_DAY = #{record.inHospitalDay,jdbcType=DECIMAL},
+      REPORT_REMARK = #{record.reportRemark,jdbcType=VARCHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      ORIGIN_EVENT_ENDING = #{record.originEventEnding,jdbcType=VARCHAR},
+      EVENT_ENDING = #{record.eventEnding,jdbcType=DECIMAL},
+      REPORT_STATUS = #{record.reportStatus,jdbcType=DECIMAL},
+      REPORT_DATE = #{record.reportDate,jdbcType=TIMESTAMP},
+      REPORT_BY = #{record.reportBy,jdbcType=VARCHAR},
+      CURRENT_REMARK = #{record.currentRemark,jdbcType=VARCHAR},
+      ORIGIN_DEAD_DATE = #{record.originDeadDate,jdbcType=DATE}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheck1" >
+    update PIP_COMM_EVENT_CHECK1
+    <set >
+      <if test="eventCode != null" >
+        EVENT_CODE = #{eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        PID = #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="originDesc != null" >
+        ORIGIN_DESC = #{originDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="currentDesc != null" >
+        CURRENT_DESC = #{currentDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isDead != null" >
+        IS_DEAD = #{isDead,jdbcType=DECIMAL},
+      </if>
+      <if test="occurDate != null" >
+        OCCUR_DATE = #{occurDate,jdbcType=DATE},
+      </if>
+      <if test="occurDateType != null" >
+        OCCUR_DATE_TYPE = #{occurDateType,jdbcType=DECIMAL},
+      </if>
+      <if test="endingDate != null" >
+        ENDING_DATE = #{endingDate,jdbcType=DATE},
+      </if>
+      <if test="endingDateType != null" >
+        ENDING_DATE_TYPE = #{endingDateType,jdbcType=DECIMAL},
+      </if>
+      <if test="deadDate != null" >
+        DEAD_DATE = #{deadDate,jdbcType=DATE},
+      </if>
+      <if test="deadDateType != null" >
+        DEAD_DATE_TYPE = #{deadDateType,jdbcType=DECIMAL},
+      </if>
+      <if test="eventPlace != null" >
+        EVENT_PLACE = #{eventPlace,jdbcType=DECIMAL},
+      </if>
+      <if test="hospitalName != null" >
+        HOSPITAL_NAME = #{hospitalName,jdbcType=VARCHAR},
+      </if>
+      <if test="inHospitalDay != null" >
+        IN_HOSPITAL_DAY = #{inHospitalDay,jdbcType=DECIMAL},
+      </if>
+      <if test="reportRemark != null" >
+        REPORT_REMARK = #{reportRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="originEventEnding != null" >
+        ORIGIN_EVENT_ENDING = #{originEventEnding,jdbcType=VARCHAR},
+      </if>
+      <if test="eventEnding != null" >
+        EVENT_ENDING = #{eventEnding,jdbcType=DECIMAL},
+      </if>
+      <if test="reportStatus != null" >
+        REPORT_STATUS = #{reportStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="reportDate != null" >
+        REPORT_DATE = #{reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reportBy != null" >
+        REPORT_BY = #{reportBy,jdbcType=VARCHAR},
+      </if>
+      <if test="currentRemark != null" >
+        CURRENT_REMARK = #{currentRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="originDeadDate != null" >
+        ORIGIN_DEAD_DATE = #{originDeadDate,jdbcType=DATE},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheck1" >
+    update PIP_COMM_EVENT_CHECK1
+    set EVENT_CODE = #{eventCode,jdbcType=VARCHAR},
+      PID = #{pid,jdbcType=VARCHAR},
+      ORIGIN_DESC = #{originDesc,jdbcType=VARCHAR},
+      CURRENT_DESC = #{currentDesc,jdbcType=VARCHAR},
+      IS_DEAD = #{isDead,jdbcType=DECIMAL},
+      OCCUR_DATE = #{occurDate,jdbcType=DATE},
+      OCCUR_DATE_TYPE = #{occurDateType,jdbcType=DECIMAL},
+      ENDING_DATE = #{endingDate,jdbcType=DATE},
+      ENDING_DATE_TYPE = #{endingDateType,jdbcType=DECIMAL},
+      DEAD_DATE = #{deadDate,jdbcType=DATE},
+      DEAD_DATE_TYPE = #{deadDateType,jdbcType=DECIMAL},
+      EVENT_PLACE = #{eventPlace,jdbcType=DECIMAL},
+      HOSPITAL_NAME = #{hospitalName,jdbcType=VARCHAR},
+      IN_HOSPITAL_DAY = #{inHospitalDay,jdbcType=DECIMAL},
+      REPORT_REMARK = #{reportRemark,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      ORIGIN_EVENT_ENDING = #{originEventEnding,jdbcType=VARCHAR},
+      EVENT_ENDING = #{eventEnding,jdbcType=DECIMAL},
+      REPORT_STATUS = #{reportStatus,jdbcType=DECIMAL},
+      REPORT_DATE = #{reportDate,jdbcType=TIMESTAMP},
+      REPORT_BY = #{reportBy,jdbcType=VARCHAR},
+      CURRENT_REMARK = #{currentRemark,jdbcType=VARCHAR},
+      ORIGIN_DEAD_DATE = #{originDeadDate,jdbcType=DATE}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

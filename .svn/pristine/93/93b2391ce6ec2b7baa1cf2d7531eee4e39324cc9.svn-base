@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.sys.version.dao.PipSysVersionMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.sys.version.domain.PipSysVersion" >
+    <id column="VERSION" property="version" jdbcType="VARCHAR" />
+    <result column="VERSION_DATA" property="versionData" jdbcType="TIMESTAMP" />
+    <result column="VERSION_TEXT" property="versionText" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    VERSION, VERSION_DATA, VERSION_TEXT
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.sys.version.domain.PipSysVersionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_SYS_VERSION
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_SYS_VERSION
+    where VERSION = #{version,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PIP_SYS_VERSION
+    where VERSION = #{version,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.sys.version.domain.PipSysVersionExample" >
+    delete from PIP_SYS_VERSION
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.sys.version.domain.PipSysVersion" >
+    insert into PIP_SYS_VERSION (VERSION, VERSION_DATA, VERSION_TEXT
+      )
+    values (#{version,jdbcType=VARCHAR}, sysdate, #{versionText,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.sys.version.domain.PipSysVersion" >
+    insert into PIP_SYS_VERSION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="version != null" >
+        VERSION,
+      </if>
+      <if test="versionData != null" >
+        VERSION_DATA,
+      </if>
+      <if test="versionText != null" >
+        VERSION_TEXT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="versionData != null" >
+        #{versionData,jdbcType=TIMESTAMP},
+      </if>
+      <if test="versionText != null" >
+        #{versionText,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.sys.version.domain.PipSysVersionExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_SYS_VERSION
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_SYS_VERSION
+    <set >
+      <if test="record.version != null" >
+        VERSION = #{record.version,jdbcType=VARCHAR},
+      </if>
+      <if test="record.versionData != null" >
+        VERSION_DATA = #{record.versionData,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.versionText != null" >
+        VERSION_TEXT = #{record.versionText,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_SYS_VERSION
+    set VERSION = #{record.version,jdbcType=VARCHAR},
+      VERSION_DATA = #{record.versionData,jdbcType=TIMESTAMP},
+      VERSION_TEXT = #{record.versionText,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.sys.version.domain.PipSysVersion" >
+    update PIP_SYS_VERSION
+    <set >
+      <if test="versionData != null" >
+        VERSION_DATA = #{versionData,jdbcType=TIMESTAMP},
+      </if>
+      <if test="versionText != null" >
+        VERSION_TEXT = #{versionText,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where VERSION = #{version,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.sys.version.domain.PipSysVersion" >
+    update PIP_SYS_VERSION
+    set VERSION_DATA = #{versionData,jdbcType=TIMESTAMP},
+      VERSION_TEXT = #{versionText,jdbcType=VARCHAR}
+    where VERSION = #{version,jdbcType=VARCHAR}
+  </update>
+  
+<select id="list" resultType="map" parameterType="com.bdcor.pip.web.sys.version.filter.PipSysVersionFilter" >
+    select
+    <include refid="Base_Column_List" />
+    from PIP_SYS_VERSION
+    where 1=1
+    <if test="version!=null and version !=''">
+    	and version like '%${version}%'
+    </if>
+    <if test="startDate!=null and startDate !=''">
+    	and to_char(VERSION_DATA,'yyyy-MM-dd') >= #{startDate}
+    </if>
+    <if test="endDate!=null and endDate !=''">
+    	and to_char(VERSION_DATA,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+    </if>
+    order by VERSION_DATA desc
+  </select>
+</mapper>
+

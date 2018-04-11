@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.pro.promgt.dao.ProjectMgtDao">
+    <resultMap id="BaseResultMap" type="com.bdcor.pip.web.pro.promgt.domain.Project">
+        <constructor>
+            <arg column="PROJECTID" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="PROJECTNAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="BEGINTIME" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="ENDTIME" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="IS_AUTO_START" jdbcType="DECIMAL" javaType="java.lang.Integer" />
+            <arg column="IS_AUTO_END" jdbcType="DECIMAL" javaType="java.lang.Integer" />
+            <arg column="LEADER" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="WORKLOAD" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="CREATOR" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="CREAT_TIME" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="ISDELETE" jdbcType="DECIMAL" javaType="java.lang.Integer" />
+            <arg column="REMARK" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="STATUS" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="SHORTNAME" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="ISSTARTED" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        PROJECTID,PROJECTNAME,BEGINTIME,ENDTIME,IS_AUTO_START,IS_AUTO_END,LEADER,WORKLOAD,
+        CREATOR,CREAT_TIME,ISDELETE,REMARK,STATUS,SHORTNAME,ISSTARTED
+    </sql>
+    <select id="getAllProjects" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.pro.promgt.filter.ProjectFilter">
+        select
+        <include refid="Base_Column_List" />
+        from pip_project_list where 1=1
+        <if test="projectName != null">
+        	<if test="projectName != null">
+				and PROJECTNAME like '%'||#{projectName}||'%'
+			</if>
+        </if>
+        <if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+    </select>
+    <insert id="addProject" parameterType="com.bdcor.pip.web.pro.promgt.domain.Project">
+    	insert into pip_project_list
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="projectId != null">
+				PROJECTID,
+			</if>
+			<if test="projectName != null">
+				PROJECTNAME,
+			</if>
+			<if test="beginTime != null">
+				BEGINTIME,
+			</if>
+			<if test="endTime != null">
+				ENDTIME,
+			</if>
+			<if test="isAutoStart != null">
+				IS_AUTO_START,
+			</if>
+			<if test="isAutoEnd != null">
+				IS_AUTO_END,
+			</if>
+			<if test="leader != null">
+				LEADER,
+			</if>
+			<if test="workload != null">
+				WORKLOAD,
+			</if>
+			<if test="creator != null">
+				CREATOR,
+			</if>
+			<if test="createTime != null">
+				CREAT_TIME,
+			</if>
+			<if test="isDelete != null">
+				ISDELETE,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="shortName != null">
+				SHORTNAME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="projectId != null">
+				#{projectId,jdbcType=VARCHAR},
+			</if>
+			<if test="projectName != null">
+				#{projectName,jdbcType=VARCHAR},
+			</if>
+			<if test="beginTime != null">
+				#{beginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isAutoStart != null">
+				#{isAutoStart,jdbcType=INTEGER},
+			</if>
+			<if test="isAutoEnd != null">
+				#{isAutoEnd,jdbcType=INTEGER},
+			</if>
+			<if test="leader != null">
+				#{leader,jdbcType=VARCHAR},
+			</if>
+			<if test="workload != null">
+				#{workload,jdbcType=INTEGER},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status, jdbcType=INTEGER},
+			</if>
+			<if test="shortName != null">
+				#{shortName, jdbcType=VARCHAR},
+			</if>
+		</trim>
+    </insert>
+    
+    <update id="updateProject" parameterType="com.bdcor.pip.web.pro.promgt.domain.Project">
+		update pip_project_list
+		<set>
+			<if test="projectName != null">
+				PROJECTNAME = #{projectName,jdbcType=VARCHAR},
+			</if>
+			<if test="beginTime != null">
+				BEGINTIME = #{beginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				ENDTIME = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isAutoStart != null">
+				IS_AUTO_START = #{isAutoStart,jdbcType=INTEGER},
+			</if>
+			<if test="isAutoEnd != null">
+				IS_AUTO_END = #{isAutoEnd,jdbcType=INTEGER},
+			</if>
+			<if test="leader != null">
+				LEADER = #{leader,jdbcType=VARCHAR},
+			</if>
+			<if test="workload != null">
+				WORKLOAD = #{workload,jdbcType=INTEGER},
+			</if>
+			<if test="creator != null">
+				CREATOR = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREAT_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDelete != null">
+				ISDELETE = #{isDelete,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status, jdbcType=INTEGER},
+			</if>
+			<if test="shortName != null">
+				SHORTNAME = #{shortName, jdbcType=VARCHAR}
+			</if>
+		</set>
+		where projectid = #{projectId,jdbcType=VARCHAR}
+    </update>
+    
+    <select id="getProjectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    	select 
+    	<include refid="Base_Column_List" />
+        from pip_project_list where projectid = #{projectId, jdbcType=VARCHAR}
+    </select>
+    <delete id="delete" parameterType="java.lang.String">
+    	delete from pip_project_list where projectid = #{projectId, jdbcType=VARCHAR}
+    </delete>
+    
+    <update id="doStartStop" parameterType="java.lang.String">
+    	update pip_project_list set 
+    	<if test="type == 'start'">
+    		status = 1
+    	</if>
+    	<if test="type == 'stop'">
+    		status = 0
+    	</if>
+    	where projectid = #{projectId, jdbcType=VARCHAR}
+    </update>
+    
+    <select id="checkNameExists" parameterType="java.lang.String" resultMap="BaseResultMap">
+    	select
+    	<include refid="Base_Column_List"/>
+    	from pip_project_list where PROJECTNAME = #{projectName,jdbcType=VARCHAR}
+    </select>
+    
+    <update id="updateIsStarted" parameterType="java.lang.String">
+    	update pip_project_list set isstarted = 1 where projectid = #{projectId, jdbcType=VARCHAR}
+    </update>
+</mapper>

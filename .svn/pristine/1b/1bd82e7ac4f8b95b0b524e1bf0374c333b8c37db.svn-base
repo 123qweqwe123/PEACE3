@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.sys.logmgt.dao.PipLogLoginMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.sys.logmgt.domain.PipLogLogin" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="MACHINE_NAME" property="machineName" jdbcType="VARCHAR" />
+    <result column="LOGIN_TIME" property="loginTime" jdbcType="TIMESTAMP" />
+    <result column="LOGOUT_TIME" property="logoutTime" jdbcType="TIMESTAMP" />
+    <result column="MACHINE_IP" property="machineIp" jdbcType="VARCHAR" />
+    <result column="IS_SUCCESS" property="isSuccess" jdbcType="CHAR" />
+    <result column="IS_VALID" property="isValid" jdbcType="CHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="USER_AGENT" property="userAgent" jdbcType="VARCHAR" />
+    <result column="LOGIN_NAME" property="loginName" jdbcType="VARCHAR" />
+    <result column="IS_ONLINE" property="isOnline" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, MACHINE_NAME, LOGIN_TIME, LOGOUT_TIME, MACHINE_IP, IS_SUCCESS, IS_VALID, REMARK, 
+    USER_ID, USER_AGENT, LOGIN_NAME, IS_ONLINE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.sys.logmgt.domain.PipLogLoginExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_LOG_LOGIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.sys.logmgt.domain.PipLogLoginExample" >
+    delete from PIP_LOG_LOGIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.sys.logmgt.domain.PipLogLogin" >
+    insert into PIP_LOG_LOGIN (ID, MACHINE_NAME, LOGIN_TIME, 
+      LOGOUT_TIME, MACHINE_IP, IS_SUCCESS, 
+      IS_VALID, REMARK, USER_ID, 
+      USER_AGENT, LOGIN_NAME, IS_ONLINE
+      )
+    values (#{id,jdbcType=DECIMAL}, #{machineName,jdbcType=VARCHAR}, #{loginTime,jdbcType=TIMESTAMP}, 
+      #{logoutTime,jdbcType=TIMESTAMP}, #{machineIp,jdbcType=VARCHAR}, #{isSuccess,jdbcType=CHAR}, 
+      #{isValid,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+      #{userAgent,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{isOnline,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.sys.logmgt.domain.PipLogLogin" >
+    insert into PIP_LOG_LOGIN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="machineName != null" >
+        MACHINE_NAME,
+      </if>
+      <if test="loginTime != null" >
+        LOGIN_TIME,
+      </if>
+      <if test="logoutTime != null" >
+        LOGOUT_TIME,
+      </if>
+      <if test="machineIp != null" >
+        MACHINE_IP,
+      </if>
+      <if test="isSuccess != null" >
+        IS_SUCCESS,
+      </if>
+      <if test="isValid != null" >
+        IS_VALID,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="userAgent != null" >
+        USER_AGENT,
+      </if>
+      <if test="loginName != null" >
+        LOGIN_NAME,
+      </if>
+      <if test="isOnline != null" >
+        IS_ONLINE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="machineName != null" >
+        #{machineName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null" >
+        #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logoutTime != null" >
+        #{logoutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="machineIp != null" >
+        #{machineIp,jdbcType=VARCHAR},
+      </if>
+      <if test="isSuccess != null" >
+        #{isSuccess,jdbcType=CHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userAgent != null" >
+        #{userAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="isOnline != null" >
+        #{isOnline,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.sys.logmgt.domain.PipLogLoginExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_LOG_LOGIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_LOG_LOGIN
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.machineName != null" >
+        MACHINE_NAME = #{record.machineName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginTime != null" >
+        LOGIN_TIME = #{record.loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.logoutTime != null" >
+        LOGOUT_TIME = #{record.logoutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.machineIp != null" >
+        MACHINE_IP = #{record.machineIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isSuccess != null" >
+        IS_SUCCESS = #{record.isSuccess,jdbcType=CHAR},
+      </if>
+      <if test="record.isValid != null" >
+        IS_VALID = #{record.isValid,jdbcType=CHAR},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        USER_ID = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userAgent != null" >
+        USER_AGENT = #{record.userAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginName != null" >
+        LOGIN_NAME = #{record.loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isOnline != null" >
+        IS_ONLINE = #{record.isOnline,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_LOG_LOGIN
+    set ID = #{record.id,jdbcType=DECIMAL},
+      MACHINE_NAME = #{record.machineName,jdbcType=VARCHAR},
+      LOGIN_TIME = #{record.loginTime,jdbcType=TIMESTAMP},
+      LOGOUT_TIME = #{record.logoutTime,jdbcType=TIMESTAMP},
+      MACHINE_IP = #{record.machineIp,jdbcType=VARCHAR},
+      IS_SUCCESS = #{record.isSuccess,jdbcType=CHAR},
+      IS_VALID = #{record.isValid,jdbcType=CHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      USER_ID = #{record.userId,jdbcType=VARCHAR},
+      USER_AGENT = #{record.userAgent,jdbcType=VARCHAR},
+      LOGIN_NAME = #{record.loginName,jdbcType=VARCHAR},
+      IS_ONLINE = #{record.isOnline,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

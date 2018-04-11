@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdcor.pip.web.spem.dao.SpBoxMapper">
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.spem.domain.SpBoxVo">
+    <id column="BOX_CODE" jdbcType="VARCHAR" property="id" />
+    <result column="BOX_TYPE" jdbcType="VARCHAR" property="boxType" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="FRIDGE_ID" jdbcType="VARCHAR" property="iceboxId" />
+    <result column="PROJECT_ID" jdbcType="VARCHAR" property="project_id" />
+    <result column="IS_CHECKIN" jdbcType="DECIMAL" property="isCheckin" />
+    <result column="BOX_STATE" jdbcType="DECIMAL" property="statusCode" /> 
+    <result column="LCC_NAME" jdbcType="VARCHAR" property="lcc_name" /> 
+    <result column="WAYBILL_NO" jdbcType="VARCHAR" property="waybill_no" /> 
+    <result column="LCC_CODE" jdbcType="VARCHAR" property="lcc_code" /> 
+    <result column="LCC_NAME" jdbcType="VARCHAR" property="lcc_name" /> 
+    <result column="TUBE_SUM" jdbcType="VARCHAR" property="usage" /> 
+    <result column="EVENT_NAME" jdbcType="VARCHAR" property="carriage_status" />  
+    <result column="FRIDGE_NAME" jdbcType="VARCHAR" property="fridge_name" />  
+    
+  </resultMap>     
+  
+ 
+  <sql id="Base_Column_List">
+    BOX_CODE, BOX_TYPE, REMARK, FRIDGE_ID, PROJECT_ID, IS_CHECKIN, BOX_STATE,WAYBILL_NO,LCC_CODE
+  </sql> 
+  
+  <select id="selectByExample" parameterType="java.lang.String" resultMap="BaseResultMap"> 
+    select 
+    <include refid="Base_Column_List" /> 
+    from PIP_SCM_FROZENBOX where   WAYBILL_NO is null
+      <if test="id != null"> 
+         and FRIDGE_ID=#{id,jdbcType=VARCHAR}  
+      </if>
+      <if test="lcc_code != null"> 
+         and LCC_CODE=#{lcc_code,jdbcType=VARCHAR}   
+      </if>
+      <if test="projectId != null"> 
+         and PROJECT_ID=#{projectId,jdbcType=VARCHAR}  
+      </if>
+      order by BOX_CODE,BOX_TYPE
+  </select> 
+  
+   <!-- 获取 盒子列表 根据订单 号 不分页  -->
+  <select id="spboxListByWaybillNo" parameterType="java.lang.String" resultMap="BaseResultMap"> 
+    select 
+    <include refid="Base_Column_List" /> 
+    from PIP_SCM_FROZENBOX where 
+    WAYBILL_NO=#{waybill_no,jdbcType=VARCHAR} 
+    
+ 
+  </select> 
+   
+   <!-- 获取 盒子列表 根据订单 号 有分页  -->
+   <select id="spboxListByWaybillNoByfilter" parameterType="com.bdcor.pip.web.spem.filter.SpBoxFilter" resultMap="BaseResultMap"> 
+    select 
+    fr.* , lc.LCC_NAME 
+    from PIP_SCM_FROZENBOX fr left join PIP_COMM_LCC lc   on lc.PROJECT_ID=fr.PROJECT_ID  and lc.LCC_CODE=fr.LCC_CODE 
+    where fr.WAYBILL_NO=#{waybillno,jdbcType=VARCHAR}  order by fr.BOX_CODE,fr.BOX_TYPE
+   </select>  
+   
+  <select id="spboxListByfilter" parameterType="com.bdcor.pip.web.spem.filter.SpBoxFilter" resultMap="BaseResultMap"> 
+	
+	select fr.BOX_CODE, lc.LCC_NAME, fr.BOX_STATE, 
+	fr.PROJECT_ID, fr.lcc_code, fr.BOX_TYPE ,t.TUBE_SUM,fe.FRIDGE_NAME
+	from PIP_SCM_FROZENBOX fr
+	left join PIP_COMM_LCC lc on lc.PROJECT_ID=fr.PROJECT_ID and
+		lc.LCC_CODE=fr.LCC_CODE
+	left join (select count(TUBE_CODE) TUBE_SUM,BOX_CODE,box_type from
+			PIP_SCM_FROZENTUBE group by BOX_CODE, box_type) t on
+			t.BOX_CODE=fr.BOX_CODE and t.box_type=fr.box_type
+	left join PIP_SCM_FRIDGE fe on fe.PROJECT_ID=fr.PROJECT_ID and
+		fe.LCC_CODE=fr.LCC_CODE and fe.fridge_id=fr.fridge_id
+
+	where 1=1    
+	 
+	 <if test="lccid != null and ''!=lccid"> 
+         and fr.LCC_CODE in ${lccid}   
+     </if>
+     <if test="projectid != null and ''!=projectid"> 
+         and fr.PROJECT_ID=#{projectid,jdbcType=VARCHAR}  
+     </if> 
+     <if test="fridgeId != null and '' != fridgeId"> 
+         and fr.fridge_id=#{fridgeId,jdbcType=VARCHAR}  
+     </if>
+     <if test="boxCodes != null and ''!=boxCodes"> 
+         and fr.BOX_CODE like '%${boxCodes}%'  
+     </if>
+     <if test="box_type != null and '' != box_type"> 
+         and fr.BOX_TYPE=#{box_type,jdbcType=VARCHAR}  
+     </if>  
+    <if test="sidx != null and sidx != ''">
+            order by ${sidx}
+            <if test="sord!=null and sord!= ''">
+                ${sord}
+            </if> 
+     </if>    
+  </select>  
+  
+  
+   <select id="countByProjectId" parameterType="java.lang.String" resultType="java.lang.Integer"> 
+   
+    select nvl(Max(to_number(substr( WAYBILL_NO , -6))) ,0) from  PIP_SCM_WAYBILL where   PROJECT_ID=#{projectId,jdbcType=VARCHAR} 
+  </select>  
+  <!--  获取管子 -->
+   <select id="microList" parameterType="com.bdcor.pip.web.spem.filter.TubeFilter" resultType="map">
+select ft.*,
+       lc.LCC_NAME LCC_NAME,
+       p.patient_name patientName,
+       p.birthday,
+       p.sex,
+       p.patient_id patientId,
+       px.zyzx_box_id
+  from PIP_SCM_FROZEN_TUBE ft
+  left join PIP_COMM_LCC lc on lc.PROJECT_ID = ft.PROJECT_ID
+                           and lc.LCC_CODE = ft.LCC_CODE
+  left join pip_comm_patient p on ft.blood_code = p.risk_code
+                              and p.lcc_code = ft.lcc_code
+                              and p.project_id = ft.project_id
+  left join pip_scm_interface_zyzx px on ft.box_code=px.box_code and ft.box_type=px.box_type and ft.project_id=px.project_id
+  where 1=1
+     <if test="boxId != null">
+       and   ft.BOX_CODE=#{boxId,jdbcType=VARCHAR} 
+     </if>
+     <if test="boxType != null">
+          and ft.BOX_TYPE=#{boxType,jdbcType=VARCHAR} 
+     </if>
+      <if test="lccid != null and ''!=lccid"> 
+         and ft.LCC_CODE=#{lccid,jdbcType=VARCHAR}   
+     </if> 
+     <if test="projectid != null and ''!=projectid"> 
+         and ft.PROJECT_ID=#{projectid,jdbcType=VARCHAR}  
+     </if>  
+    order by ft.box_code,ft.box_type,ft.box_rowno,ft.box_colno
+ </select>  
+  
+   <!--根据运单号 获取冻存管  -->
+    <select id="microListBywaybill_no" parameterType="com.bdcor.pip.web.spem.filter.TubeFilter" resultType="map">
+      select 
+      ft.*,
+       lc.LCC_NAME LCC_NAME,
+       p.patient_name patientName,
+       p.birthday,
+       p.sex,
+       p.patient_id patientId,
+       px.zyzx_box_id
+       from 
+        PIP_SCM_FROZEN_TUBE ft 
+        left join PIP_COMM_LCC lc on lc.lcc_code=ft.lcc_code  and ft.project_id=lc.project_id
+        left join pip_comm_patient p on ft.blood_code = p.risk_code
+                              and p.lcc_code = ft.lcc_code
+                              and p.project_id = ft.project_id
+  		left join pip_scm_interface_zyzx px on ft.box_code=px.box_code and ft.box_type=px.box_type and ft.project_id=px.project_id
+        left join  PIP_SCM_FROZENBOX fb on ft.box_code=fb.box_code and ft.BOX_TYPE=fb.BOX_TYPE
+        where 1=1
+     <if test="boxId != null">
+         and  ft.BOX_CODE=#{boxId,jdbcType=VARCHAR} 
+     </if>
+     <if test="boxType != null">
+         and ft.BOX_TYPE=#{boxType,jdbcType=VARCHAR} 
+     </if>  
+     <if test="waybillno != null">
+         and fb.WAYBILL_NO=#{waybillno,jdbcType=VARCHAR} 
+     </if>  
+      order by ft.box_code,ft.box_type,ft.box_rowno,ft.box_colno  
+  </select>       
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_SCM_FROZENBOX
+    where BOX_CODE = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PIP_SCM_FROZENBOX
+    where BOX_CODE = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.spem.domain.SpBoxVo">
+    insert into PIP_SCM_FROZENBOX
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        BOX_CODE,
+      </if>
+      <if test="boxType != null">
+        BOX_TYPE,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+      <if test="iceboxId != null">
+        FRIDGE_ID,
+      </if>
+      <if test="project_id != null">
+        PROJECT_ID,
+      </if>
+      <if test="isCheckin != null">
+        IS_CHECKIN,
+      </if>
+      <if test="statusCode != null">
+        BOX_STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="boxType != null">
+        #{boxType,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="iceboxId != null">
+        #{iceboxId,jdbcType=VARCHAR},
+      </if>
+      <if test="project_id != null">
+        #{project_id,jdbcType=VARCHAR},
+      </if>
+      <if test="isCheckin != null">
+        #{isCheckin,jdbcType=DECIMAL},
+      </if>
+      <if test="statusCode != null">
+        #{statusCode,jdbcType=DECIMAL},
+      </if> 
+    </trim>
+  </insert> 
+  
+  <select id="countByExample" parameterType="com.bdcor.pip.web.spem.filter.SpBoxFilter" resultType="java.lang.Integer">
+    select count(*) from PIP_SCM_FROZENBOX
+  </select>
+  
+  <update id="updateByExampleSelective" parameterType="map">
+    update PIP_SCM_FROZENBOX 
+    <set>
+      <if test="record.id != null">
+        BOX_CODE = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boxType != null">
+        BOX_TYPE = #{record.boxType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.iceboxId != null">
+        FRIDGE_ID = #{record.iceboxId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.project_id != null">
+        PROJECT_ID = #{record.project_id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isCheckin != null">
+        IS_CHECKIN = #{record.isCheckin,jdbcType=CHAR},
+      </if>
+      <if test="record.statusCode != null">
+        BOX_STATE = #{record.statusCode,jdbcType=CHAR},
+      </if>
+    </set>
+  </update> 
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.spem.domain.SpBoxVo">
+    update PIP_SCM_FROZENBOX
+    <set>
+      <if test="boxType != null">
+        BOX_TYPE = #{boxType,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR}, 
+      </if> 
+      <if test="iceboxId != null">
+        FRIDGE_ID = #{iceboxId,jdbcType=VARCHAR},
+      </if>
+      <if test="project_id != null">
+        PROJECT_ID = #{project_id,jdbcType=VARCHAR},
+      </if>
+      <if test="isCheckin != null">
+        IS_CHECKIN = #{isCheckin,jdbcType=DECIMAL},
+      </if>
+      <if test="statusCode != null">
+        STATUS_CODE = #{statusCode,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where BOX_CODE = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="removeWayBillNo" parameterType="java.lang.String" >
+        update PIP_SCM_FROZENBOX   set WAYBILL_NO=null where WAYBILL_NO=#{waybill_no,jdbcType=DECIMAL}
+  </update> 
+  
+  
+  <update id="update_status" parameterType="java.lang.String" >
+        update PIP_SCM_FROZENBOX   set IS_CHECKIN=1
+        where WAYBILL_NO=#{waybill_no,jdbcType=DECIMAL}
+  </update>  
+  
+  <update id="updateWayBillNo" parameterType="com.bdcor.pip.web.spem.domain.SpBoxVo" >
+        update PIP_SCM_FROZENBOX
+        <set>
+          <if test="isCheckin != null">
+            IS_CHECKIN = #{isCheckin,jdbcType=DECIMAL},
+          </if>
+          <if test="statusCode != null">
+            BOX_STATE = #{statusCode,jdbcType=DECIMAL},
+          </if>
+           <if test="waybill_no != null">
+            WAYBILL_NO = #{waybill_no,jdbcType=DECIMAL},
+          </if>
+        </set>   
+          where 
+         <if test="boxType != null">
+           BOX_TYPE = #{boxType,jdbcType=VARCHAR}  
+        </if>  
+        <if test="id != null">
+           and  BOX_CODE = #{id,jdbcType=VARCHAR}  
+        </if> 
+        <if test="project_id != null">
+           and  PROJECT_ID = #{project_id,jdbcType=VARCHAR}
+        </if> 
+        <if test="lcc_code != null">
+           and  LCC_CODE = #{lcc_code,jdbcType=VARCHAR}
+        </if>    
+  </update> 
+</mapper>

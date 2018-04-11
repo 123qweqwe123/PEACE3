@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.pro.promgt.dao.LccUserDao">
+	<resultMap id="BaseResultMap" type="com.bdcor.pip.web.pro.promgt.domain.LccUser">
+		<constructor>
+			<arg column="USER_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="PHONE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="EMAIL" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="LCC_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="IS_SIGN_SIGNA" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="IS_GET_RESUME" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="IS_JOIN_TRAINING" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="STATUS" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="PROJECT_ID" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="MOBILE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="ADDTOLINKMAN" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="LINKMAN_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="HELP_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="LCC_ROLE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="RESEARCH_STATUS" jdbcType="VARCHAR" javaType="java.lang.String" />
+		</constructor>
+			<result column="lcc_role_type" jdbcType="VARCHAR" property="lccRoleType"/>
+			<result column="lcc_name" jdbcType="VARCHAR" property="lccName"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		USER_CODE,NAME,PHONE,EMAIL,LCC_CODE,LCC_ROLE,IS_SIGN_SIGNA,IS_GET_RESUME,IS_JOIN_TRAINING,STATUS,PROJECT_ID,MOBILE,ADDTOLINKMAN,LINKMAN_CODE,HELP_CODE,RESEARCH_STATUS
+	</sql>
+
+
+	<resultMap id="LccUserFilterMap" type="com.bdcor.pip.web.pro.promgt.filter.LccUserFilter">
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="projectId" jdbcType="VARCHAR" property="projectId" />
+		<result column="userId" jdbcType="VARCHAR" property="userId" />
+		<result column="lccCode" jdbcType="VARCHAR" property="lccCode" />
+		<result column="lccRole" jdbcType="VARCHAR" property="lccRole" />
+		<result column="vName" jdbcType="VARCHAR" property="vName" />
+		<result column="lccName" jdbcType="VARCHAR" property="lccName" />
+		<result column="hospitalType" jdbcType="VARCHAR" property="hospitalType" />
+		<result column="isSignContract" jdbcType="VARCHAR" property="isSignContract" />
+		<result column="contractSignDate" jdbcType="VARCHAR" property="contractSignDate" />
+		<result column="expectStartDate" jdbcType="VARCHAR" property="expectStartDate" />
+		<result column="projectManager" jdbcType="VARCHAR" property="projectManager" />
+		<result column="rccName" jdbcType="VARCHAR" property="rccName" />
+		<result column="researchStatus" jdbcType="VARCHAR" property="researchStatus" />
+	</resultMap>
+	<select id="getAllLccUsers" parameterType="com.bdcor.pip.web.pro.promgt.filter.LccUserFilter"
+		resultMap="BaseResultMap">
+		select u.*,lcc.lcc_name as lccName from pip_comm_lcc_user u left join 
+			pip_comm_lcc lcc on u.lcc_code = lcc.lcc_code and u.project_id=lcc.project_id
+		<!--
+		<select id="getAllLccUsers" parameterType="com.bdcor.pip.web.pro.promgt.filter.LccUserFilter"
+		resultMap="LccUserFilterMap">
+		 select u.name as name, lcc.lcc_code as lccCode,t.vname vName, lcc.lcc_name as
+		lccName,lcc.HOSPITAL_TYPE as hospitalType,
+		lcc.IS_SIGN_CONTRACT as isSignContract,lcc.CONTRACT_SIGN_DATE as contractSignDate
+		,lcc.EXPECT_START_DATE as expectStartDate,lcc.PROJECT_MANAGER as
+		projectManager,rcc.rcc_name as rccName
+		from pip_comm_lcc_user u
+		left join pip_comm_lcc lcc on u.lcc_code = lcc.lcc_code and u.project_id =
+		lcc.project_id
+		inner join pip_comm_dict_district t on t.vcode = lcc.area_code
+		inner join pip_comm_rcc rcc on rcc.rcc_code = lcc.rcc_code -->
+		where 1=1
+		and u.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit
+		where dataLimit.user_Id=#{userId})
+
+		<if test="name != null">
+			and u.NAME like '%'||#{name}||'%'
+		</if>
+		<if test="lccCode != null">
+			and u.lcc_code = #{lccCode, jdbcType=VARCHAR}
+		</if>
+		<if test="lccRole != null and lccRole !='-1'">
+			and u.lcc_Role = #{lccRole, jdbcType=VARCHAR}
+		</if>
+		<if test="lccRoleType != null and lccRoleType !='-1' and lccRoleType !=''">
+			and lcc.LCC_ROLE_TYPE = #{lccRoleType, jdbcType=VARCHAR}
+		</if>
+		and u.project_id = #{projectId, jdbcType=VARCHAR}
+		<if test="sidx != null and sidx != ''">
+			order by u.${sidx}
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+	<select id="getLccUserList" parameterType="map" resultType="map">
+		select
+			user_code ,
+			name as user_name,
+			lcc_code,
+			help_code 
+		from pip_comm_lcc_user
+		where 1=1
+		 	<if test="projectId !=null and projectId !=''">
+		 		and project_id =#{projectId}
+		 	</if>
+			<if test="lccCode !=null and lccCode !=''">
+				and lcc_code= #{lccCode}
+			</if>
+	</select>
+	<select id="getLccUserById" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		u.*,l.lcc_name
+		from pip_comm_lcc_user u 
+		left join pip_comm_lcc l on l.project_id=u.project_id and l.lcc_code=u.lcc_code
+		where u.user_code = #{userCode, jdbcType=VARCHAR}
+		and u.project_id = #{projectId, jdbcType=VARCHAR}
+		<if test="lccRoleType !=null and lccRoleType!=''">
+			and l.lcc_role_type = #{lccRoleType}
+		</if>
+	</select>
+
+	<insert id="addLccUser" parameterType="com.bdcor.pip.web.pro.promgt.domain.LccUser">
+		insert into pip_comm_lcc_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userCode != null">
+				USER_CODE,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="phone != null">
+				PHONE,
+			</if>
+			<if test="email != null">
+				EMAIL,
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE,
+			</if>
+			<if test="lccRole != null">
+				LCC_ROLE,
+			</if>
+			<if test="isSignSigna != null">
+				IS_SIGN_SIGNA,
+			</if>
+			<if test="isGetResume != null">
+				IS_GET_RESUME,
+			</if>
+			<if test="isJoinTraining != null">
+				IS_JOIN_TRAINING,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="projectId != null">
+				PROJECT_ID,
+			</if>
+			<if test="mobile != null">
+				MOBILE,
+			</if>
+			<if test="linkManCode != null">
+				LINKMAN_CODE,
+			</if>
+			<if test="helpCode != null">
+				HELP_CODE,
+			</if>
+			<if test="researchStatus != null">
+				RESEARCH_STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userCode != null">
+				#{userCode, jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name, jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone, jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email, jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				#{lccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="lccRole != null">
+				#{lccRole, jdbcType=VARCHAR},
+			</if>
+			<if test="isSignSigna != null">
+				#{isSignSigna, jdbcType=VARCHAR},
+			</if>
+			<if test="isGetResume != null">
+				#{isGetResume, jdbcType=VARCHAR},
+			</if>
+			<if test="isJoinTraining != null">
+				#{isJoinTraining, jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status, jdbcType=VARCHAR},
+			</if>
+			<if test="projectId != null">
+				#{projectId, jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile, jdbcType=VARCHAR},
+			</if>
+			<if test="linkManCode != null">
+				#{linkManCode, jdbcType=VARCHAR},
+			</if>
+			<if test="helpCode != null">
+				#{helpCode, jdbcType=VARCHAR},
+			</if>
+			<if test="researchStatus != null">
+			    #{researchStatus, jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateAccountLccByUserCode" parameterType="com.bdcor.pip.web.pro.promgt.domain.LccUser">
+		update pip_sys_account
+		set lcc_code =#{lccCode}
+		where project_id = #{projectId}
+		and user_code = #{userCode}
+	</update>
+	<update id="updateLccUser" parameterType="com.bdcor.pip.web.pro.promgt.domain.LccUser">
+		update pip_comm_lcc_user
+		<set>
+			<if test="name != null">
+				NAME = #{name, jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				PHONE = #{phone, jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				EMAIL = #{email, jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE = #{lccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="lccRole != null">
+				LCC_ROLE = #{lccRole, jdbcType=VARCHAR},
+			</if>
+			<if test="isSignSigna != null">
+				IS_SIGN_SIGNA = #{isSignSigna, jdbcType=VARCHAR},
+			</if>
+			<if test="isGetResume != null">
+				IS_GET_RESUME = #{isGetResume, jdbcType=VARCHAR},
+			</if>
+			<if test="isJoinTraining != null">
+				IS_JOIN_TRAINING = #{isJoinTraining, jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status, jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				MOBILE = #{mobile, jdbcType=VARCHAR},
+			</if>
+			<if test="linkManCode != null">
+				LinkMAN_CODE = #{linkManCode, jdbcType=VARCHAR},
+			</if>
+			<if test="helpCode != null">
+				HELP_CODE = #{helpCode, jdbcType=VARCHAR},
+			</if>
+			<if test="researchStatus != null">
+				RESEARCH_STATUS = #{researchStatus, jdbcType=VARCHAR},
+			</if>
+			
+		</set>
+		where user_code = #{userCode, jdbcType=VARCHAR} and project_id =
+		#{projectId, jdbcType=VARCHAR}
+	</update>
+
+
+
+	<update id="changeStatus" parameterType="com.bdcor.pip.web.pro.promgt.domain.LccUser">
+		update pip_comm_lcc_user
+		set status = #{status, jdbcType=VARCHAR} where user_code = #{userCode,
+		jdbcType=VARCHAR} and project_id = #{projectId, jdbcType=VARCHAR}
+	</update>
+
+	<update id="changePipSysAccountStatus" parameterType="com.bdcor.pip.web.pro.promgt.domain.LccUser">
+		update
+		PIP_SYS_ACCOUNT set status = #{status, jdbcType=INTEGER} where
+		user_code = #{userCode, jdbcType=VARCHAR}
+	</update>
+	<update id="updatePIPSYSACCOUNTStatusForLccCodeAndProjectId"
+		parameterType="java.lang.String">
+		update PIP_SYS_ACCOUNT set status = #{status,
+		jdbcType=INTEGER} where lcc_code= #{lccCode, jdbcType=VARCHAR} and
+		project_id = #{projectId, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getLccUsersByProjectId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from pip_comm_lcc_user where PROJECT_ID = #{projectId,
+		jdbcType=VARCHAR}
+		and status=1
+	</select>
+
+	<select id="changeStatusByLccCode" parameterType="java.lang.String">
+		update pip_comm_lcc_user set
+		<if test="lccStatus == 1">
+			status = 1
+		</if>
+		<if test="lccStatus == 2">
+			status = 2
+		</if>
+		where lcc_code = #{lccCode, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getLccUserByLccCode" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from pip_comm_lcc_user where lcc_code = #{lccCode,
+		jdbcType=VARCHAR} and project_id = #{projectId, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getOneForLccCodeAndProjectIdAndUserCode"
+		parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from pip_comm_lcc_user where lcc_code = #{lccCode,
+		jdbcType=VARCHAR} and project_id = #{projectId, jdbcType=VARCHAR} and
+		user_code = #{userCode, jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateStatusForLccUser" parameterType="java.lang.String">
+		update
+		pip_comm_lcc_user set status = #{status, jdbcType=INTEGER} where
+		lcc_code in (select lcc_code from pip_comm_lcc where project_id =
+		#{projectId, jdbcType=VARCHAR})
+	</update>
+	<update id="updateStatusForLccCodeAndProjectId" parameterType="java.lang.String">
+		update pip_comm_lcc_user set status = #{status, jdbcType=INTEGER}
+		where lcc_code= #{lccCode, jdbcType=VARCHAR} and project_id =
+		#{projectId, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getMaxLccCode" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select max(user_code) from pip_comm_lcc_user where
+		substr(user_code,1,length(user_code)-4) = #{lccCode, jdbcType=VARCHAR}
+		and project_id = #{projectId, jdbcType=VARCHAR}
+	</select>
+</mapper>

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.data.dao.PipCommPatientHistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.data.domain.PipCommPatientHistory" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATER_NAME" property="createrName" jdbcType="VARCHAR" />
+    <result column="ROW_NUM" property="rowNum" jdbcType="DECIMAL" />
+    <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="FILE_NAME_CHECKED" property="fileNameChecked" jdbcType="VARCHAR" />
+    <result column="FILE_NAME_OUT" property="fileNameOut" jdbcType="VARCHAR" />
+    <result column="CHECKED_SUC" property="checkedSuc" jdbcType="DECIMAL" />
+    <result column="INSERT_TO_DB_SUC" property="insertToDbSuc" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, FILE_NAME, CREATE_DATE, CREATE_BY, CREATER_NAME, ROW_NUM, FILE_PATH, LCC_CODE, 
+    PROJECT_ID, FILE_NAME_CHECKED, FILE_NAME_OUT, CHECKED_SUC, INSERT_TO_DB_SUC
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientHistoryExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_COMM_PATIENT_HISTORY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_COMM_PATIENT_HISTORY
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from PIP_COMM_PATIENT_HISTORY
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientHistoryExample" >
+    delete from PIP_COMM_PATIENT_HISTORY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientHistory" >
+    insert into PIP_COMM_PATIENT_HISTORY (ID, FILE_NAME, CREATE_DATE, 
+      CREATE_BY, CREATER_NAME, ROW_NUM, 
+      FILE_PATH, LCC_CODE, PROJECT_ID, 
+      FILE_NAME_CHECKED, FILE_NAME_OUT, CHECKED_SUC, 
+      INSERT_TO_DB_SUC)
+    values (#{id,jdbcType=DECIMAL}, #{fileName,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{createrName,jdbcType=VARCHAR}, #{rowNum,jdbcType=DECIMAL}, 
+      #{filePath,jdbcType=VARCHAR}, #{lccCode,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, 
+      #{fileNameChecked,jdbcType=VARCHAR}, #{fileNameOut,jdbcType=VARCHAR}, #{checkedSuc,jdbcType=DECIMAL}, 
+      #{insertToDbSuc,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientHistory" >
+    insert into PIP_COMM_PATIENT_HISTORY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createrName != null" >
+        CREATER_NAME,
+      </if>
+      <if test="rowNum != null" >
+        ROW_NUM,
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="fileNameChecked != null" >
+        FILE_NAME_CHECKED,
+      </if>
+      <if test="fileNameOut != null" >
+        FILE_NAME_OUT,
+      </if>
+      <if test="checkedSuc != null" >
+        CHECKED_SUC,
+      </if>
+      <if test="insertToDbSuc != null" >
+        INSERT_TO_DB_SUC,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createrName != null" >
+        #{createrName,jdbcType=VARCHAR},
+      </if>
+      <if test="rowNum != null" >
+        #{rowNum,jdbcType=DECIMAL},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileNameChecked != null" >
+        #{fileNameChecked,jdbcType=VARCHAR},
+      </if>
+      <if test="fileNameOut != null" >
+        #{fileNameOut,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedSuc != null" >
+        #{checkedSuc,jdbcType=DECIMAL},
+      </if>
+      <if test="insertToDbSuc != null" >
+        #{insertToDbSuc,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientHistoryExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_COMM_PATIENT_HISTORY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_COMM_PATIENT_HISTORY
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fileName != null" >
+        FILE_NAME = #{record.fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createrName != null" >
+        CREATER_NAME = #{record.createrName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rowNum != null" >
+        ROW_NUM = #{record.rowNum,jdbcType=DECIMAL},
+      </if>
+      <if test="record.filePath != null" >
+        FILE_PATH = #{record.filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccCode != null" >
+        LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileNameChecked != null" >
+        FILE_NAME_CHECKED = #{record.fileNameChecked,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileNameOut != null" >
+        FILE_NAME_OUT = #{record.fileNameOut,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkedSuc != null" >
+        CHECKED_SUC = #{record.checkedSuc,jdbcType=DECIMAL},
+      </if>
+      <if test="record.insertToDbSuc != null" >
+        INSERT_TO_DB_SUC = #{record.insertToDbSuc,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_COMM_PATIENT_HISTORY
+    set ID = #{record.id,jdbcType=DECIMAL},
+      FILE_NAME = #{record.fileName,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATER_NAME = #{record.createrName,jdbcType=VARCHAR},
+      ROW_NUM = #{record.rowNum,jdbcType=DECIMAL},
+      FILE_PATH = #{record.filePath,jdbcType=VARCHAR},
+      LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      FILE_NAME_CHECKED = #{record.fileNameChecked,jdbcType=VARCHAR},
+      FILE_NAME_OUT = #{record.fileNameOut,jdbcType=VARCHAR},
+      CHECKED_SUC = #{record.checkedSuc,jdbcType=DECIMAL},
+      INSERT_TO_DB_SUC = #{record.insertToDbSuc,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientHistory" >
+    update PIP_COMM_PATIENT_HISTORY
+    <set >
+      <if test="fileName != null" >
+        FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createrName != null" >
+        CREATER_NAME = #{createrName,jdbcType=VARCHAR},
+      </if>
+      <if test="rowNum != null" >
+        ROW_NUM = #{rowNum,jdbcType=DECIMAL},
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileNameChecked != null" >
+        FILE_NAME_CHECKED = #{fileNameChecked,jdbcType=VARCHAR},
+      </if>
+      <if test="fileNameOut != null" >
+        FILE_NAME_OUT = #{fileNameOut,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedSuc != null" >
+        CHECKED_SUC = #{checkedSuc,jdbcType=DECIMAL},
+      </if>
+      <if test="insertToDbSuc != null" >
+        INSERT_TO_DB_SUC = #{insertToDbSuc,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientHistory" >
+    update PIP_COMM_PATIENT_HISTORY
+    set FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATER_NAME = #{createrName,jdbcType=VARCHAR},
+      ROW_NUM = #{rowNum,jdbcType=DECIMAL},
+      FILE_PATH = #{filePath,jdbcType=VARCHAR},
+      LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      FILE_NAME_CHECKED = #{fileNameChecked,jdbcType=VARCHAR},
+      FILE_NAME_OUT = #{fileNameOut,jdbcType=VARCHAR},
+      CHECKED_SUC = #{checkedSuc,jdbcType=DECIMAL},
+      INSERT_TO_DB_SUC = #{insertToDbSuc,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="selectForPager" parameterType="com.bdcor.pip.web.data.filter.PatientFilter" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from PIP_COMM_PATIENT_HISTORY
+    where 1 = 1
+   	  <if test="lccCode != null">
+       and LCC_CODE = #{lccCode}
+      </if>
+      <if test="start != null">
+       and CREATE_DATE &gt;= #{start}
+      </if>
+      <if test="end != null">
+       and CREATE_DATE &lt;= #{end}
+      </if>
+      <if test="fileName != null">
+       and FILE_NAME like '%${fileName}%'
+      </if>
+      <if test="insertToDbSuc != null">
+       and INSERT_TO_DB_SUC = #{insertToDbSuc}
+      </if>
+   </select> 
+</mapper>

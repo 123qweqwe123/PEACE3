@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.quality.dao.PipExpImplementProblemMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.quality.domain.PipExpImplementProblem" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="IMPLEMENT_ID" property="implementId" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="LCC_USER_ID" property="lccUserId" jdbcType="VARCHAR" />
+    <result column="PROBLEM_TYPE" property="problemType" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+    <result column="LCC_USER_NAME" property="lccUserName" jdbcType="VARCHAR" />
+    <result column="ON_STATUS_DATE" property="onStatusDate" jdbcType="TIMESTAMP" />
+    <result column="OFF_STATUS_DATE" property="offStatusDate" jdbcType="TIMESTAMP" />
+    <result column="LCC_NAME" property="lccName" jdbcType="VARCHAR" />
+    <result column="IMPLEMENT_START_DATE" property="implementStartDate" jdbcType="TIMESTAMP" />
+    <result column="IMPLEMENT_END_DATE" property="implementEndDate" jdbcType="TIMESTAMP" />
+    <result column="WATCH_PATIENT_TYPE" property="watchPatientType" jdbcType="VARCHAR" />
+    <result column="PATIENT_COUNT" property="patientCount" jdbcType="VARCHAR" />
+    <result column="PROVINCE_NAME" property="provinceName" jdbcType="VARCHAR" />
+    <result column="LCC_CODE_BK" property="lccCodeBk" jdbcType="VARCHAR" />
+    
+    
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, PROJECT_ID, LCC_CODE, IMPLEMENT_ID, CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE, 
+    LCC_USER_ID, PROBLEM_TYPE, STATUS, DESCRIPTION, ON_STATUS_DATE, OFF_STATUS_DATE
+  </sql>
+  <select id="selectByFilter" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.quality.filter.PipExpImplementProblemFilter">
+  	select 
+  		p.*,u.name as lcc_user_name,
+  		d.vname as province_name,
+  		i.lcc_name,
+  		i.lcc_code as lcc_code_bk,
+  		i.IMPLEMENT_START_DATE,
+  		i.IMPLEMENT_END_DATE,
+  		i.WATCH_PATIENT_TYPE,
+  		i.PATIENT_COUNT
+  	from PIP_EXP_IMPLEMENT_PROBLEM p
+  	left join pip_comm_lcc_user u 
+  		on p.project_id =u.project_id and p.lcc_code= u.lcc_code and u.user_code = p.LCC_USER_ID
+  	left join PIP_EXP_IMPLEMENT i 
+  		on i.ID = p.IMPLEMENT_ID
+  	left join pip_comm_dict_district d on i.PROVINCE_CODE = d.vcode
+  	where 1=1
+  		<if test="implementId !=null and implementId !=''">
+  		  and p.IMPLEMENT_ID=#{implementId}
+  		</if>
+  		<if test="startSDate !=null and startSDate !=''">
+  		  and i.IMPLEMENT_START_DATE >= #{startSDate}
+  		</if>
+  		<if test="endSDate !=null and endSDate !=''">
+  		  and i.IMPLEMENT_START_DATE <![CDATA[ <= ]]> #{endSDate}   
+  		</if>
+  		<if test="startEDate !=null and startEDate !=''">
+  		  and i.IMPLEMENT_END_DATE >= #{startEDate}
+  		</if>
+  		<if test="endEDate !=null and endEDate !=''">
+  		  and i.IMPLEMENT_END_DATE <![CDATA[ <= ]]> #{endEDate}   
+  		</if>
+  		<if test="lccCode !=null  and lccCode!=''">
+  		  and p.lcc_code  like '%${lccCode}%'
+  		</if>
+  		<if test="status != null and status !=''">
+  		  and p.status = #{status}
+  		</if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplementProblemExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_EXP_IMPLEMENT_PROBLEM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_EXP_IMPLEMENT_PROBLEM
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PIP_EXP_IMPLEMENT_PROBLEM
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplementProblemExample" >
+    delete from PIP_EXP_IMPLEMENT_PROBLEM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <delete id="deleteBatch" parameterType="string">
+  	delete from PIP_EXP_IMPLEMENT_PROBLEM
+  		where id in(${ids})
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplementProblem" >
+    
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_EXP_IMPLEMENT_PROBLEM_SEQ.nextval from dual
+    </selectKey>
+	    insert into PIP_EXP_IMPLEMENT_PROBLEM (ID, PROJECT_ID, LCC_CODE, 
+	      IMPLEMENT_ID, CREATE_BY, CREATE_DATE, 
+	      UPDATE_BY, UPDATE_DATE, LCC_USER_ID, 
+	      PROBLEM_TYPE, STATUS, DESCRIPTION, 
+	      ON_STATUS_DATE, OFF_STATUS_DATE)
+	    values (#{id,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{lccCode,jdbcType=VARCHAR}, 
+	      #{implementId,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+	      #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{lccUserId,jdbcType=VARCHAR}, 
+	      #{problemType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+	      #{onStatusDate,jdbcType=TIMESTAMP}, #{offStatusDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplementProblem" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_EXP_IMPLEMENT_PROBLEM_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_EXP_IMPLEMENT_PROBLEM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="implementId != null" >
+        IMPLEMENT_ID,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="lccUserId != null" >
+        LCC_USER_ID,
+      </if>
+      <if test="problemType != null" >
+        PROBLEM_TYPE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="description != null" >
+        DESCRIPTION,
+      </if>
+      <if test="onStatusDate != null" >
+        ON_STATUS_DATE,
+      </if>
+      <if test="offStatusDate != null" >
+        OFF_STATUS_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="implementId != null" >
+        #{implementId,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lccUserId != null" >
+        #{lccUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="problemType != null" >
+        #{problemType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="onStatusDate != null" >
+        #{onStatusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="offStatusDate != null" >
+        #{offStatusDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplementProblemExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_EXP_IMPLEMENT_PROBLEM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_EXP_IMPLEMENT_PROBLEM
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccCode != null" >
+        LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.implementId != null" >
+        IMPLEMENT_ID = #{record.implementId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lccUserId != null" >
+        LCC_USER_ID = #{record.lccUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.problemType != null" >
+        PROBLEM_TYPE = #{record.problemType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null" >
+        DESCRIPTION = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.onStatusDate != null" >
+        ON_STATUS_DATE = #{record.onStatusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.offStatusDate != null" >
+        OFF_STATUS_DATE = #{record.offStatusDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_EXP_IMPLEMENT_PROBLEM
+    set ID = #{record.id,jdbcType=VARCHAR},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      IMPLEMENT_ID = #{record.implementId,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=TIMESTAMP},
+      LCC_USER_ID = #{record.lccUserId,jdbcType=VARCHAR},
+      PROBLEM_TYPE = #{record.problemType,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=VARCHAR},
+      DESCRIPTION = #{record.description,jdbcType=VARCHAR},
+      ON_STATUS_DATE = #{record.onStatusDate,jdbcType=TIMESTAMP},
+      OFF_STATUS_DATE = #{record.offStatusDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplementProblem" >
+    update PIP_EXP_IMPLEMENT_PROBLEM
+    <set >
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="implementId != null" >
+        IMPLEMENT_ID = #{implementId,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lccUserId != null" >
+        LCC_USER_ID = #{lccUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="problemType != null" >
+        PROBLEM_TYPE = #{problemType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="onStatusDate != null" >
+        ON_STATUS_DATE = #{onStatusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="offStatusDate != null" >
+        OFF_STATUS_DATE = #{offStatusDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.quality.domain.PipExpImplementProblem" >
+    update PIP_EXP_IMPLEMENT_PROBLEM
+    set PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      IMPLEMENT_ID = #{implementId,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+      LCC_USER_ID = #{lccUserId,jdbcType=VARCHAR},
+      PROBLEM_TYPE = #{problemType,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      ON_STATUS_DATE = #{onStatusDate,jdbcType=TIMESTAMP},
+      OFF_STATUS_DATE = #{offStatusDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

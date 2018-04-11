@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.data.dao.PipUqsOptionMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.data.domain.PipUqsOption" >
+    <result column="OPTION_ID" property="optionId" jdbcType="VARCHAR" />
+    <result column="QUESTION_ID" property="questionId" jdbcType="VARCHAR" />
+    <result column="QUESTIONSET_ID" property="questionsetId" jdbcType="VARCHAR" />
+    <result column="QUESTIONNAIRE_ID" property="questionnaireId" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="DISPLAY_NAME" property="displayName" jdbcType="VARCHAR" />
+    <result column="IS_CHOOSEABLE" property="isChooseable" jdbcType="DECIMAL" />
+    <result column="PICTURE_ADDRESS" property="pictureAddress" jdbcType="VARCHAR" />
+    <result column="DATATYPE_ID" property="datatypeId" jdbcType="DECIMAL" />
+    <result column="IS_EVENT" property="isEvent" jdbcType="DECIMAL" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="DATE" />
+    <result column="IS_REMOVED" property="isRemoved" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="DICT_VALUE" property="dictValue" jdbcType="VARCHAR" />
+    <result column="OPTION_TYPE" property="optionType" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="VARCHAR" />
+    <result column="OPTION_STYLE" property="optionStyle" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    OPTION_ID, QUESTION_ID, QUESTIONSET_ID, QUESTIONNAIRE_ID, PROJECT_ID, DISPLAY_NAME, 
+    IS_CHOOSEABLE, PICTURE_ADDRESS, DATATYPE_ID, IS_EVENT, CREATE_BY, CREATE_DATE, UPDATE_BY, 
+    UPDATE_DATE, IS_REMOVED, REMARK, DICT_VALUE, OPTION_TYPE, VERSION, OPTION_STYLE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.data.domain.PipUqsOptionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_UQS_OPTION
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.data.domain.PipUqsOptionExample" >
+    delete from PIP_UQS_OPTION
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.data.domain.PipUqsOption" >
+    insert into PIP_UQS_OPTION (OPTION_ID, QUESTION_ID, QUESTIONSET_ID, 
+      QUESTIONNAIRE_ID, PROJECT_ID, DISPLAY_NAME, 
+      IS_CHOOSEABLE, PICTURE_ADDRESS, DATATYPE_ID, 
+      IS_EVENT, CREATE_BY, CREATE_DATE, 
+      UPDATE_BY, UPDATE_DATE, IS_REMOVED, 
+      REMARK, DICT_VALUE, OPTION_TYPE, 
+      VERSION, OPTION_STYLE)
+    values (#{optionId,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, #{questionsetId,jdbcType=VARCHAR}, 
+      #{questionnaireId,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{displayName,jdbcType=VARCHAR}, 
+      #{isChooseable,jdbcType=DECIMAL}, #{pictureAddress,jdbcType=VARCHAR}, #{datatypeId,jdbcType=DECIMAL}, 
+      #{isEvent,jdbcType=DECIMAL}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=DATE}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=DATE}, #{isRemoved,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{dictValue,jdbcType=VARCHAR}, #{optionType,jdbcType=VARCHAR}, 
+      #{version,jdbcType=VARCHAR}, #{optionStyle,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.data.domain.PipUqsOption" >
+    insert into PIP_UQS_OPTION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="optionId != null" >
+        OPTION_ID,
+      </if>
+      <if test="questionId != null" >
+        QUESTION_ID,
+      </if>
+      <if test="questionsetId != null" >
+        QUESTIONSET_ID,
+      </if>
+      <if test="questionnaireId != null" >
+        QUESTIONNAIRE_ID,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="displayName != null" >
+        DISPLAY_NAME,
+      </if>
+      <if test="isChooseable != null" >
+        IS_CHOOSEABLE,
+      </if>
+      <if test="pictureAddress != null" >
+        PICTURE_ADDRESS,
+      </if>
+      <if test="datatypeId != null" >
+        DATATYPE_ID,
+      </if>
+      <if test="isEvent != null" >
+        IS_EVENT,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE,
+      </if>
+      <if test="isRemoved != null" >
+        IS_REMOVED,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="dictValue != null" >
+        DICT_VALUE,
+      </if>
+      <if test="optionType != null" >
+        OPTION_TYPE,
+      </if>
+      <if test="version != null" >
+        VERSION,
+      </if>
+      <if test="optionStyle != null" >
+        OPTION_STYLE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="optionId != null" >
+        #{optionId,jdbcType=VARCHAR},
+      </if>
+      <if test="questionId != null" >
+        #{questionId,jdbcType=VARCHAR},
+      </if>
+      <if test="questionsetId != null" >
+        #{questionsetId,jdbcType=VARCHAR},
+      </if>
+      <if test="questionnaireId != null" >
+        #{questionnaireId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="displayName != null" >
+        #{displayName,jdbcType=VARCHAR},
+      </if>
+      <if test="isChooseable != null" >
+        #{isChooseable,jdbcType=DECIMAL},
+      </if>
+      <if test="pictureAddress != null" >
+        #{pictureAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="datatypeId != null" >
+        #{datatypeId,jdbcType=DECIMAL},
+      </if>
+      <if test="isEvent != null" >
+        #{isEvent,jdbcType=DECIMAL},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=DATE},
+      </if>
+      <if test="isRemoved != null" >
+        #{isRemoved,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="dictValue != null" >
+        #{dictValue,jdbcType=VARCHAR},
+      </if>
+      <if test="optionType != null" >
+        #{optionType,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="optionStyle != null" >
+        #{optionStyle,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.data.domain.PipUqsOptionExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_UQS_OPTION
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_UQS_OPTION
+    <set >
+      <if test="record.optionId != null" >
+        OPTION_ID = #{record.optionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionId != null" >
+        QUESTION_ID = #{record.questionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionsetId != null" >
+        QUESTIONSET_ID = #{record.questionsetId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionnaireId != null" >
+        QUESTIONNAIRE_ID = #{record.questionnaireId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.displayName != null" >
+        DISPLAY_NAME = #{record.displayName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isChooseable != null" >
+        IS_CHOOSEABLE = #{record.isChooseable,jdbcType=DECIMAL},
+      </if>
+      <if test="record.pictureAddress != null" >
+        PICTURE_ADDRESS = #{record.pictureAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.datatypeId != null" >
+        DATATYPE_ID = #{record.datatypeId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.isEvent != null" >
+        IS_EVENT = #{record.isEvent,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=DATE},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        UPDATE_DATE = #{record.updateDate,jdbcType=DATE},
+      </if>
+      <if test="record.isRemoved != null" >
+        IS_REMOVED = #{record.isRemoved,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dictValue != null" >
+        DICT_VALUE = #{record.dictValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optionType != null" >
+        OPTION_TYPE = #{record.optionType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        VERSION = #{record.version,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optionStyle != null" >
+        OPTION_STYLE = #{record.optionStyle,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_UQS_OPTION
+    set OPTION_ID = #{record.optionId,jdbcType=VARCHAR},
+      QUESTION_ID = #{record.questionId,jdbcType=VARCHAR},
+      QUESTIONSET_ID = #{record.questionsetId,jdbcType=VARCHAR},
+      QUESTIONNAIRE_ID = #{record.questionnaireId,jdbcType=VARCHAR},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      DISPLAY_NAME = #{record.displayName,jdbcType=VARCHAR},
+      IS_CHOOSEABLE = #{record.isChooseable,jdbcType=DECIMAL},
+      PICTURE_ADDRESS = #{record.pictureAddress,jdbcType=VARCHAR},
+      DATATYPE_ID = #{record.datatypeId,jdbcType=DECIMAL},
+      IS_EVENT = #{record.isEvent,jdbcType=DECIMAL},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=DATE},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{record.updateDate,jdbcType=DATE},
+      IS_REMOVED = #{record.isRemoved,jdbcType=DECIMAL},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      DICT_VALUE = #{record.dictValue,jdbcType=VARCHAR},
+      OPTION_TYPE = #{record.optionType,jdbcType=VARCHAR},
+      VERSION = #{record.version,jdbcType=VARCHAR},
+      OPTION_STYLE = #{record.optionStyle,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

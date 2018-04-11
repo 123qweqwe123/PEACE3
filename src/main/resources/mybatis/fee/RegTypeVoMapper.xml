@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.fee.dao.RegTypeVoMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.fee.domain.RegTypeVo" >
+    <id column="TYPE_CODE" property="typeCode" jdbcType="VARCHAR" />
+    <result column="TYPE_NAME" property="typeName" jdbcType="VARCHAR" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    TYPE_CODE, TYPE_NAME, REMARKS
+  </sql>
+  
+  
+  <select id="getAll" resultMap="BaseResultMap">
+        select 
+        <include refid="Base_Column_List" />
+        from PIP_FEE_REGTYPE 
+  </select>  
+ 
+  
+
+</mapper>

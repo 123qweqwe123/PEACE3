@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.quality.dao.ExamineDao">
+    <resultMap id="BaseResultMap" type="com.bdcor.pip.web.quality.domain.Examine">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR"/>
+        <result column="LCC_NAME" property="lccName" jdbcType="VARCHAR"/>
+        <result column="EXAMINE_USER_CODE" property="examineUserCode" jdbcType="VARCHAR"/>
+        <result column="EXAMINE_LCC_CODE" property="examineLccCode" jdbcType="VARCHAR"/>
+        <result column="EXAMINE_LCC_NAME" property="examineLccName" jdbcType="VARCHAR"/>
+        <result column="EXAMINE_USER_NAME" property="examineUserName" jdbcType="VARCHAR"/>
+        <result column="EXAMINE_DATE" property="examineDate" jdbcType="TIMESTAMP"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="FILE_NO" property="fileNo" jdbcType="INTEGER"/>
+        <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR"/>
+    	<result column="EXAMINE_DATE2" property="examineDate2" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+		ID,LCC_CODE,LCC_NAME,EXAMINE_USER_CODE,EXAMINE_LCC_CODE,EXAMINE_LCC_NAME,EXAMINE_USER_NAME,EXAMINE_DATE,EXAMINE_DATE2,REMARK,FILE_NO,PROJECT_ID
+    </sql>
+
+	<select id="getAllExamines" parameterType="com.bdcor.pip.web.quality.filter.ExamineFilter" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>
+		from PIP_CPT_SITE_EXAMINE where 1=1 and project_id = #{projectId, jdbcType=VARCHAR}
+		<if test="lccName != null">
+			and LCC_NAME like '%'||#{lccName}||'%'
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+
+	<select id="getExamineById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from PIP_CPT_SITE_EXAMINE where id = #{id, jdbcType=VARCHAR} and project_id = #{projectId,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="addExamine" parameterType="com.bdcor.pip.web.quality.domain.Examine">
+    	insert into PIP_CPT_SITE_EXAMINE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="lccCode != null">
+				 LCC_CODE,
+			</if>
+			<if test="lccName != null">
+				LCC_NAME,
+			</if>
+			<if test="examineUserCode != null">
+				EXAMINE_USER_CODE,
+			</if>
+			<if test="examineLccCode != null">
+				EXAMINE_LCC_CODE,
+			</if>
+			<if test="examineLccName != null">
+				EXAMINE_LCC_NAME,
+			</if>
+			<if test="examineUserName != null">
+				EXAMINE_USER_NAME,
+			</if>
+			<if test="examineDate != null and examineDate != ''">
+				EXAMINE_DATE,
+			</if>
+			<if test="examineDate2 != null  and examineDate2 != ''">
+				EXAMINE_DATE2,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+			<if test="fileNo != null">
+				FILE_NO,
+			</if>
+			<if test="projectId != null">
+				PROJECT_ID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id, jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				 #{lccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="lccName != null">
+				#{lccName, jdbcType=VARCHAR},
+			</if>
+			<if test="examineUserCode != null">
+				#{examineUserCode, jdbcType=VARCHAR},
+			</if>
+			<if test="examineLccCode != null">
+				#{examineLccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="examineLccName != null">
+				#{examineLccName, jdbcType=VARCHAR},
+			</if>
+			<if test="examineUserName != null">
+				#{examineUserName, jdbcType=VARCHAR},
+			</if>
+			<if test="examineDate != null and examineDate != ''">
+				#{examineDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="examineDate2 != null and examineDate2 != ''">
+				#{examineDate2, jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark, jdbcType=VARCHAR},
+			</if>
+			<if test="fileNo != null">
+				#{fileNo, jdbcType=INTEGER},
+			</if>
+			<if test="projectId != null">
+				#{projectId, jdbcType=VARCHAR},
+			</if>
+		</trim>	
+	</insert>
+	
+	<update id="updateExamine" parameterType="com.bdcor.pip.web.quality.domain.Examine">
+	    update PIP_CPT_SITE_EXAMINE
+		<set>
+			<if test="lccCode != null">
+				 LCC_CODE = #{lccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="lccName != null">
+				LCC_NAME = #{lccName, jdbcType=VARCHAR},
+			</if>
+			<if test="examineUserCode != null">
+				EXAMINE_USER_CODE = #{examineUserCode, jdbcType=VARCHAR},
+			</if>
+			<if test="examineLccCode != null">
+				EXAMINE_LCC_CODE = #{examineLccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="examineLccName != null">
+				EXAMINE_LCC_NAME = #{examineLccName, jdbcType=VARCHAR},
+			</if>
+			<if test="examineUserName != null">
+				EXAMINE_USER_NAME = #{examineUserName, jdbcType=VARCHAR},
+			</if>
+			<if test="examineDate != null and examineDate != ''">
+				EXAMINE_DATE = #{examineDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="examineDate2 != null and examineDate2 != ''">
+				EXAMINE_DATE2 = #{examineDate2, jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark, jdbcType=VARCHAR},
+			</if>
+			<if test="fileNo != null">
+				FILE_NO = #{fileNo, jdbcType=INTEGER},
+			</if>
+			
+		</set>
+		where id = #{id,jdbcType=VARCHAR} and project_id = #{projectId, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.String">
+		delete from PIP_CPT_SITE_EXAMINE where id = #{id, jdbcType=VARCHAR} and project_id = #{projectId, jdbcType=VARCHAR}
+	</delete>
+	
+	<update id="updateExamineFileNo" parameterType="java.lang.String">
+		update pip_cpt_site_examine set file_no = #{fileNo, jdbcType=INTEGER} where id = #{examineId, jdbcType=VARCHAR}
+		and project_id = #{projectId, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateExamineFileNoForDelete" parameterType="java.lang.String">
+		update pip_cpt_site_examine set file_no = file_no -1 where id = #{examineId, jdbcType=VARCHAR}
+		and project_id = #{projectId, jdbcType=VARCHAR}
+	</update>
+	
+	<resultMap id="BaseResultMapForFtp" type="com.bdcor.pip.web.quality.domain.ExamineFtp">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="EXAMINE_ID" property="examineId" jdbcType="VARCHAR"/>
+        <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR"/>
+        <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR"/>
+        <result column="OLD_FILE_NAME" property="oldFileName" jdbcType="VARCHAR"/>
+        <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <insert id="addExamineFtp" parameterType="com.bdcor.pip.web.quality.domain.ExamineFtp">
+    	insert into PIP_CPT_EXAMINE_FTP
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="examineId != null">
+				 EXAMINE_ID,
+			</if>
+			<if test="projectId != null">
+				PROJECT_ID,
+			</if>
+			<if test="fileName != null">
+				FILE_NAME,
+			</if>
+			<if test="oldFileName != null">
+				OLD_FILE_NAME,
+			</if>
+			<if test="filePath != null">
+				FILE_PATH,
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE,
+			</if>
+			<if test="createBy != null">
+				CREATE_BY,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id, jdbcType=VARCHAR},
+			</if>
+			<if test="examineId != null">
+				 #{examineId, jdbcType=VARCHAR},
+			</if>
+			<if test="projectId != null">
+				#{projectId, jdbcType=VARCHAR},
+			</if>
+			<if test="fileName != null">
+				#{fileName, jdbcType=VARCHAR},
+			</if>
+			<if test="oldFileName != null">
+				#{oldFileName, jdbcType=VARCHAR},
+			</if>
+			<if test="filePath != null">
+				#{filePath, jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy != null">
+				#{createBy, jdbcType=VARCHAR},
+			</if>
+		</trim>	    	
+    </insert>
+    
+    <select id="getExamineFileNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+    	select count(id) from pip_cpt_examine_ftp where project_id = #{projectId, jdbcType=VARCHAR} and examine_id = #{examineId, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getExamineFtp" parameterType="java.lang.String" resultMap="BaseResultMapForFtp">
+    	select * from pip_cpt_examine_ftp where project_id = #{projectId, jdbcType=VARCHAR} and id = #{examineFtpId, jdbcType=VARCHAR}
+    	<!-- 
+    	and OLD_FILE_NAME = #{fileName, jdbcType=VARCHAR} -->
+    </select>
+    
+    <update id="deleteFile" parameterType="java.lang.String">
+    	delete from pip_cpt_examine_ftp where project_id = #{projectId, jdbcType=VARCHAR} and id = #{examineFtpId, jdbcType=VARCHAR}
+    	<!-- and OLD_FILE_NAME = #{fileName, jdbcType=VARCHAR} -->
+    </update>
+    <select id="getExamineFtps" parameterType="java.lang.String" resultMap="BaseResultMapForFtp">
+    	select * from pip_cpt_examine_ftp where project_id = #{projectId, jdbcType=VARCHAR} and examine_id = #{examineId, jdbcType=VARCHAR}
+    </select>
+    <select id="getAllExamineFtps" parameterType="com.bdcor.pip.web.quality.filter.ExamineFtpFilter" resultMap="BaseResultMapForFtp">
+    	select 
+		*
+		from pip_cpt_examine_ftp where 1=1 
+		<if test="projectId != null">
+		    and project_id = #{projectId, jdbcType=VARCHAR}
+		</if>
+		<if test="examineId != null">
+		    and examine_id = #{examineId, jdbcType=VARCHAR}
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+    </select>
+</mapper>

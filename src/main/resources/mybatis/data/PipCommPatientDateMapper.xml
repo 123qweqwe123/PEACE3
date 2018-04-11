@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.data.dao.PipCommPatientDateMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.data.domain.PipCommPatientDate" >
+    <id column="PATIENT_ID" property="patientId" jdbcType="VARCHAR" />
+    <id column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="PATIENT_NAME" property="patientName" jdbcType="VARCHAR" />
+    <result column="FIRST_DATE" property="firstDate" jdbcType="TIMESTAMP" />
+    <result column="SIX_PLAN_DATE" property="sixPlanDate" jdbcType="TIMESTAMP" />
+    <result column="SIX_REAL_DATE" property="sixRealDate" jdbcType="TIMESTAMP" />
+    <result column="TWELVE_PLAN_DATE" property="twelvePlanDate" jdbcType="TIMESTAMP" />
+    <result column="TWELVE_REAL_DATE" property="twelveRealDate" jdbcType="TIMESTAMP" />
+    <result column="EIGHTEEN_PLAN_DATE" property="eighteenPlanDate" jdbcType="TIMESTAMP" />
+    <result column="EIGHTEEN_REAL_DATE" property="eighteenRealDate" jdbcType="TIMESTAMP" />
+    <result column="END_PLAN_DATE" property="endPlanDate" jdbcType="TIMESTAMP" />
+    <result column="END_REAL_DATE" property="endRealDate" jdbcType="TIMESTAMP" />
+    <result column="NOW_REMARK" property="nowRemark" jdbcType="VARCHAR" />
+  	<result column="FIRST_PLAN_DATE" property="firstPlanDate" jdbcType="TIMESTAMP" />
+  	
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    PATIENT_ID, PROJECT_ID, PATIENT_NAME, FIRST_DATE, SIX_PLAN_DATE, SIX_REAL_DATE, TWELVE_PLAN_DATE, 
+    TWELVE_REAL_DATE, EIGHTEEN_PLAN_DATE, EIGHTEEN_REAL_DATE, END_PLAN_DATE, END_REAL_DATE, 
+    NOW_REMARK,FIRST_PLAN_DATE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientDateExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_COMM_PATIENT_DATE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientDateKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_COMM_PATIENT_DATE
+    where PATIENT_ID = #{patientId,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientDateKey" >
+    delete from PIP_COMM_PATIENT_DATE
+    where PATIENT_ID = #{patientId,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientDateExample" >
+    delete from PIP_COMM_PATIENT_DATE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientDate" >
+    insert into PIP_COMM_PATIENT_DATE (PATIENT_ID, PROJECT_ID, PATIENT_NAME, 
+      FIRST_DATE, SIX_PLAN_DATE, SIX_REAL_DATE, 
+      TWELVE_PLAN_DATE, TWELVE_REAL_DATE, EIGHTEEN_PLAN_DATE, 
+      EIGHTEEN_REAL_DATE, END_PLAN_DATE, END_REAL_DATE, 
+      NOW_REMARK,FIRST_PLAN_DATE)
+    values (#{patientId,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{patientName,jdbcType=VARCHAR}, 
+      #{firstDate,jdbcType=TIMESTAMP}, #{sixPlanDate,jdbcType=TIMESTAMP}, #{sixRealDate,jdbcType=TIMESTAMP}, 
+      #{twelvePlanDate,jdbcType=TIMESTAMP}, #{twelveRealDate,jdbcType=TIMESTAMP}, #{eighteenPlanDate,jdbcType=TIMESTAMP}, 
+      #{eighteenRealDate,jdbcType=TIMESTAMP}, #{endPlanDate,jdbcType=TIMESTAMP}, #{endRealDate,jdbcType=TIMESTAMP}, 
+      #{nowRemark,jdbcType=VARCHAR},#{firstPlanDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientDate" >
+    insert into PIP_COMM_PATIENT_DATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="patientId != null" >
+        PATIENT_ID,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="patientName != null" >
+        PATIENT_NAME,
+      </if>
+      <if test="firstDate != null" >
+        FIRST_DATE,
+      </if>
+      <if test="sixPlanDate != null" >
+        SIX_PLAN_DATE,
+      </if>
+      <if test="sixRealDate != null" >
+        SIX_REAL_DATE,
+      </if>
+      <if test="twelvePlanDate != null" >
+        TWELVE_PLAN_DATE,
+      </if>
+      <if test="twelveRealDate != null" >
+        TWELVE_REAL_DATE,
+      </if>
+      <if test="eighteenPlanDate != null" >
+        EIGHTEEN_PLAN_DATE,
+      </if>
+      <if test="eighteenRealDate != null" >
+        EIGHTEEN_REAL_DATE,
+      </if>
+      <if test="endPlanDate != null" >
+        END_PLAN_DATE,
+      </if>
+      <if test="endRealDate != null" >
+        END_REAL_DATE,
+      </if>
+      <if test="nowRemark != null" >
+        NOW_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="patientId != null" >
+        #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName != null" >
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="firstDate != null" >
+        #{firstDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sixPlanDate != null" >
+        #{sixPlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sixRealDate != null" >
+        #{sixRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="twelvePlanDate != null" >
+        #{twelvePlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="twelveRealDate != null" >
+        #{twelveRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eighteenPlanDate != null" >
+        #{eighteenPlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eighteenRealDate != null" >
+        #{eighteenRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endPlanDate != null" >
+        #{endPlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endRealDate != null" >
+        #{endRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nowRemark != null" >
+        #{nowRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientDateExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_COMM_PATIENT_DATE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_COMM_PATIENT_DATE
+    <set >
+      <if test="record.patientId != null" >
+        PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientName != null" >
+        PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.firstDate != null" >
+        FIRST_DATE = #{record.firstDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.sixPlanDate != null" >
+        SIX_PLAN_DATE = #{record.sixPlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.sixRealDate != null" >
+        SIX_REAL_DATE = #{record.sixRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.twelvePlanDate != null" >
+        TWELVE_PLAN_DATE = #{record.twelvePlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.twelveRealDate != null" >
+        TWELVE_REAL_DATE = #{record.twelveRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.eighteenPlanDate != null" >
+        EIGHTEEN_PLAN_DATE = #{record.eighteenPlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.eighteenRealDate != null" >
+        EIGHTEEN_REAL_DATE = #{record.eighteenRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endPlanDate != null" >
+        END_PLAN_DATE = #{record.endPlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endRealDate != null" >
+        END_REAL_DATE = #{record.endRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.nowRemark != null" >
+        NOW_REMARK = #{record.nowRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_COMM_PATIENT_DATE
+    set PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      FIRST_DATE = #{record.firstDate,jdbcType=TIMESTAMP},
+      SIX_PLAN_DATE = #{record.sixPlanDate,jdbcType=TIMESTAMP},
+      SIX_REAL_DATE = #{record.sixRealDate,jdbcType=TIMESTAMP},
+      TWELVE_PLAN_DATE = #{record.twelvePlanDate,jdbcType=TIMESTAMP},
+      TWELVE_REAL_DATE = #{record.twelveRealDate,jdbcType=TIMESTAMP},
+      EIGHTEEN_PLAN_DATE = #{record.eighteenPlanDate,jdbcType=TIMESTAMP},
+      EIGHTEEN_REAL_DATE = #{record.eighteenRealDate,jdbcType=TIMESTAMP},
+      END_PLAN_DATE = #{record.endPlanDate,jdbcType=TIMESTAMP},
+      END_REAL_DATE = #{record.endRealDate,jdbcType=TIMESTAMP},
+      NOW_REMARK = #{record.nowRemark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientDate" >
+    update PIP_COMM_PATIENT_DATE
+    <set >
+      <if test="patientName != null" >
+        PATIENT_NAME = #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="firstDate != null" >
+        FIRST_DATE = #{firstDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sixPlanDate != null" >
+        SIX_PLAN_DATE = #{sixPlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sixRealDate != null" >
+        SIX_REAL_DATE = #{sixRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="twelvePlanDate != null" >
+        TWELVE_PLAN_DATE = #{twelvePlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="twelveRealDate != null" >
+        TWELVE_REAL_DATE = #{twelveRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eighteenPlanDate != null" >
+        EIGHTEEN_PLAN_DATE = #{eighteenPlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eighteenRealDate != null" >
+        EIGHTEEN_REAL_DATE = #{eighteenRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endPlanDate != null" >
+        END_PLAN_DATE = #{endPlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endRealDate != null" >
+        END_REAL_DATE = #{endRealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstPlanDate != null" >
+        FIRST_PLAN_DATE = #{firstPlanDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nowRemark != null" >
+        NOW_REMARK = #{nowRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PATIENT_ID = #{patientId,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientDate" >
+    update PIP_COMM_PATIENT_DATE
+    set PATIENT_NAME = #{patientName,jdbcType=VARCHAR},
+      FIRST_DATE = #{firstDate,jdbcType=TIMESTAMP},
+      SIX_PLAN_DATE = #{sixPlanDate,jdbcType=TIMESTAMP},
+      SIX_REAL_DATE = #{sixRealDate,jdbcType=TIMESTAMP},
+      TWELVE_PLAN_DATE = #{twelvePlanDate,jdbcType=TIMESTAMP},
+      TWELVE_REAL_DATE = #{twelveRealDate,jdbcType=TIMESTAMP},
+      EIGHTEEN_PLAN_DATE = #{eighteenPlanDate,jdbcType=TIMESTAMP},
+      EIGHTEEN_REAL_DATE = #{eighteenRealDate,jdbcType=TIMESTAMP},
+      END_PLAN_DATE = #{endPlanDate,jdbcType=TIMESTAMP},
+      END_REAL_DATE = #{endRealDate,jdbcType=TIMESTAMP},
+      NOW_REMARK = #{nowRemark,jdbcType=VARCHAR}
+    where PATIENT_ID = #{patientId,jdbcType=VARCHAR}
+      and PROJECT_ID = #{projectId,jdbcType=VARCHAR}
+  </update>
+</mapper>

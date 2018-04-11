@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.quality.dao.CodeAbnormalDao">
+	
+	<select id="list" parameterType="com.bdcor.pip.web.quality.filter.CodeAbnormalFilter" resultType="com.bdcor.pip.web.quality.domain.CodeAbnormalVo">
+		select 
+		qc.id as id,
+		qc.error_type as errorType,
+		qc.error_msg as errorMsg,
+		do.is_report as isReport
+		from pip_scan_pat_qc qc
+		left join pip_scan_pat_qc_do do on do.pip_scan_pat_qc_id=qc.id
+		where do.id is  null and qc.project_id=#{projectId} and 
+		qc.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="isReport != null and isReport==2">
+					and (do.is_report is null or do.is_report=2)
+		</if>
+		<if test="isHandle != null  and isHandle==2">
+			and (do.IS_HANDLE is null or do.IS_HANDLE=2)
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+	
+	<select id="getReportInfo" parameterType="map" resultType="map">
+		select 
+		do.REPORT_INFO as "reportInfo",
+	    do.SUPPORT_FILE1 as "sFile1",
+	    do.SUPPORT_FILE2 as "sFile2",
+	    do.SUPPORT_FILE3 as "sFile3",
+	    do.SUPPORT_FILE4 as "sFile4",
+	    do.SUPPORT_FILE5 as "sFile5"
+		from pip_scan_pat_qc qc
+		inner join pip_scan_pat_qc_do do on do.pip_scan_pat_qc_id=qc.id
+		where do.id is  null and qc.project_id=#{projectId} and 
+		qc.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		and qc.id=#{qcId, jdbcType=VARCHAR}
+	</select>
+	
+	<update id="errorHandle" parameterType="map">
+		update pip_scan_pat_qc_do set 
+		handle_type=#{handleType},
+		handle_info=#{handleInfo},
+		handle_by = #{handleBy},
+		handle_date = sysdate
+		where pip_scan_pat_qc_id=#{qcId} and IS_REPORT=1
+	</update>
+</mapper>

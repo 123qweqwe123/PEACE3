@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.pro.promgt.dao.EvaluationDao">
+	<resultMap id="BaseResultMap" type="com.bdcor.pip.web.pro.promgt.domain.Evaluation">
+		<result column="ID" property="id" jdbcType="VARCHAR"/>
+		<result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR"/>
+		<result column="EVALUATION" property="evaluation" jdbcType="VARCHAR"/>
+		<result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
+		<result column="UPDATE_DATE" property="updateDate" jdbcType="TIMESTAMP"/>
+		<result column="IS_REMOVED" property="isRemoved" jdbcType="INTEGER"/>
+		<result column="EVALUATION_LEVEL" property="evaluationLevel" jdbcType="INTEGER"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID,LCC_CODE,EVALUATION,REMARK,CREATE_BY,CREATE_DATE,UPDATE_BY,UPDATE_DATE,IS_REMOVED,EVALUATION_LEVEL
+	</sql>
+
+	<select id="getAllEvaluations" parameterType="com.bdcor.pip.web.pro.promgt.filter.EvaluationFilter" resultMap="BaseResultMap">
+		select 
+		e.*, l.lcc_name as lccName
+		from pip_comm_lcc_evaluation e left join pip_comm_lcc l on e.lcc_code = l.lcc_code where 1=1
+		and e.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="lccName != null">
+			and lcc_name like '%'||#{lccName, jdbcType=VARCHAR}||'%'
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by e.${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+
+	<select id="getEvaluationById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from pip_comm_lcc_evaluation where id = #{id, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="addEvaluation" parameterType="com.bdcor.pip.web.pro.promgt.domain.Evaluation">
+		insert into pip_comm_lcc_evaluation
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE,
+			</if>
+			<if test="evaluation != null">
+				EVALUATION,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+			<if test="createBy != null">
+				CREATE_BY,
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE,
+			</if>
+			<if test="updateBy != null">
+				UPDATE_BY,
+			</if>
+			<if test="updateDate != null">
+				UPDATE_DATE,
+			</if>
+			<if test="isRemoved != null">
+				IS_REMOVED,
+			</if>
+			<if test="evaluationLevel != null">
+				EVALUATION_LEVEL,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				#{lccCode,jdbcType=VARCHAR},
+			</if>
+			<if test="evaluation != null">
+				#{evaluation,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isRemoved != null">
+				#{isRemoved,jdbcType=INTEGER},
+			</if>
+			<if test="evaluationLevel != null">
+				#{evaluationLevel,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateEvaluation" parameterType="com.bdcor.pip.web.pro.promgt.domain.Evaluation">
+		update pip_comm_lcc_evaluation
+		<set>
+			<if test="lccCode != null">
+				LCC_CODE = #{lccCode, jdbcType=VARCHAR},
+			</if>
+			<if test="evaluation != null">
+				EVALUATION = #{evaluation, jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark, jdbcType=VARCHAR},
+			</if>
+			<if test="createBy != null">
+				CREATE_BY = #{createBy, jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE = #{createDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				UPDATE_BY = #{updateBy, jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				UPDATE_DATE = #{updateDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="isRemoved != null">
+				IS_REMOVED = #{isRemoved, jdbcType=INTEGER},
+			</if>
+			<if test="evaluationLevel != null">
+				EVALUATION_LEVEL = #{evaluationLevel, jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id, jdbcType=VARCHAR} 		
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.String">
+	<!-- 
+		update pip_comm_lcc_evaluation set is_removed = 2 where id = #{id, jdbcType=VARCHAR}
+		 -->
+		 delete from pip_comm_lcc_evaluation where id = #{id, jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="checkLccNameExists" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>
+		from pip_comm_lcc_evaluation where lcc_code = #{lccCode, jdbcType=VARCHAR}
+	</select>
+</mapper>

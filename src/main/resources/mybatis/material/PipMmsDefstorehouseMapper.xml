@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.material.supp.dao.PipMmsDefstorehouseMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.material.supp.domain.PipMmsDefstorehouse" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="EXORDER_NO" property="exorderNo" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="STOCK_CODE" property="stockCode" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="STOCK_NAME" property="stockName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, PROJECT_ID, EXORDER_NO, LCC_CODE, STOCK_CODE, CREATE_BY, CREATE_DATE, STOCK_NAME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsDefstorehouseExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_MMS_DEFSTOREHOUSE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  <select id="listAndLimit" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from PIP_MMS_DEFSTOREHOUSE
+    where 
+    	lcc_code in 
+    	( select lcc_code from pip_sys_user_data_limit lt where lt.user_id =#{userId} )
+     
+  </select>
+  <select id="listAndLimitLcc" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from PIP_MMS_DEFSTOREHOUSE
+    where 
+    	lcc_code in 
+    	( select lcc_code from pip_sys_user_data_limit lt where lt.user_id =#{userId} )
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_MMS_DEFSTOREHOUSE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  
+   <select id="getAllHouseListByLccCode" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsDefstorehouse" >
+    select 
+     * from PIP_MMS_DEFSTOREHOUSE a 
+     where 1=1 
+     <if test="lccCode != null and lccCode != ''" >
+      and  a.lcc_Code = ${lccCode}
+     </if>
+     <if test="exorderNo != null and exorderNo != ''" >
+      and a.exorder_NO = ${exorderNo}
+     </if>
+     
+     
+   </select>  
+     <select id="getOneHouseListByLccCode" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsDefstorehouse" >
+    select 
+     a.ID, a.PROJECT_ID, a.EXORDER_NO, a.LCC_CODE, a.STOCK_CODE, a.CREATE_BY, a.CREATE_DATE, b.STOCK_NAME STOCK_NAME
+     from PIP_MMS_DEFSTOREHOUSE a ,pip_mms_storehouse b
+     where  a.project_Id = b.project_Id 
+      and  a.lcc_Code = ${lccCode}
+    </select>
+  
+  <select id="getExportStockCode" resultMap="BaseResultMap" parameterType="String">
+     select *
+     from PIP_MMS_DEFSTOREHOUSE 
+     where 1=1 and  lcc_Code = ${lccCode}
+   </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short" >
+    delete from PIP_MMS_DEFSTOREHOUSE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsDefstorehouseExample" >
+    delete from PIP_MMS_DEFSTOREHOUSE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsDefstorehouse" >
+    insert into PIP_MMS_DEFSTOREHOUSE (ID, PROJECT_ID, EXORDER_NO, 
+      LCC_CODE, STOCK_CODE, CREATE_BY, 
+      CREATE_DATE, STOCK_NAME)
+    values (#{id,jdbcType=DECIMAL}, #{projectId,jdbcType=VARCHAR}, #{exorderNo,jdbcType=VARCHAR}, 
+      #{lccCode,jdbcType=VARCHAR}, #{stockCode,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{stockName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsDefstorehouse" >
+    insert into PIP_MMS_DEFSTOREHOUSE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="exorderNo != null" >
+        EXORDER_NO,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="stockCode != null" >
+        STOCK_CODE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="stockName != null" >
+        STOCK_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="exorderNo != null" >
+        #{exorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stockCode != null" >
+        #{stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stockName != null" >
+        #{stockName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsDefstorehouseExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_MMS_DEFSTOREHOUSE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_MMS_DEFSTOREHOUSE
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.exorderNo != null" >
+        EXORDER_NO = #{record.exorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccCode != null" >
+        LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stockCode != null" >
+        STOCK_CODE = #{record.stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.stockName != null" >
+        STOCK_NAME = #{record.stockName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_MMS_DEFSTOREHOUSE
+    set ID = #{record.id,jdbcType=DECIMAL},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      EXORDER_NO = #{record.exorderNo,jdbcType=VARCHAR},
+      LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      STOCK_CODE = #{record.stockCode,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      STOCK_NAME = #{record.stockName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsDefstorehouse" >
+    update PIP_MMS_DEFSTOREHOUSE
+    <set >
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="exorderNo != null" >
+        EXORDER_NO = #{exorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="stockCode != null" >
+        STOCK_CODE = #{stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stockName != null" >
+        STOCK_NAME = #{stockName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsDefstorehouse" >
+    update PIP_MMS_DEFSTOREHOUSE
+    set PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      EXORDER_NO = #{exorderNo,jdbcType=VARCHAR},
+      LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      STOCK_CODE = #{stockCode,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      STOCK_NAME = #{stockName,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

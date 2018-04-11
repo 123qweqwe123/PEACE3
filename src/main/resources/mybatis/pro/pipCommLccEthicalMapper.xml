@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.pro.promgt.dao.PipCommLccEthicalDao">
+	<resultMap id="BaseResultMap" type="com.bdcor.pip.web.pro.promgt.domain.PipCommLccEthical">
+		<result column="ID" property="id" jdbcType="INTEGER"/>
+		<result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR"/>
+		<result column="LCC_NAME" property="lccName" jdbcType="VARCHAR"/>
+		<result column="ETHICAL_TYPE" property="ethicalType" jdbcType="VARCHAR"/>
+		<result column="ETHICAL_EFFECTIVE_DATE" property="ethicalEffectiveDate" jdbcType="TIMESTAMP"/>
+		<result column="ETHICAL_DISABLE_DATE" property="ethicalDisableDate" jdbcType="TIMESTAMP"/>
+		<result column="ETHICAL_PAPER_CODE" property="ethicalPaperCode" jdbcType="VARCHAR"/>
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP"/>
+		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+		<result column="AREANAME" property="areaName"  jdbcType="VARCHAR"/>
+
+	</resultMap>
+	<sql id="Base_Column_List">
+     ID,LCC_CODE,ETHICAL_TYPE,ETHICAL_EFFECTIVE_DATE,ETHICAL_DISABLE_DATE,ETHICAL_PAPER_CODE,CREATE_DATE,CREATE_BY
+	</sql>
+	<select id="listByLccCode" parameterType="string" resultMap="BaseResultMap">
+		select  
+			t.ID,t.LCC_CODE,t.ETHICAL_TYPE,t.ETHICAL_EFFECTIVE_DATE,t.ETHICAL_DISABLE_DATE,t.ETHICAL_PAPER_CODE,t.CREATE_DATE,t.CREATE_BY,
+			l.lcc_Name,d.vname areaName
+		from pip_comm_lcc_ethical t 
+		left join pip_comm_lcc l on t.lcc_code = l.lcc_code and l.project_id = #{projectId,jdbcType=VARCHAR}
+		inner join pip_comm_dict_district d on d.vcode = l.area_code
+		where t.lcc_code =#{lccCode,jdbcType=VARCHAR}
+	</select>
+	<update id="updatePipCommLccEthicalById" parameterType ="com.bdcor.pip.web.pro.promgt.domain.PipCommLccEthical" >
+		update 
+			pip_comm_lcc_ethical 
+		set 
+			ETHICAL_EFFECTIVE_DATE = #{ethicalEffectiveDate},
+			ETHICAL_DISABLE_DATE = #{ethicalDisableDate},
+			ETHICAL_PAPER_CODE =#{ethicalPaperCode}
+		where id = #{id}	
+	</update>
+	<select id="selectByLccCodeAndEcode" parameterType="string" resultMap="BaseResultMap">
+		select  
+			t.ID,t.LCC_CODE,t.ETHICAL_TYPE,t.ETHICAL_EFFECTIVE_DATE,t.ETHICAL_DISABLE_DATE,t.ETHICAL_PAPER_CODE,t.CREATE_DATE,t.CREATE_BY,
+			l.lcc_Name,d.vname areaName
+		from pip_comm_lcc_ethical t 
+		left join pip_comm_lcc l on t.lcc_code = l.lcc_code <!-- and l.project_id = t.project_Id -->
+		left join pip_comm_dict_district d on d.vcode = l.area_code
+		where 
+			t.lcc_code =#{lccCode,jdbcType=VARCHAR}
+			and t.ETHICAL_PAPER_CODE = #{ethicalPaperCode,jdbcType=VARCHAR}
+	</select>	
+	
+	<insert id="insertPipCommLccEthical" parameterType="com.bdcor.pip.web.pro.promgt.domain.PipCommLccEthical">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+	     select PIP_COMM_LCC_ETHICAL_SEQ.nextval from dual
+	    </selectKey>
+		insert into PIP_COMM_LCC_ETHICAL
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE,
+			</if>
+			<if test="ethicalType != null">
+				ETHICAL_TYPE,
+			</if>
+			<if test="ethicalEffectiveDate != null">
+				ETHICAL_EFFECTIVE_DATE,
+			</if>
+			<if test="ethicalDisableDate != null">
+				ETHICAL_DISABLE_DATE,
+			</if>
+			<if test="ethicalPaperCode != null">
+				ETHICAL_PAPER_CODE,
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE,
+			</if>
+			<if test="createBy != null">
+				CREATE_BY,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				#{lccCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ethicalType != null">
+				#{ethicalType,jdbcType=VARCHAR},
+			</if>
+			<if test="ethicalEffectiveDate != null">
+				#{ethicalEffectiveDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ethicalDisableDate != null">
+				#{ethicalDisableDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ethicalPaperCode != null">
+				#{ethicalPaperCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+</mapper>

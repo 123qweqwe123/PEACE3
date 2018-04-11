@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.pro.promgt.dao.FileDao">
+    <resultMap id="BaseResultMap" type="com.bdcor.pip.web.pro.promgt.domain.Adjunct">
+        <constructor>
+            <arg column="ADJUNCT_ID" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="PROJECT_ID" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="ADJUNCT_NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="PATH" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="TYPE" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="CREATOR" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="CREATTIME" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="DOWN_COUNT" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="FILE_DESC" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+		ADJUNCT_ID,PROJECT_ID,ADJUNCT_NAME,PATH,TYPE,CREATOR,CREATTIME,DOWN_COUNT,FILE_DESC
+    </sql>
+    
+    <select id="listAdjunct" parameterType="com.bdcor.pip.web.pro.promgt.filter.AdjunctFilter" resultMap="BaseResultMap">
+    	select
+        a.*, t.type_name as typeName 
+        from pip_project_adjunct a left join pip_project_adjunct_type t on a.type = t.type_code where 1=1 
+        <if test="adjunctName != null">
+			and ADJUNCT_NAME like '%'||#{adjunctName}||'%'
+        </if>
+        <if test="type != null">
+			and type = #{type}
+        </if>
+        <if test="fileDesc != null">
+			and FILE_DESC like '%${fileDesc}%'
+        </if>
+        and project_id = #{projectId}
+        <if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+        <!-- 
+        where project_id = #{projectId} and creator = #{creator}
+         -->
+    </select>
+    
+    <insert id="saveAdjunct" parameterType="com.bdcor.pip.web.pro.promgt.domain.Adjunct">
+    	insert into pip_project_adjunct
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="adjunctId != null">
+				ADJUNCT_ID,
+			</if>
+			<if test="projectId != null">
+				PROJECT_ID,
+			</if>
+			<if test="adjunctName != null">
+				ADJUNCT_NAME,
+			</if>
+			<if test="path != null">
+				PATH,
+			</if>
+			<if test="type != null">
+				TYPE,
+			</if>
+			<if test="creator != null">
+				CREATOR,
+			</if>
+			<if test="creatTime != null">
+				CREATTIME,
+			</if>
+			<if test="downCount != null">
+				DOWN_COUNT,
+			</if>
+			<if test="fileDesc != null">
+				FILE_DESC,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="adjunctId != null">
+				#{adjunctId,jdbcType=VARCHAR},
+			</if>
+			<if test="projectId != null">
+				#{projectId,jdbcType=VARCHAR},
+			</if>
+			<if test="adjunctName != null">
+				#{adjunctName,jdbcType=VARCHAR},
+			</if>
+			<if test="path != null">
+				#{path,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="creatTime != null">
+				#{creatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="downCount != null">
+				#{downCount,jdbcType=INTEGER},
+			</if>
+			<if test="fileDesc != null">
+				#{fileDesc, jdbcType=VARCHAR},
+			</if>
+		</trim>
+    </insert>
+    <update id="updateDownCount" parameterType="com.bdcor.pip.web.pro.promgt.domain.Adjunct">
+    	update pip_project_adjunct set down_count = down_count + 1 where adjunct_id = #{adjunctId}
+    </update>
+    
+    <delete id="deleteAdjunct" parameterType="String">
+    	delete from pip_project_adjunct where adjunct_id = #{adjunctId}
+    </delete>
+    
+    <resultMap id="BaseResultMapForType" type="com.bdcor.pip.web.pro.promgt.domain.AdjunctType">
+    	<result column="TYPE_CODE" property="typeCode" jdbcType="VARCHAR"/>
+    	<result column="TYPE_NAME" property="typeName" jdbcType="VARCHAR"/>
+    	<result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>    
+    <select id="getAdjunctType" resultMap="BaseResultMapForType">
+    	select * from pip_project_adjunct_type
+    </select>
+    
+    
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.PipQnReportDao">
+	<select id="bloodlist" resultType="map" parameterType="string">
+          with tt as
+         (select t1.lcc_code,
+                 lcc.lcc_name,
+                 'CHAT研究干预随机门诊' TYPE,
+                 ycjs,
+                 sjcjs,
+                 round(sjcjs / ycjs * 100) || '%' cxl,
+                 wcjs
+            from (select lcc_code,
+                         sum(decode(questionnaire_id, '004.010.001', 1, 0)) ycjs,
+                         sum(decode(questionnaire_id,
+                                    '004.011.001',
+                                    decode(option_id, '1', 1, 0),
+                                    0)) sjcjs,
+                         sum(decode(questionnaire_id,
+                                    '004.011.001',
+                                    decode(option_id, '1', 0, 1),
+                                    0)) wcjs
+                    from pip_uqs_answer ua
+                   where (ua.questionnaire_id = '004.010.001' and
+                         ua.questionset_id = '3' and ua.question_id = '1' and
+                         ua.option_id = '1')
+                      or (ua.questionnaire_id = '004.011.001' and
+                         ua.questionset_id = '1' and ua.question_id = '2' and
+                         ua.option_id = '1')
+                      or (ua.questionnaire_id = '004.011.001' and
+                         ua.questionset_id = '1' and ua.question_id = '2' and
+                         ua.option_id in ('2', '3'))
+                   group by ua.lcc_code) t1
+            left join pip_comm_lcc lcc
+              on t1.lcc_code = lcc.lcc_code)
+        select ' ' as lcc_code,
+               '全国合计' lcc_name,max(TYPE) TYPE,
+               sum(ycjs) ycjs,
+               sum(sjcjs) sjcjs,
+               round(sum(sjcjs) / sum(ycjs) * 100) || '%' cxl,
+               sum(wcjs) wcjs
+          from tt
+        union all
+        select * from (
+            select * from tt
+            where 1=1
+            <if test="lccCode != null and lccCode != '' " >
+               and lcc_code = #{lccCode}
+            </if>
+        order by lcc_code
+        )
+	</select>
+
+    <select id="getNoCenterBloodlist" resultType="map">
+        select * from (
+            select  ua.lcc_code ,lcc.lcc_name, ua.patient_id ,
+            p.patient_name,'CHAT研究干预随机面访' as TYPE
+            from pip_uqs_answer ua
+                left join pip_comm_patient p on ua.patient_id = p.patient_id
+                left join pip_comm_lcc lcc on ua.lcc_code = lcc.lcc_code
+                where ua.questionnaire_id = '004.011.001' and
+                      ua.questionset_id = '1' and ua.question_id = '2' and
+                      ua.option_id in ('2', '3')
+                      <if test="lccCode != null and lccCode != ''" >
+                      and ua.lcc_code = #{lccCode}
+                      </if>
+        )
+        where 1=1
+        <if test="patientId != null and patientId != ''">
+            and PATIENT_ID like '%'||#{patientId}||'%'
+        </if>
+        <if test="patientName != null and patientName != ''">
+            and patient_name like '%'|| #{patientName} ||'%'
+        </if>
+    </select>
+
+</mapper>

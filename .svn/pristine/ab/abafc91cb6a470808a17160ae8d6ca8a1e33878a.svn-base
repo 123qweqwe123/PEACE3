@@ -1,0 +1,2485 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<questionnaire xmlns="http://www.gener-health.com/uqsPaper">
+	
+	
+	<title>UQS0M随访问卷</title>
+	<doctype projectid="004" projectname="冠心病及合并糖尿病患者长期自我管理的适宜信息化辅助工具评价研究" UQSid="004001" UQSName="0M基线问卷" UQSVersion="004.001.001" VersionCreateDate="2015-08-31 14:07:01"/>
+	
+	<QuestionSet id="1" displayname="A.登记患者基本信息" order="10">
+		<question id="1" type="FillBlank" displayname="姓名：" order="10" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="maxlength" value="16"/>
+				<Attribute id="2" type="validate" validateobjecttype="char" validatetype="ch" value="1"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="helptext" value="如发现姓名错误，请联系NCC相关人员更改"/>
+		</question>
+		<question id="2" type="Single" displayname="性别：" order="20" code="">
+			<option id="1" displayname="男" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="女" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="FillBlank" displayname="出生日期：" order="30" code="">
+			<option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="4" type="FillBlank" displayname="身份证号：" order="40" code="">
+			<option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="idcard" value="1"/>
+			</option>
+			<Attribute id="1" type="isnull" value="0"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="5" type="SingleFill" displayname="其他证件类型：" order="50" code="">
+			<option id="1" displayname="居民户口簿" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="护照" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="军官证" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="驾驶证" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="港澳居民来往内地通行证" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="台湾居民来往内地通行证" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" datatype="VARCHAR2(32)" order="70" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他法定有效证件："/>
+			</option>
+			<Attribute id="1" type="isnull" value="0"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="6" type="FillBlank" displayname="其他证件号：" order="60" code="">
+			<option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="0"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="7" type="FillBlank" displayname="China PEACE 前瞻研究ID号：" order="70" code="">
+			<option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="0"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="2" displayname="B.联系方式 (至少提供1个非共同居住的亲属联系方式)" order="20">
+		<question id="1" type="FillBlank" displayname="现居住住址：" order="10" code="">
+			<option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="DISTRICT.01">
+				<Attribute id="1" type="after_content_display" value="省（自治区）"/>
+				<Attribute id="2" type="isnull" value="1"/>
+			</option>
+			<option id="2" datatype="VARCHAR2(64)" order="20" datastyle="FillBlank" code="DISTRICT.02">
+				<Attribute id="1" type="after_content_display" value="市（盟，自治州）"/>
+				<Attribute id="2" type="isnull" value="1"/>
+			</option>
+			<option id="3" datatype="VARCHAR2(64)" order="30" datastyle="FillBlank" code="DISTRICT.03">
+				<Attribute id="1" type="after_content_display" value="县（旗、市辖区、林区）"/>
+				<Attribute id="2" type="isnull" value="1"/>
+			</option>
+			<option id="4" datatype="VARCHAR2(64)" order="40" datastyle="FillBlank" code="DISTRICT.04">
+				<Attribute id="1" type="after_content_display" value="乡（镇、街道、苏木）"/>
+				<Attribute id="2" type="isnull" value="1"/>
+			</option>
+			<option id="5" datatype="VARCHAR2(64)" order="50" datastyle="FillBlank" code="DISTRICT.05">
+				<Attribute id="1" type="after_content_display" value="村（社区）"/>
+				<Attribute id="2" type="isnull" value="1"/>
+			</option>
+			<option id="6" datatype="VARCHAR2(64)" order="60" datastyle="FillBlank" code="">
+				<Attribute id="1" type="after_content_display" value="号"/>
+				<Attribute id="2" type="isnull" value="1"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="SingleFill" displayname="有无固定电话？" order="20" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="有："/>
+				<Attribute id="2" type="validate" validateobjecttype="char" validatetype="num" value="1"/>
+			</option>
+			<option id="1" displayname="无" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="SingleFill" displayname="有无手机号码：" order="30" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="有："/>
+				<Attribute id="2" type="validate" validateobjecttype="char" validatetype="num" value="1"/>
+				<Attribute id="3" type="maxlength" value="11"/>
+			</option>
+			<option id="1" displayname="本人无手机号码" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="4" type="FillBlank" displayname="第一联系人姓名：" order="40" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="maxlength" value="16"/>
+				<Attribute id="2" type="validate" validateobjecttype="char" validatetype="ch" value="1"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="5" type="Single" displayname="第一联系人与本人关系：" order="50" code="">
+			<option id="1" displayname="父母" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="子女" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="兄弟姐妹" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="配偶" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="其他" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="6" type="FillBlank" displayname="第一联系人手机：" order="60" code="">
+			<option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="char" validatetype="num" value="1"/>
+				<Attribute id="2" type="maxlength" value="11"/>
+				<Attribute id="3" type="calculateandvalidate" value="#2_3_1-#2_6_1!=0"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="7" type="FillBlank" displayname="第二联系人姓名：" order="70" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="maxlength" value="16"/>
+				<Attribute id="2" type="validate" validateobjecttype="char" validatetype="ch" value="1"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="8" type="Single" displayname="第二联系人与本人关系：" order="80" code="">
+			<option id="1" displayname="父母" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="子女" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="兄弟姐妹" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="配偶" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="其他" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="9" type="FillBlank" displayname="第二联系人手机：" order="90" code="">
+			<option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="char" validatetype="num" value="1"/>
+				<Attribute id="2" type="maxlength" value="11"/>
+				<Attribute id="3" type="calculateandvalidate" value="#2_3_1-#2_9_1!=0"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>	
+
+	<QuestionSet id="3" displayname="C.知情同意相关信息--延长期随访" order="30">
+		<question id="1" type="FillBlank" displayname="签署知情同意书的日期 :" order="10" code="">
+			<option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="constrainvalidate" validateobjecttype="datenum" validatetype="scope" value="[,2015-12-01]"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="4" displayname="D.生物样本采集" order="40">
+		<question id="1" type="Single" displayname="是否采集化验室血尿样本" order="10" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否，采血困难" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="否，拒绝采血" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="Single" displayname="是否采集中心血尿样本" order="20" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+				<Attribute id="1" type="isdefaultchosen" value="1"/>
+			</option>
+			<option id="2" displayname="否，采血困难" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="否，拒绝采血" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="FillBlank" displayname="采血样本编号（采血器具包编号）：" order="30" code="">
+			<option id="1" datatype="VARCHAR2(64)" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="controlshow" value="S4_2_1"/>
+			<Attribute id="3" type="helptext" value="提示“请将扫码枪连接电脑，光标移至空白处，扫描患者手环条形码”"/>
+		</question>
+	</QuestionSet>	
+	
+	<QuestionSet id="5" displayname="E.体格检查" order="50">
+		<question id="1" type="SingleFill" displayname="体重：" order="10" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F4.1"/>
+				<Attribute id="2" type="validate" validateobjecttype="number" validatetype="scope" value="[20,150]"/>
+				<Attribute id="3" type="after_content_display" value="kg"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="FillBlank" displayname="腰围：" order="20" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="after_content_display" value="cm"/>
+				<Attribute id="2" type="validate" validateobjecttype="number" validatetype="format" value="F4.1"/>
+				<Attribute id="3" type="validate" validateobjecttype="number" validatetype="scope" value="[40,150]"/>
+			</option>	
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>	
+		<question id="3" type="ShowText" displayname="请测量研究对象血压" order="30" code="">
+			<Attribute id="1" type="sethidden" value="0"/>
+		</question>
+		<question id="4" type="FillBlank" displayname="收缩压测量:" order="40" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F3"/>
+				<Attribute id="2" type="validate" validateobjecttype="number" validatetype="scope" value="[50,300]"/>
+				<Attribute id="3" type="after_content_display" value="mmHg"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="5" type="FillBlank" displayname="舒张压测量:" order="50" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F3"/>
+				<Attribute id="2" type="validate" validateobjecttype="number" validatetype="scope" value="[20,200]"/>
+				<Attribute id="3" type="after_content_display" value="mmHg"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="6" type="ShowText" displayname="请再次测量研究对象血压" order="60" code="">
+			<Attribute id="1" type="sethidden" value="0"/>
+		</question>
+		<question id="7" type="FillBlank" displayname="第2次收缩压测量:" order="70" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F3"/>
+				<Attribute id="2" type="validate" validateobjecttype="number" validatetype="scope" value="[50,300]"/>
+				<Attribute id="3" type="after_content_display" value="mmHg"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="8" type="FillBlank" displayname="第2次舒张压测量:" order="80" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F3"/>
+				<Attribute id="2" type="validate" validateobjecttype="number" validatetype="scope" value="[20,200]"/>
+				<Attribute id="3" type="after_content_display" value="mmHg"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="9" type="ShowText" displayname="请第三次测量研究对象血压" order="90" code="">
+			<Attribute id="1" type="sethidden" value="0"/>
+		</question>
+		<question id="10" type="FillBlank" displayname="第3次收缩压测量:" order="100" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F3"/>
+				<Attribute id="2" type="validate" validateobjecttype="number" validatetype="scope" value="[50,300]"/>
+				<Attribute id="3" type="after_content_display" value="mmHg"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="11" type="FillBlank" displayname="第3次舒张压测量:" order="110" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F3"/>
+				<Attribute id="2" type="validate" validateobjecttype="number" validatetype="scope" value="[20,200]"/>
+				<Attribute id="3" type="after_content_display" value="mmHg"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+
+	<QuestionSet id="6" displayname="F.动态血压监测和糖耐量试验" order="60">
+		<question id="1" type="Single" displayname="是否拟行24小时动态血压监测" order="10" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="7" displayname="G.住院结局事件" order="70">
+		<question id="1" type="Single" displayname="自      年   月    日  ，您是否住过院(至少在医院住过一晚)？" order="10" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="FillBlank" displayname="您曾经住院过几次？(0-3次）" order="20" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="1" datastyle="FillBlank" code="">
+				<Attribute id="1" type="constrainvalidate" validateobjecttype="number" validatetype="format" value="F1"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value="[0,3]"/>
+			</option>	
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S7_1_1"/>
+		</question>
+		
+		<!-- 第一次住院-->
+		<question id="3" type="ShowText" displayname="住院记录Ⅰ" order="30" code="">
+			<Attribute id="1" type="sethidden" value="1"/>
+			<Attribute id="2" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;0)"/>
+		</question>
+		<question id="4" type="SingleFill" displayname="住院日期是：" order="40" code="">
+			<option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;0)"/>
+		</question>
+		<question id="5" type="FillBlank" displayname="出院日期是：" order="50" code="">
+			<option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;0)"/>
+		</question>
+		<question id="6" type="FillBlank" displayname="住院医院名称：" order="60" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;0)"/>
+		</question>	
+		<question id="7" type="Single" displayname="入院状态：" order="70" code="">
+			<option id="1" displayname="急诊入院" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="择期入院" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;0)"/>		
+		</question>	
+		<question id="8" type="MultiFill" displayname="住院主要原因：" order="80" code="">
+			<option id="1" displayname="新发急性心肌梗死" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+			</option>
+			<option id="2" displayname="不稳定性心绞痛" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+			</option>
+			<option id="3" displayname="稳定性心绞痛" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+			</option>
+			<option id="4" displayname="新发缺血性脑卒中" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+			</option>
+			<option id="5" displayname="新发出血性脑卒中" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+			</option>
+			<option id="6" displayname="短暂性脑缺血发作" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+			</option>
+			<option id="7" displayname="心力衰竭" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+			</option>
+			<option id="8" displayname="脑出血以外的其他出血" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+			</option>
+			<option id="9" displayname="瓣膜疾病 " datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+			</option>
+			<option id="10" displayname="心律失常" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+			</option>
+			<option id="11" displayname="糖尿病" datatype="VARCHAR2(32)" order="110" datastyle="Multi" code="">
+			</option>
+			<option id="12" displayname="肾脏疾病" datatype="VARCHAR2(32)" order="120" datastyle="Multi" code="">
+			</option>
+			<option id="13" displayname="心脏手术操作相关感染" datatype="VARCHAR2(32)" order="130" datastyle="Multi" code="">
+			</option>
+			<option id="14" displayname="心包渗出或填塞" datatype="VARCHAR2(32)" order="140" datastyle="Multi" code="">
+			</option>
+			<option id="15" displayname="肺栓塞" datatype="VARCHAR2(32)" order="150" datastyle="Multi" code="">
+			</option>
+			<option id="16" datatype="VARCHAR2(128)" order="160" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;0)"/>	
+		</question>
+		<question id="9" type="MultiFill" displayname="住院期间接受的诊疗措施：" order="90" code="">
+			<option id="1" displayname="冠脉介入治疗" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+			</option>
+			<option id="2" displayname="冠脉搭桥" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+			</option>
+			<option id="3" displayname="非冠状动脉血管重建（介入+外科）" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+			</option>
+			<option id="4" displayname="急性心肌梗死溶栓" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+			</option>
+			<option id="5" displayname="冠脉造影" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+			</option>
+			<option id="6" displayname="脑卒中溶栓" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+			</option>
+			<option id="7" displayname="瓣膜手术" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+			</option>
+			<option id="8" displayname="左心室辅助装置植入" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+			</option>
+			<option id="9" displayname="起搏器或除颤器植入" datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+			</option>
+			<option id="10" displayname="肺栓塞溶栓" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+			</option>
+			<option id="9" displayname="起搏器或除颤器植入" datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+			</option>
+			<option id="10" displayname="肺栓塞溶栓" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+			</option>
+			<option id="11" displayname="透析" datatype="VARCHAR2(32)" order="110" datastyle="Multi" code="">
+			</option>
+			<option id="12" displayname="心肺复苏" datatype="VARCHAR2(32)" order="120" datastyle="Multi" code="">
+			</option>
+			<option id="13" datatype="VARCHAR2(128)" order="130" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;0)"/>	
+		</question>
+		<question id="10" type="Single" displayname="出院转归：" order="100" code="">
+			<option id="1" displayname="好转" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="未愈/未治疗" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="临终放弃治疗" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="转院" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;0)"/>	
+		</question>
+		<!-- 第二次住院-->
+		<question id="11" type="ShowText" displayname="住院记录Ⅱ" order="110" code="">
+			<Attribute id="1" type="sethidden" value="1"/>
+			<Attribute id="2" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;1)"/>
+		</question>
+		<question id="12" type="SingleFill" displayname="住院日期是：" order="120" code="">
+			<option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;1)"/>
+		</question>
+		<question id="13" type="FillBlank" displayname="出院日期是：" order="130" code="">
+			<option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;1)"/>
+		</question>
+		<question id="14" type="FillBlank" displayname="住院医院名称：" order="140" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;1)"/>
+		</question>	
+		<question id="15" type="Single" displayname="入院状态：" order="150" code="">
+			<option id="1" displayname="急诊入院" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="择期入院" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;1)"/>		
+		</question>	
+		<question id="16" type="MultiFill" displayname="住院主要原因：" order="160" code="">
+			<option id="1" displayname="新发急性心肌梗死" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+			</option>
+			<option id="2" displayname="不稳定性心绞痛" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+			</option>
+			<option id="3" displayname="稳定性心绞痛" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+			</option>
+			<option id="4" displayname="新发缺血性脑卒中" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+			</option>
+			<option id="5" displayname="新发出血性脑卒中" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+			</option>
+			<option id="6" displayname="短暂性脑缺血发作" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+			</option>
+			<option id="7" displayname="心力衰竭" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+			</option>
+			<option id="8" displayname="脑出血以外的其他出血" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+			</option>
+			<option id="9" displayname="瓣膜疾病 " datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+			</option>
+			<option id="10" displayname="心律失常" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+			</option>
+			<option id="11" displayname="糖尿病" datatype="VARCHAR2(32)" order="110" datastyle="Multi" code="">
+			</option>
+			<option id="12" displayname="肾脏疾病" datatype="VARCHAR2(32)" order="120" datastyle="Multi" code="">
+			</option>
+			<option id="13" displayname="心脏手术操作相关感染" datatype="VARCHAR2(32)" order="130" datastyle="Multi" code="">
+			</option>
+			<option id="14" displayname="心包渗出或填塞" datatype="VARCHAR2(32)" order="140" datastyle="Multi" code="">
+			</option>
+			<option id="15" displayname="肺栓塞" datatype="VARCHAR2(32)" order="150" datastyle="Multi" code="">
+			</option>
+			<option id="16" datatype="VARCHAR2(128)" order="160" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;1)"/>	
+		</question>
+		<question id="17" type="MultiFill" displayname="住院期间接受的诊疗措施：" order="170" code="">
+			<option id="1" displayname="冠脉介入治疗" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+			</option>
+			<option id="2" displayname="冠脉搭桥" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+			</option>
+			<option id="3" displayname="非冠状动脉血管重建（介入+外科）" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+			</option>
+			<option id="4" displayname="急性心肌梗死溶栓" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+			</option>
+			<option id="5" displayname="冠脉造影" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+			</option>
+			<option id="6" displayname="脑卒中溶栓" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+			</option>
+			<option id="7" displayname="瓣膜手术" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+			</option>
+			<option id="8" displayname="左心室辅助装置植入" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+			</option>
+			<option id="9" displayname="起搏器或除颤器植入" datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+			</option>
+			<option id="10" displayname="肺栓塞溶栓" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+			</option>
+			<option id="9" displayname="起搏器或除颤器植入" datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+			</option>
+			<option id="10" displayname="肺栓塞溶栓" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+			</option>
+			<option id="11" displayname="透析" datatype="VARCHAR2(32)" order="110" datastyle="Multi" code="">
+			</option>
+			<option id="12" displayname="心肺复苏" datatype="VARCHAR2(32)" order="120" datastyle="Multi" code="">
+			</option>
+			<option id="13" datatype="VARCHAR2(128)" order="130" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;1)"/>	
+		</question>
+		<question id="18" type="Single" displayname="出院转归：" order="180" code="">
+			<option id="1" displayname="好转" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="未愈/未治疗" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="临终放弃治疗" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="转院" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;1)"/>	
+		</question>		
+		<!-- 第三次住院-->
+		<question id="19" type="ShowText" displayname="住院记录Ⅲ" order="190" code="">
+			<Attribute id="1" type="sethidden" value="1"/>
+			<Attribute id="2" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;2)"/>
+		</question>
+		<question id="20" type="SingleFill" displayname="住院日期是：" order="200" code="">
+			<option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;2)"/>
+		</question>
+		<question id="21" type="FillBlank" displayname="出院日期是：" order="210" code="">
+			<option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;2)"/>
+		</question>
+		<question id="22" type="FillBlank" displayname="住院医院名称：" order="220" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;2)"/>
+		</question>	
+		<question id="23" type="Single" displayname="入院状态：" order="230" code="">
+			<option id="1" displayname="急诊入院" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="择期入院" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;2)"/>		
+		</question>	
+		<question id="24" type="MultiFill" displayname="住院主要原因：" order="240" code="">
+			<option id="1" displayname="新发急性心肌梗死" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+			</option>
+			<option id="2" displayname="不稳定性心绞痛" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+			</option>
+			<option id="3" displayname="稳定性心绞痛" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+			</option>
+			<option id="4" displayname="新发缺血性脑卒中" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+			</option>
+			<option id="5" displayname="新发出血性脑卒中" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+			</option>
+			<option id="6" displayname="短暂性脑缺血发作" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+			</option>
+			<option id="7" displayname="心力衰竭" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+			</option>
+			<option id="8" displayname="脑出血以外的其他出血" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+			</option>
+			<option id="9" displayname="瓣膜疾病 " datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+			</option>
+			<option id="10" displayname="心律失常" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+			</option>
+			<option id="11" displayname="糖尿病" datatype="VARCHAR2(32)" order="110" datastyle="Multi" code="">
+			</option>
+			<option id="12" displayname="肾脏疾病" datatype="VARCHAR2(32)" order="120" datastyle="Multi" code="">
+			</option>
+			<option id="13" displayname="心脏手术操作相关感染" datatype="VARCHAR2(32)" order="130" datastyle="Multi" code="">
+			</option>
+			<option id="14" displayname="心包渗出或填塞" datatype="VARCHAR2(32)" order="140" datastyle="Multi" code="">
+			</option>
+			<option id="15" displayname="肺栓塞" datatype="VARCHAR2(32)" order="150" datastyle="Multi" code="">
+			</option>
+			<option id="16" datatype="VARCHAR2(128)" order="160" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;2)"/>	
+		</question>
+		<question id="25" type="MultiFill" displayname="住院期间接受的诊疗措施：" order="250" code="">
+			<option id="1" displayname="冠脉介入治疗" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+			</option>
+			<option id="2" displayname="冠脉搭桥" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+			</option>
+			<option id="3" displayname="非冠状动脉血管重建（介入+外科）" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+			</option>
+			<option id="4" displayname="急性心肌梗死溶栓" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+			</option>
+			<option id="5" displayname="冠脉造影" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+			</option>
+			<option id="6" displayname="脑卒中溶栓" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+			</option>
+			<option id="7" displayname="瓣膜手术" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+			</option>
+			<option id="8" displayname="左心室辅助装置植入" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+			</option>
+			<option id="9" displayname="起搏器或除颤器植入" datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+			</option>
+			<option id="10" displayname="肺栓塞溶栓" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+			</option>
+			<option id="9" displayname="起搏器或除颤器植入" datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+			</option>
+			<option id="10" displayname="肺栓塞溶栓" datatype="VARCHAR2(32)" order="100" datastyle="Multi" code="">
+			</option>
+			<option id="11" displayname="透析" datatype="VARCHAR2(32)" order="110" datastyle="Multi" code="">
+			</option>
+			<option id="12" displayname="心肺复苏" datatype="VARCHAR2(32)" order="120" datastyle="Multi" code="">
+			</option>
+			<option id="13" datatype="VARCHAR2(128)" order="130" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;2)"/>	
+		</question>
+		<question id="26" type="Single" displayname="出院转归：" order="260" code="">
+			<option id="1" displayname="好转" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="未愈/未治疗" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="临终放弃治疗" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="转院" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>	
+			<Attribute id="3" type="controlshow" value="S7_1_1&amp;&amp;(#7_2_1&gt;2)"/>	
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="8" displayname="H.用药情况" order="80">
+		<question id="1" type="Single" displayname="两周内是否常规服用降血压、降血脂、降血糖或抗血小板等心血管相关药物（包括西药、中成药）？" order="10" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="FillBlank" displayname="药物名称：" order="20" code="">
+			<option id="1" datatype="VARCHAR2(1024)" order="10" datastyle="FillBlank" code="PUB.0002">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="helptext" value="通过药库选择"/>
+			<Attribute id="4" type="controlshow" value="S8_1_1"/>
+		</question>
+		<question id="3" type="FillBlank" displayname="用药剂量：" order="30" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F9.2"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S8_1_1"/>
+			<Attribute id="4" type="helptext" value="如不清楚填9999"/>
+		</question>
+		<question id="4" type="Single" displayname="剂量单位：" order="40" code="">
+			<option id="1" displayname="g" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="mg" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="ml" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="U" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="片/粒" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="其他" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="未记录" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S8_1_1"/>
+		</question>
+		<question id="5" type="Single" displayname="用药方法：" order="50" code="">
+			<option id="1" displayname="1次/天（Qd /QN）" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="2次/天（Bid/q12h）" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="3次/天（Tid/q8h）" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="4次/天（Q6h）" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="隔日一次（qod）" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="必要时（sos/prn）" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="其他" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="未记录" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S8_1_1"/>
+		</question>
+		<question id="6" type="Single" displayname="是否还有其他药物？" order="60" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+				<Attribute id="1" type="cycle" value="1"/>
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S8_1_1"/>
+		</question>
+		<Attribute id="1" type="iscycle" value="1"/>
+	</QuestionSet>
+	
+	<QuestionSet id="9" displayname="I.药物依从性-Morisky" order="90">
+		<question id="1" type="Single" displayname="您是否忘记过使用心脏病药物？" order="10" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="Single" displayname="您最近两周是否忘记过服用心脏病药物？" order="20" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="Single" displayname="病情加重时是否不告知医生就减少药物剂量或停止服药？" order="30" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="4" type="Single" displayname="旅行或长时间离家时，您是否忘记过携带心脏病药物？" order="40" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="5" type="Single" displayname="您昨天服用心脏病药物了吗？" order="50" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="6" type="Single" displayname="感觉病情已得到控制时，您是否自行停用心脏病药物？" order="60" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="7" type="Single" displayname="您觉得自己尊从心脏病治疗方案吗？" order="70" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="8" type="Single" displayname="您认为记得服用目前药物有困难吗？" order="80" code="">
+			<option id="1" displayname="是" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="否" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="10" displayname="J.药物依从性调查" order="100">
+		<question id="1" type="Single" displayname="过去的1个月里，对于医生让您每天吃的药物，您是否曾经无意间忘记吃（如果医生让每天吃不只一种药物，只要忘记其中一种就算忘记）？" order="10" code="">
+			<option id="1" displayname="医生没让我每天吃药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="从来没有忘记" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="曾有1次忘记" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="曾有2-3次忘记" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="平均每星期有1次忘记" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="平均每星期有2-5次忘记" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="几乎每天忘记" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="不清楚" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<option id="9" displayname="拒绝回答" datatype="VARCHAR2(32)" order="90" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="Single" displayname="过去的1个月里，您是否每天吃医生开的阿司匹林？" order="20" code="">
+			<option id="1" displayname="医生没让我每天吃药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="一直坚持吃" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="曾有1次没吃" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="曾有2-3次没吃" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="平均每星期有1次没吃" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="平均每星期有2-5次没吃" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="几乎已经不吃" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="不清楚" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<option id="9" displayname="拒绝回答" datatype="VARCHAR2(32)" order="90" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="SingleFill" displayname="主要是因为什么原因？" order="30" code="">
+			<option id="1" displayname="我无意间忘记吃这种药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="医生让我别再吃这种药" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我认为病情好转，觉得不需继续吃这种药" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="我觉得这种药的疗效不好" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="我担心这种药会有副作用" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="这种药太贵，我无法负担" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="这种药不容易买到" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" datatype="VARCHAR2(32)" order="80" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他，请说明："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S10_2_3||S10_2_4||S10_2_5||S10_2_6||S10_2_7"/>
+		</question>
+		<question id="4" type="Single" displayname="过去的1个月里，您是否每天吃医生开的氯吡格雷或替格瑞洛？" order="40" code="">
+			<option id="1" displayname="医生没让我每天吃药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="一直坚持吃" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="曾有1次没吃" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="曾有2-3次没吃" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="平均每星期有1次没吃" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="平均每星期有2-5次没吃" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="几乎已经不吃" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="不清楚" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<option id="9" displayname="拒绝回答" datatype="VARCHAR2(32)" order="90" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="5" type="SingleFill" displayname="主要是因为什么原因？" order="50" code="">
+			<option id="1" displayname="我无意间忘记吃这种药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="医生让我别再吃这种药" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我认为病情好转，觉得不需继续吃这种药" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="我觉得这种药的疗效不好" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="我担心这种药会有副作用" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="这种药太贵，我无法负担" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="这种药不容易买到" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" datatype="VARCHAR2(32)" order="80" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他，请说明："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S10_4_3||S10_4_4||S10_4_5||S10_4_6||S10_4_7"/>
+		</question>
+		<question id="6" type="Single" displayname="过去的1个月里，您是否每天吃医生开的他汀？" order="60" code="">
+			<option id="1" displayname="医生没让我每天吃药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="一直坚持吃" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="曾有1次没吃" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="曾有2-3次没吃" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="平均每星期有1次没吃" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="平均每星期有2-5次没吃" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="几乎已经不吃" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="不清楚" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<option id="9" displayname="拒绝回答" datatype="VARCHAR2(32)" order="90" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="7" type="SingleFill" displayname="主要是因为什么原因？" order="70" code="">
+			<option id="1" displayname="我无意间忘记吃这种药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="医生让我别再吃这种药" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我认为病情好转，觉得不需继续吃这种药" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="我觉得这种药的疗效不好" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="我担心这种药会有副作用" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="这种药太贵，我无法负担" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="这种药不容易买到" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" datatype="VARCHAR2(32)" order="80" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他，请说明："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S10_6_3||S10_6_4||S10_6_5||S10_6_6||S10_6_7"/>
+		</question>
+		<question id="8" type="Single" displayname="过去的1个月里，您是否每天吃医生开的β受体阻滞剂？" order="80" code="">
+			<option id="1" displayname="医生没让我每天吃药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="一直坚持吃" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="曾有1次没吃" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="曾有2-3次没吃" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="平均每星期有1次没吃" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="平均每星期有2-5次没吃" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="几乎已经不吃" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="不清楚" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<option id="9" displayname="拒绝回答" datatype="VARCHAR2(32)" order="90" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="9" type="SingleFill" displayname="主要是因为什么原因？" order="90" code="">
+			<option id="1" displayname="我无意间忘记吃这种药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="医生让我别再吃这种药" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我认为病情好转，觉得不需继续吃这种药" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="我觉得这种药的疗效不好" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="我担心这种药会有副作用" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="这种药太贵，我无法负担" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="这种药不容易买到" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" datatype="VARCHAR2(32)" order="80" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他，请说明："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S10_8_3||S10_8_4||S10_8_5||S10_8_6||S10_8_7"/>
+		</question>
+		<question id="10" type="Single" displayname="过去的1个月里，您是否每天吃医生开的ACEI/ARB类药物？" order="100" code="">
+			<option id="1" displayname="医生没让我每天吃药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="一直坚持吃" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="曾有1次没吃" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="曾有2-3次没吃" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="平均每星期有1次没吃" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="平均每星期有2-5次没吃" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="几乎已经不吃" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="不清楚" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<option id="9" displayname="拒绝回答" datatype="VARCHAR2(32)" order="90" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="11" type="SingleFill" displayname="主要是因为什么原因？" order="110" code="">
+			<option id="1" displayname="我无意间忘记吃这种药" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="医生让我别再吃这种药" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我认为病情好转，觉得不需继续吃这种药" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="我觉得这种药的疗效不好" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="我担心这种药会有副作用" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="这种药太贵，我无法负担" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="这种药不容易买到" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" datatype="VARCHAR2(32)" order="80" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="其他，请说明："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S10_10_3||S10_10_4||S10_10_5||S10_10_6||S10_10_7"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="11" displayname="K.冠心病相关生活状况 (SAQ)" order="110">
+		<question id="1" type="Table" displayname="在下表中我们列举了人们一周中经常进行的日常活动。虽然对于患有严重疾病的患者，其日常活动受限的原因很难确定，请尽量就下列活动指出您在本次症状出现前四周中因为胸痛、胸闷、或心绞痛而使您的日常活动受限的程度。" order="10" code="">
+			<table displayname="">
+				<tr displayname="自己穿衣服" rownum="1">
+					<th id="1" displayname="极度受限" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="明显受限" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有些受限" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="轻微受限" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="完全不受限" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+					<th id="6" displayname="其他原因以致活动受限或没有从事这一活动" datatype="VARCHAR2(32)" order="60" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="在室内的平地上行走 " rownum="2">
+					<th id="1" displayname="极度受限" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="明显受限" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有些受限" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="轻微受限" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="完全不受限" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+					<th id="6" displayname="其他原因以致活动受限或没有从事这一活动" datatype="VARCHAR2(32)" order="60" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="淋浴" rownum="3">
+					<th id="1" displayname="极度受限" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="明显受限" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有些受限" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="轻微受限" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="完全不受限" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+					<th id="6" displayname="其他原因以致活动受限或没有从事这一活动" datatype="VARCHAR2(32)" order="60" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="不停歇的爬一个小山或一层楼梯" rownum="4">
+					<th id="1" displayname="极度受限" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="明显受限" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有些受限" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="轻微受限" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="完全不受限" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+					<th id="6" displayname="其他原因以致活动受限或没有从事这一活动" datatype="VARCHAR2(32)" order="60" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="做家务、提菜篮或者侍弄花草" rownum="5">
+					<th id="1" displayname="极度受限" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="明显受限" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有些受限" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="轻微受限" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="完全不受限" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+					<th id="6" displayname="其他原因以致活动受限或没有从事这一活动" datatype="VARCHAR2(32)" order="60" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="快走100米" rownum="6">
+					<th id="1" displayname="极度受限" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="明显受限" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有些受限" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="轻微受限" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="完全不受限" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+					<th id="6" displayname="其他原因以致活动受限或没有从事这一活动" datatype="VARCHAR2(32)" order="60" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="跑步或慢跑" rownum="7">
+					<th id="1" displayname="极度受限" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="明显受限" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有些受限" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="轻微受限" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="完全不受限" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+					<th id="6" displayname="其他原因以致活动受限或没有从事这一活动" datatype="VARCHAR2(32)" order="60" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="提起或移动重物 (如家具或小孩)" rownum="8">
+					<th id="1" displayname="极度受限" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="明显受限" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有些受限" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="轻微受限" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="完全不受限" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+					<th id="6" displayname="其他原因以致活动受限或没有从事这一活动" datatype="VARCHAR2(32)" order="60" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="参加剧烈体育活动 (例如游泳或网球)" rownum="9">
+					<th id="1" displayname="极度受限" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="明显受限" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有些受限" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="轻微受限" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="完全不受限" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+					<th id="6" displayname="其他原因以致活动受限或没有从事这一活动" datatype="VARCHAR2(32)" order="60" colstyle="TSingle" code="">
+					</th>
+				</tr>
+			</table>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="Single" displayname="与四周前相比，当您进行最剧烈的活动时，胸痛、胸闷或心绞痛发生的频率有何变化？" order="20" code="">
+			<option id="1" displayname="频繁多了" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="稍微频繁一些" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="大致一样" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="稍微少一些" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="明显少了" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="这四周中没有发生" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="Single" displayname="在过去四周中，平均而言，您曾发生过多少次胸痛、胸闷或心绞痛？" order="30" code="">
+			<option id="1" displayname="每天4次或以上" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="每天1-3 次" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="每周3次或以上但不是每天都有" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="每周1-2 次" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="每周少于1次 " datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="这四周中没有发生" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="4" type="Single" displayname="过去四周内，平均而言，您曾几次因胸痛、胸闷或心绞痛而服用硝酸甘油 (药片或喷雾剂)？" order="40" code="">
+			<option id="1" displayname="每天4次或以上" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="每天1-3 次" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="每周3次或以上但不是每天都有" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="每周1-2 次" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="每周少于1次 " datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="这四周中没有发生" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="5" type="Single" displayname="当您服用医生处方中开的治疗胸痛、胸闷或心绞痛的药时，觉得有多麻烦？" order="50" code="">
+			<option id="1" displayname="极其麻烦" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="非常麻烦" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="有些麻烦" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="轻微麻烦" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="完全不麻烦" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="医生没开处方" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="6" type="Single" displayname="若您得到了针对胸痛、胸闷或心绞痛的所有可能的治疗，您的满意程度如何？" order="60" code="">
+			<option id="1" displayname="完全不满意" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="很大程度上不满意" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="一定程度上满意" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="很大程度上满意" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="完全满意" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="7" type="Single" displayname="对于医生给您的关于胸痛、胸闷或心绞痛的解释说明，您的满意程度如何？" order="70" code="">
+			<option id="1" displayname="完全不满意" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="很大程度上不满意" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="一定程度上满意" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="很大程度上满意" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="完全满意" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="8" type="Single" displayname="总体来说，对于目前您胸痛、胸闷或心绞痛的治疗，您的满意程度如何？" order="80" code="">
+			<option id="1" displayname="完全不满意" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="很大程度上不满意" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="一定程度上满意" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="很大程度上满意" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="完全满意" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="9" type="Single" displayname="过去四周中，您的胸痛、胸闷或心绞痛症状对您的日常生活有多大影响？ " order="90" code="">
+			<option id="1" displayname="严重影响了我的日常生活" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="对我的日常生活有很大影响" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="对我的日常生活有一定影响" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="对我的日常生活有轻微影响" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="对我的日常生活基本没有影响" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="10" type="Single" displayname="如果您今后的胸痛、胸闷或心绞痛症状将与这次住院前四周一样并持续终生，您会有何反应？" order="100" code="">
+			<option id="1" displayname="完全不满意" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="很大程度上不满意" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="一定程度上满意" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="很大程度上满意" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="完全满意" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="11" type="Single" displayname="您会经常想着或担心您突然心脏病发或猝死吗？" order="110" code="">
+			<option id="1" displayname="我时时刻刻都会想到或担心" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="我时常会想到或担心" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我偶尔会想到或担心 " datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="我很少会想到或担心 " datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="我从未想到或担心" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="12" displayname="L.健康相关生活质量 (EQ-5D)" order="120">
+		<Attribute id="1" type="helptext" value="请在各组选项中，指出哪一项最能反映调查对象体检当天的健康状况。请依次读出问题的题目以及所有选项，请调查对象根据自己的情况进行选择。"/>
+		<question id="1" type="ShowText" displayname="下列问题将询问您当前的健康状况。请在下列各组选项中，指出哪一项最能反映您今天的健康状况。[读出所有选项，请患者选择]" order="10" code="">
+			<Attribute id="1" type="isnull" value="0"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>	
+		<question id="2" type="Single" displayname="行动能力" order="20" code="">
+			<option id="1" displayname="我可以四处走动，没有任何困难。" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="我行动有些不方便。" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我不能下床活动。" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="Single" displayname="自我照顾能力" order="30" code="">
+			<option id="1" displayname="我能自己照顾自己，没有任何困难。" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="我在洗脸、刷牙、洗澡或穿衣方面有些困难。" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我无法自己洗脸、刷牙、洗澡或穿衣。" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="4" type="Single" displayname="日常活动(如工作、学习、家务事、家庭或休闲活动)" order="40" code="">
+			<option id="1" displayname="我能进行日常活动，没有任何困难。" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="我在进行日常活动方面有些困难。" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我无法进行日常活动。" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="5" type="Single" displayname="疼痛/不舒服" order="50" code="">
+			<option id="1" displayname="我没有任何疼痛或不舒服。" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="我觉得中度疼痛或不舒服。" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我觉得极度疼痛或不舒服。" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="6" type="Single" displayname="焦虑/抑郁(心理压力大/心情不舒畅)" order="60" code="">
+			<option id="1" displayname="我不觉得焦虑或抑郁。" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="我觉得中度焦虑或抑郁。" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我觉得极度焦虑或抑郁。" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="7" type="SingleFill" displayname="请给您这次住院前一周的健康状况的好坏打分。您心中最好的健康状况是100，最差的状况是0。总体来说，在0到100之间，您会给您今天的健康状况打多少分？" order="70" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="before_content_display" value="填写0到100之间的一个数值："/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value="[0,100]"/>
+				<Attribute id="3" type="ischosennull" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="13" displayname="M.抑郁" order="130">
+		<question id="1" type="Table" displayname="在过去两周内，您被下列问题困扰的频率是多少？" order="10" code="">
+			<table displayname="">
+				<tr displayname="做事缺乏兴趣或乐趣" rownum="1">
+					<th id="1" displayname="完全没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="有些天" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="一半以上的天数" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="几乎每天" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="情绪低落，抑郁或绝望 " rownum="2">
+					<th id="1" displayname="完全没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="有些天" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="一半以上的天数" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="几乎每天" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="入睡困难或睡不安稳，或睡觉时间过多" rownum="3">
+					<th id="1" displayname="完全没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="有些天" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="一半以上的天数" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="几乎每天" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="不停歇的爬一个小山或一层楼梯" rownum="4">
+					<th id="1" displayname="完全没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="有些天" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="一半以上的天数" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="几乎每天" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="觉得疲惫或活力不足" rownum="5">
+					<th id="1" displayname="完全没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="有些天" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="一半以上的天数" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="几乎每天" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="胃口极差或进食过量" rownum="6">
+					<th id="1" displayname="完全没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="有些天" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="一半以上的天数" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="几乎每天" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="不喜欢自己，或觉得自己做的不好，对自己失望或有负家人期望" rownum="7">
+					<th id="1" displayname="完全没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="有些天" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="一半以上的天数" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="几乎每天" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="难于集中精神做事，例如看报纸或看电视" rownum="8">
+					<th id="1" displayname="完全没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="有些天" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="一半以上的天数" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="几乎每天" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="其他人反映您行动或说话迟缓；或者相反地，您比平常活动更多──坐立不安、停不下来" rownum="9">
+					<th id="1" displayname="完全没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="有些天" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="一半以上的天数" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="几乎每天" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+				</tr>
+			</table>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="14" displayname="N.压力" order="140">
+		<question id="1" type="Table" displayname="这份量表中的问题是询问在过去一个月，您个人的想法和感受。请您于每一个题目上作答时，指出您感受或有某一特定想法的频率。虽然有些问题看起来相似，但实际上还是有所差别，因此每一题均需作答。快速的回答问题是最好的作答方法。即不要去计算每一题分数，或考虑其含义，而是选择最能反映您真实情况的选项。" order="10" code="">
+			<table displayname="">
+				<tr displayname="感觉无法控制自己生活中重要的事情" rownum="1">
+					<th id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="偶尔" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有时" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="经常" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="总是" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="有信心能够处理自己私人问题 " rownum="2">
+					<th id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="偶尔" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有时" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="经常" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="总是" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="感到事情顺心如意 " rownum="3">
+					<th id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="偶尔" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有时" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="经常" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="总是" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="感到困难的事情堆积如山，而自己无法克服它们 " rownum="4">
+					<th id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="偶尔" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="有时" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="经常" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="总是" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+			</table>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="15" displayname="O.医疗服务" order="150">
+		<question id="1" type="Multi" displayname="您医疗费用的支付方式？" order="10" code="">
+			<option id="1" displayname="公费医疗" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+			</option>
+			<option id="2" displayname="城镇居民/职工医疗保险" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+			</option>
+			<option id="3" displayname="大病统筹" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+			</option>
+			<option id="4" displayname="农村合作医疗" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+			</option>
+			<option id="5" displayname="其他社会医疗保险" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+			</option>
+			<option id="6" displayname="商业医疗保险 " datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+			</option>
+			<option id="7" displayname="完全自费" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+			</option>
+			<option id="8" displayname="不清楚" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+				<Attribute id="1" type="rejectother" value="1"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="SingleFill" displayname="过去一年里，您看病总花费（包括门诊和住院）大约是多少钱？" order="20" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="元"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+				<Attribute id="3" type="constrainvalidate" validateobjecttype="char" validatetype="num" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="拒绝回答" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="SingleFill" displayname="过去一年里，您看病总花费中（包括门诊和住院）自己负担的费用大约是多少钱？" order="30" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="元"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+				<Attribute id="3" type="constrainvalidate" validateobjecttype="char" validatetype="num" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="拒绝回答" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="4" type="Single" displayname="在过去的一年中，为支付您的医疗费用，是否曾借款或贷款（不需要偿还的除外）？" order="40" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="16" displayname="P.社会经济学特征" order="160">
+		<question id="1" type="Single" displayname="您所接受的最高的教育程度是：" order="10" code="">
+			<option id="1" displayname="文盲/半文盲" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="小学" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="初中" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="高中 (技校或中专)" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="大学 (大专)" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="研究生" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="不清楚" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="拒绝回答" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="Single" displayname="您的外语水平怎么样？" order="20" code="">
+			<option id="1" displayname="我可以用1种以上的外语简单交流  " datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="我可以用1种外语简单交流" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="我了解一些外语，但不足以进行简单交流中" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="我学过外语，但现在基本不记得了" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="我从来没有学过外语" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="不清楚" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="拒绝回答" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="Single" displayname="您目前的工作状态是：" order="30" code="">
+			<option id="1" displayname="正在工作" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="过去曾工作，现在不工作" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="从来不工作" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="不清楚" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="拒绝回答" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="4" type="Single" displayname="您目前的职业是：" order="40" code="">
+			<option id="1" displayname="农民 (包括种植业生产人员、林业生产及野生动物保护人员、畜牧业生产人员、渔业生产人员、水利设施管理养护人员等)" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="工人 (包括勘测及矿物开采人员、工业生产、装配、维修，加工人员，工程施工人员、运输设备操作人员及有关人员，以及检验、计量人员等)" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="行政管理人员 (包括国家机关、党群组织、企业、事业单位负责人)" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="行政办事人员 (包括行政办公人员、警察、保卫和消防人员、邮政和电信业务人员等)" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="医疗卫生领域的专业技术人员 (包括医师、药师和护士等)" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="非医疗卫生领域的专业技术人员 (包括 科研、技术、教学人员，以及经济、金融、法律、文艺体育、文化出版、宗教等专业业务人员)" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="商业、服务业工作人员 (包括购销人员，仓储人员，餐饮、娱乐、运输服务人员，社会服务和居民生活服务人员(如理发)等)" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="军人 (包括军人和武警)" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<option id="9" displayname="不便分类的其他从业人员" datatype="VARCHAR2(32)" order="90" datastyle="Single" code="">
+			</option>
+			<option id="10" displayname="不清楚" datatype="VARCHAR2(32)" order="100" datastyle="Single" code="">
+			</option>
+			<option id="11" displayname="拒绝回答" datatype="VARCHAR2(32)" order="110" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S15_3_1||S15_3_2"/>
+		</question>
+		<question id="5" type="Single" displayname="您平均多久需要在特殊工作时间值一次班？（包括夜班（晚6点至次日早8点）、早班（凌晨0点至早8点）或晚班（晚5点至次日凌晨0点））？" order="50" code="">
+			<option id="1" displayname="每周1次或以上" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="每月1-3次" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="每月不到1次" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="不需要值班" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="不清楚" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="拒绝回答" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S15_3_1"/>
+		</question>
+		<question id="6" type="SingleFill" displayname="您目前不工作的主要原因是什么？" order="60" code="">
+			<option id="1" displayname="失业" datatype="VARCHAR2(64)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="全职家务" datatype="VARCHAR2(64)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="离退休" datatype="VARCHAR2(64)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="因身体或精神原因无法工作" datatype="VARCHAR2(64)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="自己不愿意工作" datatype="VARCHAR2(64)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" datatype="VARCHAR2(64)" order="60" datastyle="Fillblank" code="">
+				<Attribute id="1" type="before_content_display" value="其他，请说明："/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+			</option>
+			<option id="7" displayname="无或不清楚" datatype="VARCHAR2(64)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="拒绝回答" datatype="VARCHAR2(64)" order="80" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S15_3_2||S15_3_3"/>
+		</question>
+		<question id="7" type="Single" displayname="您目前的婚姻状态是：" order="70" code="">
+			<option id="1" displayname="在婚" datatype="VARCHAR2(64)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="离异或分居" datatype="VARCHAR2(64)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="丧偶" datatype="VARCHAR2(64)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="未婚" datatype="VARCHAR2(64)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="不清楚" datatype="VARCHAR2(64)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="拒绝回答" datatype="VARCHAR2(64)" order="60" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>	
+		<question id="8" type="SingleFill" displayname="包括您在内，您全家有几个人共同生活住在一起" order="80" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="人"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+			</option>
+			<option id="2" displayname="拒绝回答" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="9" type="Single" displayname="您目前是否有自家房屋？" order="90" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="10" type="Single" displayname="您家是否有带上下水的家庭独用卫生间？" order="100" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="11" type="Single" displayname="您家是否有私人电话 (座机或手机)？" order="110" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="12" type="Single" displayname="您家是否有机动车辆 (包括拖拉机、摩托车、电动车、汽车等)？" order="120" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="13" type="Single" displayname="您五年内是否曾自费外出旅游度假？" order="130" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="14" type="Single" displayname="您过去1年的家庭总收入约为多少人民币（元）？ " order="140" code="">
+			<option id="1" displayname="&lt;10000" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="10000-29999" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="30000-49999" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="50000-69999" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="70000-99999" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="≥100000" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="不清楚" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="拒绝回答" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="15" type="Single" displayname="您平时用手机发短信吗？" order="150" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="16" type="Single" displayname="您平时上网吗？" order="160" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="17" type="Single" displayname="您获得健康相关知识的最主要的途径是什么？" order="170" code="">
+			<option id="1" displayname="电视" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="网络" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="广播" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="报纸或杂志" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="书籍或宣传册" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="海报或宣传画" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="讲座或课程" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="与他人面对面交谈" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<option id="9" displayname="无或不清楚" datatype="VARCHAR2(32)" order="90" datastyle="Single" code="">
+			</option>
+			<option id="10" displayname="拒绝回答" datatype="VARCHAR2(32)" order="100" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="18" type="Single" displayname="您获得健康相关知识的最主要的途径是什么？" order="180" code="">
+			<option id="1" displayname="医疗卫生专业人员" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="家人和亲属" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="朋友同事" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="其他" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="不清楚" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="拒绝回答" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+	
+	<QuestionSet id="17" displayname="Q.危险因素" order="170">
+		<question id="1" type="Single" displayname="您的父亲和同胞兄弟中，是否有人在55岁前患心梗，或接受支架、搭桥治疗？" order="10" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="2" type="Single" displayname="您的母亲和同胞姐妹中，是否有人在65岁前患心梗，或接受支架、搭桥治疗？" order="20" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="Single" displayname="您目前的吸烟状况是？" order="30" code="">
+			<option id="1" displayname="从不吸烟" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="戒烟1年以上" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="戒烟1个月以上，但不足一年" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="近1个月在吸烟 " datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="不清楚" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="拒绝回答" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="4" type="SingleFill" displayname="平均每天吸烟多少支？" order="40" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="支"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="拒绝回答" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S16_3_4"/>
+		</question>
+		<question id="5" type="SingleFill" displayname="您从多少岁开始规律吸烟？" order="50" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="岁"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="拒绝回答" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S16_3_4"/>
+		</question>
+		<question id="6" type="SingleFill" displayname="本次随访前的一个月里，您每周平均有多少个小时暴露于“二手烟”（他人吸烟的烟雾）" order="60" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="小时"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="拒绝回答" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="helptext" value="如果没有，填“0”"/>
+		</question>
+		<question id="7" type="SingleFill" displayname="本次随访前，您平均每周需要工作多少小时？" order="70" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="小时/星期"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="拒绝回答" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="helptext" value="如果没有，填“0”"/>
+		</question>
+		<question id="8" type="Single" displayname="本次随访前，您的工作强度有多大 (包括志愿工作)？" order="80" code="">
+			<option id="1" displayname="主要是坐着的案头工作" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="平地步行，不搬举重物" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="步行、爬楼梯、爬山，以及搬举重物" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="重体力劳动" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="不工作" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="不清楚" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="拒绝回答" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="9" type="SingleFill" displayname="工作日中，您在从自己家到工作单位的路上往返的花费时间平均为多少分钟？" order="90" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="分钟/天"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="拒绝回答" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="helptext" value="如果没有，填“0”"/>
+		</question>
+		<question id="10" type="Single" displayname="您从自己家到工作单位通常采用的交通方式是？" order="100" code="">
+			<option id="1" displayname="步行" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="自行车" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="公交/地铁" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="摩托车/电动车" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="出租车" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="私家汽车" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="不工作" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<option id="8" displayname="不清楚" datatype="VARCHAR2(32)" order="80" datastyle="Single" code="">
+			</option>
+			<option id="9" displayname="拒绝回答" datatype="VARCHAR2(32)" order="90" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="11" type="SingleFill" displayname="本次随访前，您平均每周的家务劳动多少小时？" order="110" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="小时/星期"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="拒绝回答" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="helptext" value="如果没有，填“0”"/>
+		</question>
+		<question id="12" type="Single" displayname="在过去的1个月里，除了日常工作、上下班路上和家务劳动以外，您是否还参加体育锻炼，如散步、打球等？" order="120" code="">
+			<option id="1" displayname="否" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="是" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="不清楚" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="拒绝回答" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="13" type="SingleFill" displayname="您平均每周总共花多少时间做体育锻炼？" order="130" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="小时/星期"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="拒绝回答" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="helptext" value="如果没有，填“0”"/>
+			<Attribute id="4" type="controlshow" value="S16_12_2"/>
+		</question>
+		<question id="14" type="SingleFill" displayname="您平均每周会有几天做30分钟以上的体育锻炼？" order="140" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="Fillblank" code="">
+				<Attribute id="1" type="after_content_display" value="天/星期"/>
+				<Attribute id="2" type="ischosennull" value="1"/>
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="拒绝回答" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="helptext" value="如果没有，填“0”"/>
+			<Attribute id="4" type="controlshow" value="S16_12_2"/>
+		</question>
+		<question id="15" type="Multi" displayname="除了日常工作、上下班路上和家务劳动以外，您通常还参加那些类型的体育锻炼？" order="150" code="">
+			<option id="1" displayname="快走或慢跑" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+			</option>
+			<option id="2" displayname="骑自行车" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+			</option>
+			<option id="3" displayname="跳舞或健身操" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+			</option>
+			<option id="4" displayname="游泳" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+			</option>
+			<option id="5" displayname="太极拳" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+			</option>
+			<option id="6" displayname="爬山或爬楼梯" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+			</option>
+			<option id="7" displayname="球类运动" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+			</option>
+			<option id="8" displayname="其他，包括散步" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+			</option>
+			<option id="9" displayname="无" datatype="VARCHAR2(32)" order="90" datastyle="Multi" code="">
+				<Attribute id="1" type="rejectother" value="1"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S16_12_2"/>
+		</question>
+		<question id="16" type="Single" displayname="您多久喝一次酒？" order="160" code="">
+			<option id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="每月少于1次" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="1" displayname="每月2-4次" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="每周2-3次" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="1" displayname="每周超过4次" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="不清楚" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="拒绝回答" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="helptext" value="“饮酒”包括饮用各种含酒精饮料，不包括饮用无醇啤酒等，也不包括在摄入含酒精的食品或药品。"/>
+		</question>
+		<question id="17" type="ShowText" displayname="饮酒量评价中的1个“单位”等于17mL纯酒精，约等于120mL葡萄酒，360mL (1听或半瓶)啤酒，100mL (2两)黄酒，或45mL (1两)白酒" order="170" code="">
+			<Attribute id="1" type="isnull" value="0"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="controlhide" value="S16_16_1"/>
+		</question>
+		<question id="18" type="Single" displayname="在过去一个月，平均每天饮酒量（单位）？" order="180" code="">
+			<option id="1" displayname="1或2" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="3或4" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="5或6" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="7到9" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="超过10" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="不清楚" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="拒绝回答" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="controlhide" value="S16_16_1"/>
+			<Attribute id="4" type="helptext" value="对不是每天饮酒者（如每周只有 1-2 天饮酒），请按饮酒日所饮用的量回答（不能按每周 7 天计算平均每天饮酒量）。如在不同季节喝不同的酒，则以一年中最常饮用的一种酒为准。各种不同酒的饮用量之和应等于饮酒时当日的总饮酒量。"/>
+		</question>
+		<question id="19" type="ShowText" displayname="饮酒量评价中的6个“单位”等于102mL纯酒精，约等于720mL葡萄酒，2.16L (6听或3瓶)啤酒，600mL (1.2斤)黄酒，或270mL (6两)白酒" order="190" code="">
+			<Attribute id="1" type="isnull" value="0"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="controlhide" value="S16_16_1"/>
+		</question>
+		<question id="19" type="Single" displayname="您多久会出现一次喝6个单位或更多酒的情况？" order="190" code="">
+			<option id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="每月少于1次" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="每月" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="每周" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="每天或几乎每天" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<option id="6" displayname="不清楚" datatype="VARCHAR2(32)" order="60" datastyle="Single" code="">
+			</option>
+			<option id="7" displayname="拒绝回答" datatype="VARCHAR2(32)" order="70" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="controlhide" value="S16_16_1"/>
+		</question>
+		<question id="20" type="Table" displayname="过去一年中，您多久会出现一次以下情况?" order="200" code="">
+			<table displayname="问题">
+				<tr displayname="一旦开始喝酒后就无法停止" rownum="1">
+					<th id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="每月少于1次" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="每月" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="每周" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="每天或几乎每天" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="无法做平常该做的事" rownum="2">
+					<th id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="每月少于1次" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="每月" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="每周" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="每天或几乎每天" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="经过一段时间的大量饮酒后，早上需要喝一杯才会觉得舒服" rownum="3">
+					<th id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="每月少于1次" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="每月" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="每周" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="每天或几乎每天" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="酒后觉得愧疚或自责" rownum="4">
+					<th id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="每月少于1次" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="每月" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="每周" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="每天或几乎每天" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="酒后忘记前一晚发生的事情" rownum="5">
+					<th id="1" displayname="从不" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="每月少于1次" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="每月" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="每周" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="每天或几乎每天" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+			</table>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+			<Attribute id="3" type="controlhide" value="S16_16_1||(S16_18_1&amp;&amp;S16_19_1)"/>
+		</question>
+		<question id="21" type="Single" displayname="您喝酒是否曾经造成其他人或您自己的身体受伤？" order="210" code="">
+			<option id="1" displayname="没有" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="有，但不是在过去的一年中" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="有，在过去的一年中" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="不清楚" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="拒绝回答" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>		
+		<question id="22" type="Single" displayname="是否曾经有亲友、医生或其他医务人员关心您喝酒的问题，或建议您少喝点？" order="220" code="">
+			<option id="1" displayname="没有" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="有，但不是在过去的一年中" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="有，在过去的一年中" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="不清楚" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="拒绝回答" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>		
+		<question id="23" type="Multi" displayname="您觉得下列哪些因素会增加您患冠心病的风险？" order="230" code="">
+			<option id="1" displayname="吸烟" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+			</option>
+			<option id="2" displayname="高血压" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+			</option>
+			<option id="3" displayname="高血脂" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+			</option>
+			<option id="4" displayname="高血糖" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+			</option>
+			<option id="5" displayname="缺乏运动" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+			</option>
+			<option id="6" displayname="过度饮酒" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+			</option>
+			<option id="7" displayname="超重" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+			</option>
+			<option id="8" displayname="以上都没有" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+				<Attribute id="1" type="rejectother" value="1"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>	
+		<question id="24" type="Multi" displayname="从发病住院到目前为止的这段时间，医生曾经告诉过您下列因素会增加您患冠心病的风险吗？" order="240" code="">
+			<option id="1" displayname="吸烟" datatype="VARCHAR2(32)" order="10" datastyle="Multi" code="">
+			</option>
+			<option id="2" displayname="高血压" datatype="VARCHAR2(32)" order="20" datastyle="Multi" code="">
+			</option>
+			<option id="3" displayname="高血脂" datatype="VARCHAR2(32)" order="30" datastyle="Multi" code="">
+			</option>
+			<option id="4" displayname="高血糖" datatype="VARCHAR2(32)" order="40" datastyle="Multi" code="">
+			</option>
+			<option id="5" displayname="缺乏运动" datatype="VARCHAR2(32)" order="50" datastyle="Multi" code="">
+			</option>
+			<option id="6" displayname="过度饮酒" datatype="VARCHAR2(32)" order="60" datastyle="Multi" code="">
+			</option>
+			<option id="7" displayname="超重" datatype="VARCHAR2(32)" order="70" datastyle="Multi" code="">
+			</option>
+			<option id="8" displayname="以上都没有" datatype="VARCHAR2(32)" order="80" datastyle="Multi" code="">
+				<Attribute id="1" type="rejectother" value="1"/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>	
+	</QuestionSet>
+	
+	<QuestionSet id="18" displayname="R.社会支持" order="180">
+		<question id="1" type="Table" displayname="过去一年中，您多久会出现一次以下情况?" order="10" code="">
+			<table displayname="问题">
+				<tr displayname="当您需要交谈的时候，有人愿意听您倾诉吗？" rownum="1">
+					<th id="1" displayname="没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="小部分时间" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="部分时间" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="大部分时间" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="一直" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="当遇到问题时，有人可以帮您提供解决建议吗？" rownum="2">
+					<th id="1" displayname="没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="小部分时间" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="部分时间" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="大部分时间" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="一直" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="有人对您表示关心吗？" rownum="3">
+					<th id="1" displayname="没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="小部分时间" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="部分时间" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="大部分时间" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="一直" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="有人帮助您做家务杂事吗？" rownum="4">
+					<th id="1" displayname="没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="小部分时间" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="部分时间" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="大部分时间" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="一直" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="有人可以给您感情支持(商量问题或帮您做艰难的决策)吗？" rownum="5">
+					<th id="1" displayname="没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="小部分时间" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="部分时间" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="大部分时间" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="一直" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+				<tr displayname="您和您感觉亲近或可以信赖的人(如家人朋友)有充分的交流吗？" rownum="5">
+					<th id="1" displayname="没有" datatype="VARCHAR2(32)" order="10" colstyle="TSingle" code="">
+					</th>
+					<th id="2" displayname="小部分时间" datatype="VARCHAR2(32)" order="20" colstyle="TSingle" code="">
+					</th>
+					<th id="3" displayname="部分时间" datatype="VARCHAR2(32)" order="30" colstyle="TSingle" code="">
+					</th>
+					<th id="4" displayname="大部分时间" datatype="VARCHAR2(32)" order="40" colstyle="TSingle" code="">
+					</th>
+					<th id="5" displayname="一直" datatype="VARCHAR2(32)" order="50" colstyle="TSingle" code="">
+					</th>
+				</tr>
+			</table>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+	</QuestionSet>
+</questionnaire>

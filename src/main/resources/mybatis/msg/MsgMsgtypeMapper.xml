@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.msg.dao.PipMsgMsgtypeDao">
+ 
+	<select id="msgTypeList" parameterType="com.bdcor.pip.web.msg.filter.PipMsgMsgtypeFilter" resultType="com.bdcor.pip.web.msg.domain.MsgMsgtype">
+		select 
+			t.ID as id,
+			t.MSG_TYPE_CODE as typeCode,
+			t.MSG_TYPE_NAME as typeName,
+			t.CREATE_DATE as createDate,
+			a.NAME as createBy
+		from 
+			PIP_MSG_MSGTYPE t
+		left join 
+			PIP_SYS_ACCOUNT a
+		on 
+			t.CREATE_BY = a.ID
+		where 1=1
+		<if test="createDate != null and createDate !=''">
+			and to_char(CREATE_DATE, 'yyyy-MM-dd') = #{createDate}
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+	
+	<update id="updateMsgType" parameterType="com.bdcor.pip.web.msg.domain.MsgMsgtype">
+		update PIP_MSG_MSGTYPE
+		<set>
+		    <if test="typeCode != null">
+		      	MSG_TYPE_CODE = #{typeCode, jdbcType=VARCHAR},
+		    </if>
+		    <if test="typeName != null">
+		      	MSG_TYPE_NAME = #{typeName, jdbcType=VARCHAR},
+		    </if>
+		    <if test="createDate != null">
+				CREATE_DATE = to_date(#{createDate}, 'yyyy-MM-dd HH24:mi:ss'),
+			</if>
+			<if test="createBy != null">
+				CREATE_BY = #{createBy, jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id, jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="addMsgType" parameterType="com.bdcor.pip.web.msg.domain.MsgMsgtype">
+		insert into PIP_MSG_MSGTYPE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+		      	ID,
+		    </if>
+		    <if test="typeCode != null">
+		      	MSG_TYPE_CODE,
+		    </if>
+		    <if test="typeName != null">
+		      	MSG_TYPE_NAME,
+		    </if>
+		    <if test="createDate != null">
+				CREATE_DATE,
+			</if>
+			<if test="createBy != null">
+				CREATE_BY,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+		      	#{id, jdbcType=VARCHAR},
+		    </if>
+		    <if test="typeCode != null">
+		      	#{typeCode, jdbcType=VARCHAR},
+		    </if>
+		    <if test="typeName != null">
+		      	#{typeName, jdbcType=VARCHAR},
+		    </if>
+		    <if test="createDate != null">
+				to_date(#{createDate}, 'yyyy-MM-dd HH24:mi:ss'),
+			</if>
+			<if test="createBy != null">
+				#{createBy, jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<delete id="deleteMsgType" parameterType="java.lang.String">
+  		delete from PIP_MSG_MSGTYPE where ID = #{id}
+  	</delete>
+  	
+  	<select id="getMsgTypeById" parameterType="java.lang.String" resultType="com.bdcor.pip.web.msg.domain.MsgMsgtype">
+		select 
+			t.ID as id,
+			t.MSG_TYPE_CODE as typeCode,
+			t.MSG_TYPE_NAME as typeName,
+			t.CREATE_DATE as createDate,
+			t.CREATE_BY as createBy
+		from 
+			PIP_MSG_MSGTYPE t
+		left join 
+			PIP_SYS_ACCOUNT a
+		on 
+			t.CREATE_BY = a.ID
+		where 
+			t.ID = #{id}
+	</select>
+  	
+  	<select id="getMsgtypeByCode" parameterType="java.lang.String" resultType="com.bdcor.pip.web.msg.domain.MsgMsgtype">
+		select 
+			t.ID as id,
+			t.MSG_TYPE_CODE as typeCode,
+			t.MSG_TYPE_NAME as typeName,
+			t.CREATE_DATE as createDate,
+			t.CREATE_BY as createBy
+		from 
+			PIP_MSG_MSGTYPE t
+		left join 
+			PIP_SYS_ACCOUNT a
+		on 
+			t.CREATE_BY = a.ID
+		where 
+			t.MSG_TYPE_CODE = #{typeCode}
+	</select>
+</mapper>

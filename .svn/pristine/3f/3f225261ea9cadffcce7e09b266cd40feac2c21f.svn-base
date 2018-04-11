@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.quality.dao.PipExpPlanMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.quality.domain.PipExpPlan" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PROVINCE_CODE" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="LCC_NAME" property="lccName" jdbcType="VARCHAR" />
+    <result column="PLAN_START_DATE" property="planStartDate" jdbcType="TIMESTAMP" />
+    <result column="PLAN_END_DATE" property="planEndDate" jdbcType="TIMESTAMP" />
+    <result column="EXP_USER_NAME" property="expUserName" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_USER_ID" property="createUserId" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="PROVINCE_NAME" property="provinceName" jdbcType="VARCHAR"/>
+    <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, PROVINCE_CODE, LCC_CODE, LCC_NAME, PLAN_START_DATE, EXP_USER_NAME, REMARK, CREATE_USER_ID, 
+    CREATE_DATE
+  </sql>
+  <select id="list" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.quality.filter.PipExpPlanFilter">
+  	select
+  		p.*, d.vname as province_name,a.name as user_name
+    from PIP_EXP_PLAN p
+    left join pip_comm_dict_district d on p.PROVINCE_CODE = d.vcode
+    left join pip_sys_account a on a.id = p.CREATE_USER_ID 
+    where 1=1 
+    	<if test="lccCode != null and lccCode !=''">
+    	  and p.LCC_CODE = #{lccCode}
+    	</if>
+    	<if test="planSStartDate !=null and planSStartDate!=''">
+    		and p.PLAN_START_DATE >= #{planSStartDate}
+    	</if>
+    	<if test="planSEndDate !=null and planSEndDate!=''">
+    		and p.PLAN_START_DATE <![CDATA[<=]]> #{planSEndDate}
+    	</if>
+    	<if test="planEStartDate !=null and planEStartDate!=''">
+    		and p.PLAN_END_DATE >= #{planEStartDate}
+    	</if>
+    	<if test="planEEndDate !=null and planEEndDate!=''">
+    		and p.PLAN_END_DATE <![CDATA[<=]]> #{planEEndDate}
+    	</if>
+    	order by  p.id desc
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.quality.domain.PipExpPlanExample" >
+    select
+    p.*, d.vname as province_name,a.name as user_name
+    from PIP_EXP_PLAN p
+    left join pip_comm_dict_district d on p.PROVINCE_CODE = d.vcode
+    left join pip_sys_account a on a.id = p.CREATE_USER_ID 
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    p.*, d.vname as province_name,a.name as user_name
+    from PIP_EXP_PLAN p
+    left join pip_comm_dict_district d on p.PROVINCE_CODE = d.vcode
+    left join pip_sys_account a on a.id = p.CREATE_USER_ID 
+    where p.ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PIP_EXP_PLAN
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteBatch" parameterType="java.lang.String">
+  	delete from PIP_EXP_PLAN
+    where ID in (${ids,jdbcType=VARCHAR})
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.quality.domain.PipExpPlanExample" >
+    delete from PIP_EXP_PLAN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.quality.domain.PipExpPlan" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_EXP_PLAN_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_EXP_PLAN (ID, PROVINCE_CODE, LCC_CODE, 
+      LCC_NAME, PLAN_START_DATE,PLAN_END_DATE, EXP_USER_NAME, 
+      REMARK, CREATE_USER_ID, CREATE_DATE
+      )
+    values (#{id,jdbcType=VARCHAR}, #{provinceCode,jdbcType=VARCHAR}, #{lccCode,jdbcType=VARCHAR}, 
+      #{lccName,jdbcType=VARCHAR}, #{planStartDate,jdbcType=TIMESTAMP}, #{planEndDate,jdbcType=TIMESTAMP}, #{expUserName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.quality.domain.PipExpPlan" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_EXP_PLAN_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_EXP_PLAN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="provinceCode != null" >
+        PROVINCE_CODE,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="lccName != null" >
+        LCC_NAME,
+      </if>
+      <if test="planStartDate != null" >
+        PLAN_START_DATE,
+      </if>
+      <if test="expUserName != null" >
+        EXP_USER_NAME,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccName != null" >
+        #{lccName,jdbcType=VARCHAR},
+      </if>
+      <if test="planStartDate != null" >
+        #{planStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expUserName != null" >
+        #{expUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.quality.domain.PipExpPlanExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_EXP_PLAN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_EXP_PLAN
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.provinceCode != null" >
+        PROVINCE_CODE = #{record.provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccCode != null" >
+        LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccName != null" >
+        LCC_NAME = #{record.lccName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planStartDate != null" >
+        PLAN_START_DATE = #{record.planStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expUserName != null" >
+        EXP_USER_NAME = #{record.expUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        CREATE_USER_ID = #{record.createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_EXP_PLAN
+    set ID = #{record.id,jdbcType=VARCHAR},
+      PROVINCE_CODE = #{record.provinceCode,jdbcType=VARCHAR},
+      LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      LCC_NAME = #{record.lccName,jdbcType=VARCHAR},
+      PLAN_START_DATE = #{record.planStartDate,jdbcType=TIMESTAMP},
+      EXP_USER_NAME = #{record.expUserName,jdbcType=VARCHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      CREATE_USER_ID = #{record.createUserId,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.quality.domain.PipExpPlan" >
+    update PIP_EXP_PLAN
+    <set >
+      <if test="provinceCode != null" >
+        PROVINCE_CODE = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccName != null" >
+        LCC_NAME = #{lccName,jdbcType=VARCHAR},
+      </if>
+      <if test="planStartDate != null" >
+        PLAN_START_DATE = #{planStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planEndDate != null" >
+        PLAN_END_DATE = #{planEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expUserName != null" >
+        EXP_USER_NAME = #{expUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.quality.domain.PipExpPlan" >
+    update PIP_EXP_PLAN
+    set PROVINCE_CODE = #{provinceCode,jdbcType=VARCHAR},
+      LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      LCC_NAME = #{lccName,jdbcType=VARCHAR},
+      PLAN_START_DATE = #{planStartDate,jdbcType=TIMESTAMP},
+      PLAN_END_DATE = #{planEndDate,jdbcType=TIMESTAMP},
+      EXP_USER_NAME = #{expUserName,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

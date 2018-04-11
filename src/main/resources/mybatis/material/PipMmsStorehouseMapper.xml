@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.material.supp.dao.PipMmsStorehouseMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.material.supp.domain.PipMmsStorehouse" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="STOCK_CODE" property="stockCode" jdbcType="VARCHAR" />
+    <result column="STOCK_NAME" property="stockName" jdbcType="VARCHAR" />
+    <result column="HELP_CODE" property="helpCode" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="IS_REMOVED" property="isRemoved" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  
+
+	
+	<select id="getAllPipMmsStorehouse" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsStorehouse" >
+	    select *
+	     from pip_mms_storehouse 
+	     where  lcc_Code = ${lccCode}
+	</select>    
+	
+  <select id="getExportStockCode" resultMap="BaseResultMap" parameterType="String">
+     select *
+     from pip_mms_storehouse 
+     where 1=1 and  lcc_Code = ${lccCode}
+   </select>
+
+</mapper>

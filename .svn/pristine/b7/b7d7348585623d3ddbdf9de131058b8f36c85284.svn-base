@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<questionnaire xmlns="http://www.gener-health.com/uqsPaper">
+	
+	
+	<title>实验室检验报告录入</title>
+	<doctype projectid="004" projectname="冠心病及合并糖尿病患者长期自我管理的适宜信息化辅助工具评价研究" UQSid="004007" UQSName="实验室检查结果录入问卷" UQSVersion="004.007.001" VersionCreateDate="2015-08-31 14:07:01"/>
+	
+	<QuestionSet id="1" displayname="A.实验室检验报告" order="10">
+    <question id="1" type="FillBlank" displayname="检验报告时间:" order="10" code="">
+      <option id="1" datatype="DATE" order="10" datastyle="FillBlank" code="">
+      </option>
+    </question>
+		<question id="2" type="SingleFill" displayname="总胆固醇 (TC):" order="20" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mmol/L"/>
+			</option>
+			<option id="2" datatype="VARCHAR2(32)" order="20" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mg/dl"/>
+			</option>
+			<option id="3" displayname="未检测" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="3" type="SingleFill" displayname="高密度脂蛋白胆固醇 (HDL-C):" order="30" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mmol/L"/>
+			</option>
+			<option id="2" datatype="VARCHAR2(32)" order="20" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mg/dl"/>
+			</option>
+			<option id="3" displayname="未检测" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="4" type="SingleFill" displayname="低密度脂蛋白胆固醇 (LDL-C):" order="40" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mmol/L"/>
+			</option>
+			<option id="2" datatype="VARCHAR2(32)" order="20" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mg/dl"/>
+			</option>
+			<option id="3" displayname="未检测" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="5" type="SingleFill" displayname="甘油三脂（TG）：" order="50" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mmol/L"/>
+			</option>
+			<option id="2" datatype="VARCHAR2(32)" order="20" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mg/dl"/>
+			</option>
+			<option id="3" displayname="未检测" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="6" type="SingleFill" displayname="空腹血糖：" order="60" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mmol/L"/>
+			</option>
+			<option id="2" displayname="未检测" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="7" type="SingleFill" displayname="谷丙转氨酶(ALT)：" order="70" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="U/L"/>
+			</option>
+			<option id="2" displayname="未检测" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="8" type="SingleFill" displayname="血肌酐(Cr):" order="80" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="μmol/L"/>
+			</option>
+			<option id="2" displayname="未检测" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="9" type="SingleFill" displayname="血尿素氮（BUN）:" order="90" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mmol/L"/>
+			</option>
+			<option id="2" displayname="未检测" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="10" type="SingleFill" displayname="肌酸激酶:" order="100" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="IU/L"/>
+			</option>
+			<option id="2" displayname="未检测" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="11" type="SingleFill" displayname="高敏C反应蛋白:" order="110" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="mg/L"/>
+			</option>
+			<option id="2" displayname="未检测" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="12" type="SingleFill" displayname="血红蛋白:" order="120" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="g/L"/>
+			</option>
+			<option id="2" displayname="未检测" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="13" type="SingleFill" displayname="红细胞比容（HCT）:" order="130" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="%"/>
+			</option>
+			<option id="2" displayname="未检测" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="14" type="SingleFill" displayname="白细胞计数（WBC）:" order="140" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="10^9/L "/>
+			</option>
+			<option id="2" displayname="未检测" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="15" type="SingleFill" displayname="血小板计数（PLT）:" order="150" code="">
+			<option id="1" datatype="VARCHAR2(32)" order="10" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="after_content_display" value="10^9/L "/>
+			</option>
+			<option id="2" displayname="未检测" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="16" type="Single" displayname="尿潜血:" order="160" code="">
+			<option id="1" displayname="阴性" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="阳性" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="可疑阳性" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="未检测" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="17" type="Single" displayname="尿蛋白：" order="170" code="">
+			<option id="1" displayname="阴性" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="阳性" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="可疑阳性" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="未检测" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" displayname="尿蛋白定量" datatype="VARCHAR2(32)" order="50" datastyle="Single" code="">
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="0"/>
+		</question>
+		<question id="18" type="Single" displayname="尿蛋白定量:" order="180" code="">
+			<option id="1" displayname="+" datatype="VARCHAR2(32)" order="10" datastyle="Single" code="">
+			</option>
+			<option id="2" displayname="++" datatype="VARCHAR2(32)" order="20" datastyle="Single" code="">
+			</option>
+			<option id="3" displayname="+++" datatype="VARCHAR2(32)" order="30" datastyle="Single" code="">
+			</option>
+			<option id="4" displayname="++++" datatype="VARCHAR2(32)" order="40" datastyle="Single" code="">
+			</option>
+			<option id="5" datatype="VARCHAR2(32)" order="50" datastyle="FillBlank" code="">
+				<Attribute id="1" type="validate" validateobjecttype="number" validatetype="format" value="F5.2"/>
+				<Attribute id="2" type="constrainvalidate" validateobjecttype="number" validatetype="scope" value=""/>
+				<Attribute id="3" type="before_content_display" value="数值："/>
+			</option>
+			<Attribute id="1" type="isnull" value="1"/>
+			<Attribute id="2" type="sethidden" value="1"/>
+			<Attribute id="3" type="controlshow" value="S1_17_5"/>
+		</question>
+	</QuestionSet>
+</questionnaire>

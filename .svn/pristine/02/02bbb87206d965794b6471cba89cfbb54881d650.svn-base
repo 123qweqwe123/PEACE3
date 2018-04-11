@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.spem.dao.WayBillVoMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.spem.domain.WayBillVo" >
+    <id column="WAYBILL_NO" property="waybill_no" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="BOX_CODE" property="boxCodes" jdbcType="VARCHAR" />
+    <result column="BOX_TYPE" property="boxType" jdbcType="VARCHAR" />
+    <result column="APPLYER" property="applyer" jdbcType="VARCHAR" />
+    <result column="APPLY_DATE" property="applyDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+     <result column="lcc_name" property="lcc_name" jdbcType="VARCHAR" />
+     <result column="applyer_name" property="applyer_name" jdbcType="VARCHAR" />
+     <result column="LIABLE_SB" property="liable_sb" jdbcType="VARCHAR" />
+     <result column="EVENT_DATE" property="event_date" jdbcType="VARCHAR" />
+     <result column="EVENT_CODE" property="event_code" jdbcType="VARCHAR" />
+     <result column="EVENT_NAME" property="event_name" jdbcType="VARCHAR" /> 
+  </resultMap> 
+
+  <sql id="Base_Column_List" >
+    WAYBILL_NO, PROJECT_ID, LCC_CODE, BOX_CODE, BOX_TYPE, APPLYER, APPLY_DATE, CREATE_DATE, 
+    CREATE_BY, REMARK
+  </sql>
+ 
+   <select id="list" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.spem.filter.WayBillFilter" >
+    select sw.*, l.lcc_name lcc_name,et.EVENT_NAME,acct.NAME applyer_name, evt.EVENT_DATE, evt.EVENT_CODE , acc.NAME LIABLE_SB
+
+    from PIP_SCM_WAYBILL sw  left join pip_comm_lcc l  on sw.LCC_CODE=l.lcc_code
+
+    left join PIP_SYS_ACCOUNT acct on  sw.APPLYER=acct.ID
+
+    left join pip_scm_waybill_event evt on evt.PROJECT_ID=sw.PROJECT_ID and evt.WAYBILL_NO=sw.WAYBILL_NO and  
+
+    evt.EVENT_DATE in (select max(EVENT_DATE) from pip_scm_waybill_event group by WAYBILL_NO) 
+
+    left join PIP_SCM_EVENTDICT et on evt.EVENT_CODE=et.EVENT_CODE 
+    
+    left join PIP_SYS_ACCOUNT acc on acc.ID=evt.LIABLE_SB
+    
+    where  sw.IS_REMOVE!=1
+      
+    <if test="projectId != null and ''!=projectId" >
+        and sw.PROJECT_ID=#{projectId,jdbcType=VARCHAR} 
+    </if>
+    <if test="lccid != null and ''!=lccid" >
+        and sw.LCC_CODE=#{lccid,jdbcType=VARCHAR}
+    </if>
+    <if test="state != null and ''!=state" >
+        and evt.EVENT_CODE=#{state,jdbcType=VARCHAR}
+    </if>
+    <if test="waybill_no != null and ''!=waybill_no" >
+        and sw.WAYBILL_NO like '%${waybill_no}%'
+    </if>
+    <if test="boxCodes != null and ''!=boxCodes" >
+        ${boxCodes}
+    </if>  
+    
+    <if test="sidx != null and sidx != ''">
+            order by ${sidx}
+            <if test="sord!=null and sord!= ''">
+                ${sord}
+            </if>
+        </if>    
+  </select>
+  
+  
+  
+   <select id="list_lcc" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.spem.filter.WayBillFilter" >
+   
+    select sw.*, l.lcc_name lcc_name,et.EVENT_NAME,acct.NAME applyer_name, evt.EVENT_DATE, evt.EVENT_CODE , acc.NAME LIABLE_SB
+
+    from PIP_SCM_WAYBILL sw  left join pip_comm_lcc l  on sw.LCC_CODE=l.lcc_code
+
+    left join PIP_SYS_ACCOUNT acct on  sw.APPLYER=acct.ID
+
+    left join pip_scm_waybill_event evt on evt.PROJECT_ID=sw.PROJECT_ID and evt.WAYBILL_NO=sw.WAYBILL_NO and  
+
+    evt.EVENT_DATE in (select max(EVENT_DATE) from pip_scm_waybill_event group by WAYBILL_NO) 
+
+    left join PIP_SCM_EVENTDICT et on evt.EVENT_CODE=et.EVENT_CODE 
+    
+    left join PIP_SYS_ACCOUNT acc on acc.ID=evt.LIABLE_SB
+    
+    where  sw.IS_REMOVE!=1
+      
+    <if test="projectId != null and ''!=projectId" >
+        and sw.PROJECT_ID=#{projectId,jdbcType=VARCHAR} 
+    </if>
+    <if test="lccid != null and ''!=lccid" >
+        and sw.LCC_CODE=#{lccid,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="sidx != null and sidx != ''">
+            order by ${sidx}
+            <if test="sord!=null and sord!= ''">
+                ${sord}
+            </if>
+        </if> 
+    
+  </select>
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  
+    select sw.*, l.lcc_name lcc_name,et.EVENT_NAME,acct.LOGIN_NAME applyer_name, evt.EVENT_DATE, evt.EVENT_CODE
+
+    from PIP_SCM_WAYBILL sw  left join pip_comm_lcc l  on sw.LCC_CODE=l.lcc_code
+
+    left join PIP_SYS_ACCOUNT acct on  sw.APPLYER=acct.ID
+
+    left join pip_scm_waybill_event evt on evt.PROJECT_ID=sw.PROJECT_ID and evt.WAYBILL_NO=sw.WAYBILL_NO and
+
+    evt.EVENT_DATE in (select max(EVENT_DATE) from pip_scm_waybill_event group by WAYBILL_NO)
+
+    left join PIP_SCM_EVENTDICT et on evt.EVENT_CODE=et.EVENT_CODE  where  sw.IS_REMOVE!=1
+    and  sw.WAYBILL_NO = #{waybill_no,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <select id="getNextEventCode" resultType="map" parameterType="java.lang.String"> 
+    select 
+    EVENT_CODE
+   from  PIP_SCM_EVENTDICT
+   where FRONT_EVENT_CODE = #{current_event_code,jdbcType=VARCHAR} 
+  </select>
+  
+  
+   <update id="delete" parameterType="java.lang.String"  >
+      update PIP_SCM_WAYBILL  set IS_REMOVE=1 where   WAYBILL_NO = #{waybill_no,jdbcType=VARCHAR}
+   </update> 
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PIP_SCM_WAYBILL
+    where WAYBILL_NO = #{waybill_no,jdbcType=VARCHAR}
+  </delete> 
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.spem.filter.WayBillFilter" >
+    delete from PIP_SCM_WAYBILL
+   
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.spem.domain.WayBillVo" >
+    insert into PIP_SCM_WAYBILL (WAYBILL_NO, PROJECT_ID, LCC_CODE, 
+      BOX_CODE, BOX_TYPE, APPLYER, 
+      APPLY_DATE, CREATE_DATE, CREATE_BY, 
+      REMARK)
+    values (#{waybill_no,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{lccCode,jdbcType=VARCHAR}, 
+      #{boxCodes,jdbcType=VARCHAR}, #{boxType,jdbcType=VARCHAR}, #{applyer,jdbcType=VARCHAR}, 
+      #{applyDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="createWayBill" parameterType="com.bdcor.pip.web.spem.domain.WayBillVo" >
+    insert into PIP_SCM_WAYBILL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="waybill_no != null" >
+        WAYBILL_NO,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="boxCodes != null" >
+        BOX_CODE,
+      </if>
+      <if test="boxType != null" >
+        BOX_TYPE,
+      </if>
+      <if test="applyer != null" >
+        APPLYER,
+      </if>
+      <if test="applyDate != null" >
+        APPLY_DATE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="waybill_no != null" >
+        #{waybill_no,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="boxCodes != null" >
+        #{boxCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="boxType != null" >
+        #{boxType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyer != null" >
+        #{applyer,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null" >
+        #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.spem.filter.WayBillFilter" resultType="java.lang.Integer" >
+    select count(*) from PIP_SCM_WAYBILL
+   
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_SCM_WAYBILL
+    <set >
+      <if test="record.waybill_no != null" >
+        WAYBILL_NO = #{record.waybill_no,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccCode != null" >
+        LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boxCodes != null" >
+        BOX_CODE = #{record.boxCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boxType != null" >
+        BOX_TYPE = #{record.boxType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyer != null" >
+        APPLYER = #{record.applyer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyDate != null" >
+        APPLY_DATE = #{record.applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_SCM_WAYBILL
+    set WAYBILL_NO = #{record.waybill_no,jdbcType=VARCHAR},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      BOX_CODE = #{record.boxCodes,jdbcType=VARCHAR},
+      BOX_TYPE = #{record.boxType,jdbcType=VARCHAR},
+      APPLYER = #{record.applyer,jdbcType=VARCHAR},
+      APPLY_DATE = #{record.applyDate,jdbcType=TIMESTAMP},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR}
+  </update>  
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.spem.domain.WayBillVo" >
+    update PIP_SCM_WAYBILL
+    <set >
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="boxCodes != null" >
+        BOX_CODE = #{boxCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="boxType != null" >
+        BOX_TYPE = #{boxType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyer != null" >
+        APPLYER = #{applyer,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null" >
+        APPLY_DATE = #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where WAYBILL_NO = #{waybill_no,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.spem.domain.WayBillVo" >
+    update PIP_SCM_WAYBILL
+    set PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      BOX_CODE = #{boxCodes,jdbcType=VARCHAR},
+      BOX_TYPE = #{boxType,jdbcType=VARCHAR},
+      APPLYER = #{applyer,jdbcType=VARCHAR},
+      APPLY_DATE = #{applyDate,jdbcType=TIMESTAMP},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where WAYBILL_NO = #{waybill_no,jdbcType=VARCHAR}
+  </update>
+</mapper>

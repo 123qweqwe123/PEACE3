@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/layouts/">
+	<excludes>
+		<pattern>/static/*</pattern>
+		<pattern>/portals/*</pattern>
+		<pattern>/login*</pattern>
+		<pattern>*/redirectto*</pattern>
+	    <pattern>*/openmodal*</pattern>
+	    <pattern>*/**/look*</pattern>
+	</excludes>   
+	
+	<!-- 工作台 -->
+	<decorator name="portal" page="default2.jsp">
+		<pattern>/portal*</pattern>    
+	</decorator>
+	
+	<!-- 字典 -->
+   <!--  <decorator name="dict" page="default.jsp">
+        <pattern>/dict/*</pattern>    
+    </decorator> -->  
+    
+    <!-- 字典 -->
+    <decorator name="meta" page="default2.jsp">
+        <pattern>/meta/*</pattern>    
+    </decorator>
+    
+ 	<!-- 病例系统 -->
+	<decorator name="illness" page="default2.jsp">
+        <pattern>/illness/*</pattern>
+    </decorator>
+    <!-- 版本系统 -->
+    <decorator name="version" page="default2.jsp">
+        <pattern>/version*</pattern>
+    </decorator> 
+    
+    <!-- 短信系统 -->
+    <decorator name="msg" page="default2.jsp">
+        <pattern>/msg*</pattern>
+    </decorator> 
+    <!-- 系统管理 -->
+   <!--  <decorator name="systemManage" page="sys.jsp">
+        <pattern>/sys/*</pattern>
+    </decorator> -->
+    
+    <decorator name="systemManage" page="default2.jsp">
+        <pattern>/sys/*</pattern>
+    </decorator> 
+	
+	 <decorator name="knowledge" page="default2.jsp">
+        <pattern>/knowledge/*</pattern>
+    </decorator> 
+    	 <decorator name="reserve" page="default2.jsp">
+        <pattern>/reserve/*</pattern>
+    </decorator> 
+    <!-- 问卷 -->
+	<decorator name="question" page="default2.jsp">
+        <pattern>/question/*</pattern>
+    </decorator> 
+	   
+	
+	<decorator name="pro" page="default2.jsp">
+		<pattern>/pro/*</pattern>
+		<pattern>/fee/*</pattern> 
+		<pattern>/spem/*</pattern>  
+		<pattern>/progress/*</pattern>  
+		<pattern>/websocket/*</pattern>  
+		<pattern>/drop/*</pattern> 
+		<pattern>/file/*</pattern> 
+	</decorator>
+	
+	<decorator name="managementIndex" page="default3.jsp">
+		<pattern>/managementIndex</pattern> 
+	</decorator>
+	
+	<decorator name="material" page="default2.jsp">
+		<pattern>/material/*</pattern>
+	</decorator>
+	<decorator name="rcc" page="default2.jsp">
+		<pattern>/rcc/*</pattern>
+	</decorator>
+	
+	<decorator name="quality" page="default2.jsp">
+		<pattern>/quality/*</pattern>
+	</decorator>
+	
+	<decorator name="qn" page="default2.jsp">
+		<pattern>/qn/*</pattern>
+	</decorator>
+	
+	<decorator name="scm" page="default2.jsp">
+		<pattern>/scm/*</pattern>
+	</decorator>
+	
+	<decorator name="dataMgt" page="default2.jsp">
+		<pattern>/dataMgt/*</pattern>
+	</decorator>
+	
+	<decorator name="systemManage2" page="sys1.jsp">
+        <pattern>/sys1/*</pattern>
+    </decorator>
+
+	<decorator name="systemManage2" page="default2.jsp">
+		<pattern>/changeans*</pattern>
+	</decorator>
+	
+	<decorator name="random" page="default2.jsp">
+        <pattern>/random/*</pattern>
+    </decorator>
+
+</decorators>

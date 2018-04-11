@@ -1,0 +1,1155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.ProgramReportDao">
+	<select id="uqsAnswerqnBloodReport" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+	with bycy as   
+		 (select l.lcc_code, l.patient_id, l.project_id, a.answer
+		    from pip_uqs_answerqn_log l
+		   right join PIP_UQS_ANSWER a
+		      on a.project_id = l.project_id
+		     and a.patient_id = l.patient_id
+		     and a.questionnaire_id = l.uqs_version
+		     and a.option_id = '1'
+		     and a.question_id = '1'
+		     and a.questionset_id = '4'
+		   where l.state = 1),
+		fbysy as     
+		 (select l.lcc_code, l.patient_id, l.project_id, a.answer
+		    from pip_uqs_answerqn_log l
+		   right join PIP_UQS_ANSWER a
+		      on a.project_id = l.project_id
+		     and a.patient_id = l.patient_id
+		     and a.questionnaire_id = l.uqs_version
+		     and a.option_id = '3'
+		     and a.question_id = '1'
+		     and a.questionset_id = '4'
+		   where l.state = 1),
+		ylr as   
+		 (select patient_id, lcc_code, project_id
+		    from PIP_UQS_ANSWERQN_LOG_MIN
+		   where uqs_version = '004.007.001'
+		   group by patient_id, lcc_code,project_id)
+		select lcc.lcc_code,
+		       lcc.lcc_name,
+		       (select count(1)
+		          from bycy
+		         where bycy.lcc_code = lcc.lcc_code
+		           and bycy.project_id = lcc.project_id) as bycycount,
+		       (select count(1)
+		          from fbysy
+		         where fbysy.lcc_code = lcc.lcc_code
+		           and fbysy.project_id = lcc.project_id) as fbysycount,
+		       (select count(1)
+		          from ylr
+		         where ylr.project_id = lcc.project_id
+		           and ylr.lcc_code = lcc.lcc_code) as ylrcount,
+		       ((select count(1)
+		           from bycy
+		          where bycy.lcc_code = lcc.lcc_code
+		            and bycy.project_id = lcc.project_id) +
+		       (select count(1)
+		           from fbysy
+		          where fbysy.lcc_code = lcc.lcc_code
+		            and fbysy.project_id = lcc.project_id) -
+		       (select count(1)
+		           from ylr
+		          where ylr.project_id = lcc.project_id
+		            and ylr.lcc_code = lcc.lcc_code)) as wlr
+		  from pip_comm_lcc lcc
+		  <if test="lccCode !=null and lccCode !=''">
+		   	where lcc.lcc_code = #{lccCode}
+		   </if>
+		   <if test="sidx != null and sidx != ''">
+				order by ${sidx} 
+				<if test="sord!=null and sord!= ''">
+					${sord}
+				</if>
+			</if>
+	</select>
+	
+	<select id="uqsAnswerqnBloodReportSum" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+	with bycy as   
+		 (select l.lcc_code, l.patient_id, l.project_id, a.answer
+		    from pip_uqs_answerqn_log l
+		   right join PIP_UQS_ANSWER a
+		      on a.project_id = l.project_id
+		     and a.patient_id = l.patient_id
+		     and a.questionnaire_id = l.uqs_version
+		     and a.option_id = '1'
+		     and a.question_id = '1'
+		     and a.questionset_id = '4'
+		   where l.state = 1),
+		fbysy as     
+		 (select l.lcc_code, l.patient_id, l.project_id, a.answer
+		    from pip_uqs_answerqn_log l
+		   right join PIP_UQS_ANSWER a
+		      on a.project_id = l.project_id
+		     and a.patient_id = l.patient_id
+		     and a.questionnaire_id = l.uqs_version
+		     and a.option_id = '3'
+		     and a.question_id = '1'
+		     and a.questionset_id = '4'
+		   where l.state = 1),
+		ylr as   
+		 (select patient_id, lcc_code, project_id
+		    from PIP_UQS_ANSWERQN_LOG_MIN
+		   where uqs_version = '004.007.001'
+		   group by patient_id, lcc_code,project_id)
+		select '总计' as lcc_code,
+		        '' as lcc_name,
+		       sum((select count(1)
+		          from bycy
+		         where bycy.lcc_code = lcc.lcc_code
+		           and bycy.project_id = lcc.project_id)) as bycycount,
+		       sum((select count(1)
+		          from fbysy
+		         where fbysy.lcc_code = lcc.lcc_code
+		           and fbysy.project_id = lcc.project_id)) as fbysycount,
+		       sum((select count(1)
+		          from ylr
+		         where ylr.project_id = lcc.project_id
+		           and ylr.lcc_code = lcc.lcc_code)) as ylrcount,
+		       sum(((select count(1)
+		           from bycy
+		          where bycy.lcc_code = lcc.lcc_code
+		            and bycy.project_id = lcc.project_id) +
+		       (select count(1)
+		           from fbysy
+		          where fbysy.lcc_code = lcc.lcc_code
+		            and fbysy.project_id = lcc.project_id) -
+		       (select count(1)
+		           from ylr
+		          where ylr.project_id = lcc.project_id
+		            and ylr.lcc_code = lcc.lcc_code))) as wlr
+		  from pip_comm_lcc lcc
+	</select>
+	
+	
+	<select id="uqsAnswerqnBloodReportAll" resultType="map">
+	with bycy as   
+		 (select l.lcc_code, l.patient_id, l.project_id, a.answer
+		    from pip_uqs_answerqn_log l
+		   right join PIP_UQS_ANSWER a
+		      on a.project_id = l.project_id
+		     and a.patient_id = l.patient_id
+		     and a.questionnaire_id = l.uqs_version
+		     and a.option_id = '1'
+		     and a.question_id = '1'
+		     and a.questionset_id = '4'
+		   where l.state = 1),
+		fbysy as     
+		 (select l.lcc_code, l.patient_id, l.project_id, a.answer
+		    from pip_uqs_answerqn_log l
+		   right join PIP_UQS_ANSWER a
+		      on a.project_id = l.project_id
+		     and a.patient_id = l.patient_id
+		     and a.questionnaire_id = l.uqs_version
+		     and a.option_id = '3'
+		     and a.question_id = '1'
+		     and a.questionset_id = '4'
+		   where l.state = 1),
+		ylr as   
+		 (select patient_id, lcc_code, project_id
+		    from PIP_UQS_ANSWERQN_LOG_MIN
+		   where uqs_version = '004.007.001'
+		   group by patient_id, lcc_code,project_id)
+		select lcc.lcc_code,
+		       lcc.lcc_name,
+		       (select count(1)
+		          from bycy
+		         where bycy.lcc_code = lcc.lcc_code
+		           and bycy.project_id = lcc.project_id) as bycycount,
+		       (select count(1)
+		          from fbysy
+		         where fbysy.lcc_code = lcc.lcc_code
+		           and fbysy.project_id = lcc.project_id) as fbysycount,
+		       (select count(1)
+		          from ylr
+		         where ylr.project_id = lcc.project_id
+		           and ylr.lcc_code = lcc.lcc_code) as ylrcount,
+		       ((select count(1)
+		           from bycy
+		          where bycy.lcc_code = lcc.lcc_code
+		            and bycy.project_id = lcc.project_id) +
+		       (select count(1)
+		           from fbysy
+		          where fbysy.lcc_code = lcc.lcc_code
+		            and fbysy.project_id = lcc.project_id) -
+		       (select count(1)
+		           from ylr
+		          where ylr.project_id = lcc.project_id
+		            and ylr.lcc_code = lcc.lcc_code)) as wlr
+		  from pip_comm_lcc lcc
+		  order by lcc.lcc_code desc
+	</select>
+
+    <!-- 问卷完成情况报表SQL -->
+<select id="uqsQnlogReport" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+   select * from (
+        select t2.lcc_code,lcc.lcc_name,nvl(ysfrs,'0') ysfrs, -- 应随访人数
+            nvl(is_dead,'0') swrs,nvl(uqs01,'0') scsf,
+            nvl(belong_group,'0') GY , nvl(FGY,'0') FGY,nvl(UQSMOBILE,'0') UQSMOBILE,
+            nvl(GYMC,'0') GYMC,nvl(FGYMC,'0') FGYMC
+            from (
+            select lcc_code,count(1) ysfrs, sum(is_dead) is_dead, sum(belong_group) belong_group,
+            sum(uqs01) uqs01,
+            sum(FGY) FGY,sum(UQSMOBILE) UQSMOBILE,sum(FGYMC) FGYMC,sum(GYMC) GYMC
+            from (
+                select p.patient_id,
+                --count
+                (decode(p.is_dead,'1',1,0)) is_dead ,p.lcc_code,
+                decode(pgy.belong_group,null,0,1) belong_group,
+                q.uqs01,FGY,UQSMOBILE,GYMC,FGYMC
+                from pip_comm_patient p
+                left join (
+                    select  patient_id,
+                    sum(case when uqs_version = '001' then 1 else 0 end ) as uqs01,-- 首次随访
+                    sum(case when uqs_version = '002' then 1 else 0 end ) as FGY,--非干预6月
+                    sum(case when uqs_version = '013' then 1 else 0 end ) as UQSMOBILE,--电话随访
+                    sum(case when uqs_version = '014' then 1 else 0 end ) as GYMC, -- 干预末次
+                    sum(case when uqs_version = '015' then 1 else 0 end ) as FGYMC -- 非干预末次
+                    from (
+                        select substr(uqs_version,5,3) uqs_version ,patient_id from pip_uqs_answerqn_log ql
+                        where 1=1 and state=1
+                        and uqs_version in ( '004.001.001','004.002.002','004.013.001','004.014.001','004.015.001')
+                        <if test="startDate !=null and startDate !=''">
+                            and to_date(#{startDate},'yyyy-MM-dd') &lt;= ql.end_time
+                        </if>
+                        <if test="endDate !=null and endDate !=''">
+                            and to_date(#{endDate},'yyyy-MM-dd') > ql.end_time
+                        </if>
+                  ) group by patient_id
+                ) q on p.patient_id = q.patient_id
+                left join (
+                select patient_id,belong_group from pip_comm_patient pt where pt.belong_group is not null
+    <if test="startDate !=null and startDate !=''">
+    and to_date(#{startDate},'yyyy-MM-dd') &lt;= pt.group_date
+    </if>
+    <if test="endDate !=null and endDate !=''">
+    and to_date(#{endDate},'yyyy-MM-dd') > pt.group_date
+    </if>
+                ) pgy on p.patient_id = pgy.patient_id
+            ) t
+            group by lcc_code
+        ) t2 left join pip_comm_lcc lcc on t2.lcc_code = lcc.lcc_code
+   )
+    where 1=1
+    <if test="lccCode !=null and lccCode !=''">
+        and lcc_code = #{lccCode}
+    </if>
+    <if test="sidx != null and sidx != ''">
+        order by ${sidx}
+        <if test="sord!=null and sord!= ''">
+            ${sord}
+        </if>
+    </if>
+</select>
+<select id="uqsQnlogReportSum" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+    select ' ' lcc_code , '合计' lcc_name,
+    sum(ysfrs) ysfrs,sum(swrs) swrs,sum(scsf) scsf,sum(GY) GY,sum(FGY) FGY,sum(UQSMOBILE) UQSMOBILE,
+    sum(GYMC) GYMC,sum(FGYMC) FGYMC
+        from (
+        select lcc_code,'0' lcc_name,nvl(ysfrs,'0') ysfrs, -- 应随访人数
+        nvl(is_dead,'0') swrs,nvl(uqs01,'0') scsf,
+        nvl(belong_group,'0') GY , nvl(FGY,'0') FGY,nvl(UQSMOBILE,'0') UQSMOBILE,
+        nvl(GYMC,'0') GYMC,nvl(FGYMC,'0') FGYMC
+            from (
+                select lcc_code,count(1) ysfrs, sum(is_dead) is_dead, sum(belong_group) belong_group,
+                sum(uqs01) uqs01,
+                sum(FGY) FGY,sum(UQSMOBILE) UQSMOBILE,sum(FGYMC) FGYMC,sum(GYMC) GYMC
+                from (
+                select p.patient_id,
+                --count
+                (decode(p.is_dead,'1',1,0)) is_dead ,p.lcc_code,
+                decode(pgy.belong_group,null,0,1) belong_group,
+                q.uqs01,FGY,UQSMOBILE,GYMC,FGYMC
+                from pip_comm_patient p
+                left join (
+                select  patient_id,
+                sum(case when uqs_version = '001' then 1 else 0 end ) as uqs01,-- 首次随访
+                sum(case when uqs_version = '002' then 1 else 0 end ) as FGY,--非干预6月
+                sum(case when uqs_version = '013' then 1 else 0 end ) as UQSMOBILE,--电话随访
+                sum(case when uqs_version = '014' then 1 else 0 end ) as GYMC, -- 干预末次
+                sum(case when uqs_version = '015' then 1 else 0 end ) as FGYMC -- 非干预末次
+                from (
+                select substr(uqs_version,5,3) uqs_version ,patient_id from pip_uqs_answerqn_log ql
+                where 1=1 and state=1
+                and uqs_version in ( '004.001.001','004.002.002','004.013.001','004.014.001','004.015.001')
+    <if test="startDate !=null and startDate !=''">
+        and to_date(#{startDate},'yyyy-MM-dd') &lt;= ql.end_time
+    </if>
+    <if test="endDate !=null and endDate !=''">
+        and to_date(#{endDate},'yyyy-MM-dd') > ql.end_time
+    </if>
+                ) group by patient_id
+                ) q on p.patient_id = q.patient_id
+    left join (
+    select patient_id,belong_group from pip_comm_patient pt where pt.belong_group is not null
+    <if test="startDate !=null and startDate !=''">
+        and to_date(#{startDate},'yyyy-MM-dd') &lt;= pt.group_date
+    </if>
+    <if test="endDate !=null and endDate !=''">
+        and to_date(#{endDate},'yyyy-MM-dd') > pt.group_date
+    </if>
+    ) pgy on p.patient_id = pgy.patient_id
+                ) t
+                group by lcc_code
+            )
+        )
+    where 1=1
+    <if test="lccCode !=null and lccCode !=''">
+        and lcc_code = #{lccCode}
+    </if>
+
+</select>
+
+	<select id="uqsAnswerqnLogReport" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+		select lcc.lcc_code,
+	       lcc.lcc_name,
+	       (select count(1) from pip_comm_patient pp where pp.project_id = lcc.project_id and pp.lcc_code = lcc.lcc_code) as ysfrs,
+	       (select count(1) from pip_comm_patient pp where pp.project_id = lcc.project_id and pp.lcc_code = lcc.lcc_code and pp.is_dead=1) as swrs,
+	       (select count(1)
+	          from PIP_UQS_ANSWERQN_LOG al
+	         where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.001.001'
+	           <if test="startDate !=null and startDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') >= #{startDate}
+	           </if>
+	           <if test="endDate !=null and endDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+	           </if>
+	           ) as scsf,
+	        (
+	        (select count(1) from pip_comm_patient pp where pp.project_id = lcc.project_id and pp.lcc_code = lcc.lcc_code)
+	        -
+	        (select count(1)
+	          from PIP_UQS_ANSWERQN_LOG al
+	         where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.001.001'
+	           )
+	        ) as scsfw,
+		nvl(tx.lysf,0) lysf,
+	        (select count(1)
+	          from PIP_UQS_ANSWERQN_LOG al
+	         where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.003.001'
+	           <if test="startDate !=null and startDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') >= #{startDate}
+	           </if>
+	           <if test="endDate !=null and endDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+	           </if>
+	           ) as seysf,   
+	        (select count(1)
+	          from PIP_UQS_ANSWERQN_LOG al
+	         where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.004.001'
+	           <if test="startDate !=null and startDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') >= #{startDate}
+	           </if>
+	           <if test="endDate !=null and endDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+	           </if>
+	           ) as sbysf,
+	        (select count(1)
+	          from PIP_UQS_ANSWERQN_LOG al
+	         where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.005.001'
+	           <if test="startDate !=null and startDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') >= #{startDate}
+	           </if>
+	           <if test="endDate !=null and endDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+	           </if>
+	           ) as mcsf
+	  from pip_comm_lcc lcc
+		left join (
+				select lcc_code ,count(1) lysf from (
+						select t.patient_id ,p.lcc_code
+						from (
+							select patient_id ,end_time from pip_uqs_answerqn_log
+							where uqs_version ='004.002.002' and state=1
+							union all
+							select patient_id,end_time from pip_uqs_answerqn_log
+							where uqs_version ='004.013.001' and state=1
+							union all
+							select patient_id,ql.end_time from pip_uqs_answerqn_log ql
+							where uqs_version ='004.011.001' and state=1
+							and exists(
+							select 1 from pip_comm_patient p where p.is_diabetes='1' and p.patient_id = ql.patient_id
+							)
+							union all
+							select patient_id,end_time from pip_uqs_answerqn_log ql
+							where uqs_version ='004.012.001' and state=1
+							and exists(
+							select 1 from pip_comm_patient p where (
+							p.is_diabetes='2' or  p.is_diabetes is null
+							) and p.patient_id = ql.patient_id
+							)
+						) t
+						left join pip_comm_patient p
+						on t.patient_id = p.patient_Id
+						where 1=1
+						<if test="startDate !=null and startDate !=''">
+							and to_char(t.end_time,'yyyy-MM-dd') >= #{startDate}
+						</if>
+						<if test="endDate !=null and endDate !=''">
+							and to_char(t.end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+						</if>
+				) group by lcc_code
+		) tx on lcc.lcc_code = tx.lcc_code
+	  <if test="lccCode !=null and lccCode !=''">
+	   	where lcc.lcc_code = #{lccCode}
+	   </if>
+	  <if test="sidx != null and sidx != ''">
+		order by ${sidx} 
+		<if test="sord!=null and sord!= ''">
+			${sord}
+		</if>
+	</if>
+	</select>
+	<select id="uqsAnswerqnLogReportSum" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+		select '总计' as lcc_code,
+	        '' as lcc_name,
+	       sum((select count(1) from pip_comm_patient pp where pp.project_id = lcc.project_id and pp.lcc_code = lcc.lcc_code)) as ysfrs,
+	       sum((select count(1) from pip_comm_patient pp where pp.project_id = lcc.project_id and pp.lcc_code = lcc.lcc_code and pp.is_dead=1)) as swrs,
+	       sum((select count(1)
+	          from PIP_UQS_ANSWERQN_LOG al
+	         where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.001.001'
+	           <if test="startDate !=null and startDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') >= #{startDate}
+	           </if>
+	           <if test="endDate !=null and endDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+	           </if>
+	           )) as scsf,
+	        sum((
+	        (select count(1) from pip_comm_patient pp where pp.project_id = lcc.project_id and pp.lcc_code = lcc.lcc_code)
+	        -
+	        (select count(1)
+	          from PIP_UQS_ANSWERQN_LOG al
+	         where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.001.001'
+	           )
+	        )) as scsfw,
+	        sum((select count(1)
+	          from (
+						select t.patient_id ,p.lcc_code,t.end_time
+						from (
+							select patient_id ,end_time from pip_uqs_answerqn_log
+							where uqs_version ='004.002.002' and state=1
+							union all
+							select patient_id,end_time from pip_uqs_answerqn_log
+							where uqs_version ='004.013.001' and state=1
+							union all
+							select patient_id,ql.end_time from pip_uqs_answerqn_log ql
+							where uqs_version ='004.011.001' and state=1
+							and exists(
+							select 1 from pip_comm_patient p where p.is_diabetes='1' and p.patient_id = ql.patient_id
+							)
+							union all
+							select patient_id,end_time from pip_uqs_answerqn_log ql
+							where uqs_version ='004.012.001' and state=1
+							and exists(
+							select 1 from pip_comm_patient p where (
+							p.is_diabetes='2' or  p.is_diabetes is null
+							) and p.patient_id = ql.patient_id
+							)
+						) t
+						left join pip_comm_patient p
+						on t.patient_id = p.patient_Id
+						) al
+	         where 1=1 and al.lcc_code = lcc.lcc_code
+		/*al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.013.001'*/
+	           <if test="startDate !=null and startDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') >= #{startDate}
+	           </if>
+	           <if test="endDate !=null and endDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+	           </if>
+	           )) as lysf,
+	        sum((select count(1)
+	          from PIP_UQS_ANSWERQN_LOG al
+	         where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.003.001'
+	           <if test="startDate !=null and startDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') >= #{startDate}
+	           </if>
+	           
+	           
+	           <if test="endDate !=null and endDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+	           </if>
+	           )) as seysf,   
+	        sum((select count(1)
+	          from PIP_UQS_ANSWERQN_LOG al
+	         where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.004.001'
+	           <if test="startDate !=null and startDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') >= #{startDate}
+	           </if>
+	           <if test="endDate !=null and endDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+	           </if>
+	           )) as sbysf,
+	        sum((select count(1)
+	          from PIP_UQS_ANSWERQN_LOG al
+	         where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+	           and al.uqs_version = '004.005.001'
+	           <if test="startDate !=null and startDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') >= #{startDate}
+	           </if>
+	           <if test="endDate !=null and endDate !=''">
+	           		and to_char(al.end_time,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate}
+	           </if>
+	           )) as mcsf
+	  from pip_comm_lcc lcc
+	</select>
+	<select id="uqsAnswerqnLogReportAll" resultType="map">
+		select lcc.lcc_code,
+         lcc.lcc_name,
+         (select count(1) from pip_comm_patient pp where pp.project_id = lcc.project_id and pp.lcc_code = lcc.lcc_code) as ysfrs,
+         (select count(1) from pip_comm_patient pp where pp.project_id = lcc.project_id and pp.lcc_code = lcc.lcc_code and pp.is_dead=1) as swrs,
+         (select count(1)
+            from PIP_UQS_ANSWERQN_LOG al
+           where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+             and al.uqs_version = '004.001.001'
+             
+             ) as scsf,
+          (
+          (select count(1) from pip_comm_patient pp where pp.project_id = lcc.project_id and pp.lcc_code = lcc.lcc_code)
+          -
+          (select count(1)
+            from PIP_UQS_ANSWERQN_LOG al
+           where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+             and al.uqs_version = '004.001.001'
+             )
+          ) as scsfw,
+          (select count(1)
+            from PIP_UQS_ANSWERQN_LOG al
+           where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+             and al.uqs_version = '004.013.001'
+             
+             ) as lysf,
+          (select count(1)
+            from PIP_UQS_ANSWERQN_LOG al
+           where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+             and al.uqs_version = '004.003.001'
+            
+             ) as seysf,   
+          (select count(1)
+            from PIP_UQS_ANSWERQN_LOG al
+           where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+             and al.uqs_version = '004.004.001'
+            
+             ) as sbysf,
+          (select count(1)
+            from PIP_UQS_ANSWERQN_LOG al
+           where al.project_id = lcc.project_id and al.lcc_code = lcc.lcc_code and al.state =1
+             and al.uqs_version = '004.005.001'
+            
+             ) as mcsf
+    	from pip_comm_lcc lcc
+	 order by lcc.lcc_code
+	</select>
+	<select id="eventDetailReport" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+		select pe.lcc_code,
+	       lcc.lcc_name,
+	       pe.patient_id,
+	       pe.patient_name,
+	       pe.event_code,
+	       pe.event_name,
+	       pe.in_hos_date,
+	       pe.out_hos_date,
+	       pe.hos_name
+	  from PIP_COMM_EVENT pe
+	  left join pip_comm_lcc lcc
+	    on lcc.lcc_code = pe.lcc_code
+	   and pe.project_id = lcc.project_id
+	   where (pe.is_delete=2 or pe.is_delete is null)
+	   <if test="lccCode !=null and lccCode !=''">
+	   	  and lcc.lcc_code = #{lccCode}
+	   </if>
+	   <if test="patientId !=null and patientId !=''">
+	   	  and pe.patient_id like  '%'||#{patientId}||'%'
+	   </if>
+	   <if test="patientName !=null and patientName !=''">
+	   	  and pe.patient_name like  '%'||#{patientName}||'%'
+	   </if>
+	   <if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+	<select id="eventDetailReportAll" resultType="map">
+		select pe.lcc_code,
+	       lcc.lcc_name,
+	       pe.patient_id,
+	       pe.patient_name,
+	       pe.event_code,
+	       pe.event_name,
+	       to_char(pe.in_hos_date,'yyyy-MM-dd') as in_hos_date,
+	       to_char(pe.out_hos_date,'yyyy-MM-dd') as out_hos_date,
+	       pe.hos_name
+	  from PIP_COMM_EVENT pe
+	  left join pip_comm_lcc lcc
+	    on lcc.lcc_code = pe.lcc_code
+	   and pe.project_id = lcc.project_id
+	   where (pe.is_delete=2 or pe.is_delete is null)
+	   order by pe.lcc_code
+	</select>
+	<select id="eventReport" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+		 with e as
+		 (
+
+			select g.lcc_code, g.project_id, count(*) as zycs
+			from (
+			select p.lcc_code, p.project_id, event.patient_id, in_hos_date, out_hos_date
+			from PIP_COMM_EVENT event
+			left join pip_comm_patient p
+			on event.patient_id = p.patient_id
+			where in_hos_date is not null
+			and (event.is_delete = 2 or event.is_delete is null)
+			group by p.lcc_code,
+			p.project_id,
+			event.patient_id,
+			in_hos_date,
+			out_hos_date
+			) g
+			group by g.lcc_code, g.project_id
+
+		),
+		f as
+		 (
+
+			select p.lcc_code, event.project_id, count(*) as sjs
+			from PIP_COMM_EVENT event
+			left join pip_comm_patient p on event.patient_id = p.patient_id
+			where event.is_delete = 2
+			or event.is_delete is null
+			group by p.lcc_code, event.project_id
+
+		)
+		select lcc.lcc_code, lcc.lcc_name, e.zycs as zyzs, f.sjs as sjzs
+		  from pip_comm_lcc lcc
+		  left join e
+		    on lcc.lcc_code = e.lcc_code
+		   and lcc.project_id = e.project_id
+		  left join f
+		    on f.project_id = lcc.project_id
+		   and f.lcc_code = lcc.lcc_code
+
+		   <if test="lccCode !=null and lccCode !=''">
+		   	where lcc.lcc_code = #{lccCode}
+		   </if>
+		    <if test="sidx != null and sidx != ''">
+				order by ${sidx} 
+				<if test="sord!=null and sord!= ''">
+					${sord}
+				</if>
+			</if>
+	</select>
+	<select id="eventReportSum" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+		 with e as
+		 (
+		  
+		  select g.lcc_code, g.project_id, count(*) as zycs
+		    from (select lcc_code, project_id, patient_id, in_hos_date, out_hos_date
+		             from PIP_COMM_EVENT
+		            where in_hos_date is not null
+		              and (is_delete = 2 or is_delete is null)
+		            group by lcc_code,
+		                     project_id,
+		                     patient_id,
+		                     in_hos_date,
+		                     out_hos_date) g
+		   group by g.lcc_code, g.project_id),
+		f as
+		 (
+		  
+		  select lcc_code, project_id, count(*) as sjs
+		    from PIP_COMM_EVENT
+		   where is_delete = 2
+		      or is_delete is null
+		   group by lcc_code, project_id)
+		select '总计' as lcc_code, '' as lcc_name, sum(e.zycs) as zyzs, 
+		  sum(f.sjs) as sjzs
+		  from pip_comm_lcc lcc
+		  left join e
+		    on lcc.lcc_code = e.lcc_code
+		   and lcc.project_id = e.project_id
+		  left join f
+		    on f.project_id = lcc.project_id
+		   and f.lcc_code = lcc.lcc_code
+	</select>
+	<select id="eventReportAll" resultType="map">
+		 with e as
+		 (
+		  
+		  select g.lcc_code, g.project_id, count(*) as zycs
+		    from (select lcc_code, project_id, patient_id, in_hos_date, out_hos_date
+		             from PIP_COMM_EVENT
+		            where in_hos_date is not null
+		              and (is_delete = 2 or is_delete is null)
+		            group by lcc_code,
+		                     project_id,
+		                     patient_id,
+		                     in_hos_date,
+		                     out_hos_date) g
+		   group by g.lcc_code, g.project_id),
+		f as
+		 (
+		  
+		  select lcc_code, project_id, count(*) as sjs
+		    from PIP_COMM_EVENT
+		   where is_delete = 2
+		      or is_delete is null
+		   group by lcc_code, project_id)
+		select lcc.lcc_code, lcc.lcc_name, e.zycs as sjzs, f.sjs as zyzs
+		  from pip_comm_lcc lcc
+		  left join e
+		    on lcc.lcc_code = e.lcc_code
+		   and lcc.project_id = e.project_id
+		  left join f
+		    on f.project_id = lcc.project_id
+		   and f.lcc_code = lcc.lcc_code
+		order by lcc.lcc_code	
+	</select>
+	<select id="bloodReport" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+		with e as 
+		 (select b.lcc_code, c.stock_code, a.package_state
+		    from PIP_MMS_SCMARCHIVES a
+		    left join PIP_MMS_SCMSTOCK b
+		      on a.archives_no = b.archives_no
+		     and a.project_id = b.project_id
+		     and b.stock_num = 1
+		    left join PIP_MMS_DEFSTOREHOUSE c
+		      on c.project_id = b.project_id
+		     and b.stock_code = c.stock_code),
+		sf as 
+		 (select count(1) as sfcount, lcc_code
+		    from pip_comm_patient
+		   where IS_REMOVED = 0
+		   group by lcc_code),
+		sw as 
+		 (select count(1) as swcount, lcc_code
+		    from PIP_COMM_PATIENT p
+		   where p.is_dead = 1
+		     and IS_REMOVED = 0
+		   group by lcc_code)
+		select lcc.lcc_code,
+		       p.stock_name,
+		       (select sfcount from sf where sf.lcc_code = lcc.lcc_code) as sfrs,
+		       (select swcount from sw where sw.lcc_code = lcc.lcc_code) as swrs,
+		       (select count(1)
+		          from e
+		         where e.lcc_code = lcc.lcc_code
+		           and e.stock_code = p.stock_code
+		           and e.package_state = 1) as ysy,
+		       (select count(1)
+		          from e
+		         where e.lcc_code = lcc.lcc_code
+		           and e.stock_code = p.stock_code
+		           and e.package_state = 2) as wsy,
+		       (select count(1)
+		          from e
+		         where e.lcc_code = lcc.lcc_code
+		           and e.stock_code = p.stock_code
+		           and e.package_state = 3) as bs,
+
+				(select count(1)
+				from e
+				where e.lcc_code = lcc.lcc_code
+				and e.stock_code = p.stock_code
+				and e.package_state = 4) as gq,
+
+		       (select numb
+		          from (select e.lcc_code, count(1) as numb
+		                  from PIP_MMS_SCMARCHIVES f
+		                 right join PIP_MMS_EXSCMDETAL d
+		                    on f.archives_no = d.archives_no
+		                   and f.project_id = d.project_id
+		                  left join PIP_MMS_EXSCMMASTER e
+		                    on d.exorder_no = e.exorder_no
+		                   and d.project_id = e.project_id
+		                 group by e.lcc_code) d
+		         where d.lcc_code = lcc.lcc_code) as ff
+		
+		  from pip_comm_lcc lcc
+		  left join PIP_MMS_DEFSTOREHOUSE p
+		    on lcc.project_id = p.project_id
+		   and lcc.lcc_code = p.lcc_code
+		   <if test="lccCode !=null and lccCode !=''">
+		   	where lcc.lcc_code = #{lccCode}
+		   </if>
+		   <if test="sidx != null and sidx != ''">
+				order by ${sidx} 
+				<if test="sord!=null and sord!= ''">
+					${sord}
+				</if>
+			</if>
+	</select>
+	<select id="bloodReportSum" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+		with e as 
+		 (select b.lcc_code, c.stock_code, a.package_state
+		    from PIP_MMS_SCMARCHIVES a
+		    left join PIP_MMS_SCMSTOCK b
+		      on a.archives_no = b.archives_no
+		     and a.project_id = b.project_id
+		     and b.stock_num = 1
+		    left join PIP_MMS_DEFSTOREHOUSE c
+		      on c.project_id = b.project_id
+		     and b.stock_code = c.stock_code),
+		sf as 
+		 (select count(1) as sfcount, lcc_code
+		    from pip_comm_patient
+		   where IS_REMOVED = 0
+		   group by lcc_code),
+		sw as 
+		 (select count(1) as swcount, lcc_code
+		    from PIP_COMM_PATIENT p
+		   where p.is_dead = 1
+		     and IS_REMOVED = 0
+		   group by lcc_code)
+		select '总计' as lcc_code,
+		       '' as stock_name,
+		       sum((select sfcount from sf where sf.lcc_code = lcc.lcc_code)) as sfrs,
+		       sum((select swcount from sw where sw.lcc_code = lcc.lcc_code)) as swrs,
+		       sum((select count(1)
+		          from e
+		         where e.lcc_code = lcc.lcc_code
+		           and e.stock_code = p.stock_code
+		           and e.package_state = 1)) as ysy,
+		       sum((select count(1)
+		          from e
+		         where e.lcc_code = lcc.lcc_code
+		           and e.stock_code = p.stock_code
+		           and e.package_state = 2)) as wsy,
+		       sum((select count(1)
+		          from e
+		         where e.lcc_code = lcc.lcc_code
+		           and e.stock_code = p.stock_code
+		           and e.package_state = 3)) as bs,
+			sum((select count(1)
+			   from e
+			   where e.lcc_code = lcc.lcc_code
+			   and e.stock_code = p.stock_code
+			   and e.package_state = 4)) as gq,
+		       sum((select numb
+		          from (select e.lcc_code, count(1) as numb
+		                  from PIP_MMS_SCMARCHIVES f
+		                 right join PIP_MMS_EXSCMDETAL d
+		                    on f.archives_no = d.archives_no
+		                   and f.project_id = d.project_id
+		                  left join PIP_MMS_EXSCMMASTER e
+		                    on d.exorder_no = e.exorder_no
+		                   and d.project_id = e.project_id
+		                 group by e.lcc_code) d
+		         where d.lcc_code = lcc.lcc_code)) as ff
+		  from pip_comm_lcc lcc
+		  left join PIP_MMS_DEFSTOREHOUSE p
+		    on lcc.project_id = p.project_id
+		   and lcc.lcc_code = p.lcc_code
+	</select>
+	<select id="bloodReportAll" resultType="map">
+		with e as 
+		 (select b.lcc_code, c.stock_code, a.package_state
+		    from PIP_MMS_SCMARCHIVES a
+		    left join PIP_MMS_SCMSTOCK b
+		      on a.archives_no = b.archives_no
+		     and a.project_id = b.project_id
+		     and b.stock_num = 1
+		    left join PIP_MMS_DEFSTOREHOUSE c
+		      on c.project_id = b.project_id
+		     and b.stock_code = c.stock_code),
+		sf as 
+		 (select count(1) as sfcount, lcc_code
+		    from pip_comm_patient
+		   where IS_REMOVED = 0
+		   group by lcc_code),
+		sw as 
+		 (select count(1) as swcount, lcc_code
+		    from PIP_COMM_PATIENT p
+		   where p.is_dead = 1
+		     and IS_REMOVED = 0
+		   group by lcc_code)
+		select lcc.lcc_code,
+		       p.stock_name,
+		       (select sfcount from sf where sf.lcc_code = lcc.lcc_code) as sfrs,
+		       (select swcount from sw where sw.lcc_code = lcc.lcc_code) as swrs,
+		       (select count(1)
+		          from e
+		         where e.lcc_code = lcc.lcc_code
+		           and e.stock_code = p.stock_code
+		           and e.package_state = 1) as ysy,
+		       (select count(1)
+		          from e
+		         where e.lcc_code = lcc.lcc_code
+		           and e.stock_code = p.stock_code
+		           and e.package_state = 2) as wsy,
+		       (select count(1)
+		          from e
+		         where e.lcc_code = lcc.lcc_code
+		           and e.stock_code = p.stock_code
+		           and e.package_state = 3) as bs,
+		             (select count(1)
+		          from e
+		         where e.lcc_code = lcc.lcc_code
+		           and e.stock_code = p.stock_code
+		           and e.package_state = 4) as gq,
+		       (select numb
+		          from (select e.lcc_code, count(1) as numb
+		                  from PIP_MMS_SCMARCHIVES f
+		                 right join PIP_MMS_EXSCMDETAL d
+		                    on f.archives_no = d.archives_no
+		                   and f.project_id = d.project_id
+		                  left join PIP_MMS_EXSCMMASTER e
+		                    on d.exorder_no = e.exorder_no
+		                   and d.project_id = e.project_id
+		                 group by e.lcc_code) d
+		         where d.lcc_code = lcc.lcc_code) as ff
+		
+		  from pip_comm_lcc lcc
+		  left join PIP_MMS_DEFSTOREHOUSE p
+		    on lcc.project_id = p.project_id
+		   and lcc.lcc_code = p.lcc_code
+		   order by lcc.lcc_code 
+	</select>
+	<select id="uqsBloodReportDetailList" resultType="map" parameterType="com.bdcor.pip.web.qn.filter.ReportFilter">
+		select
+			m.project_id,
+			m.lcc_code,
+			lcc.lcc_name,
+			m.patient_id,
+			p.patient_name,
+			m.uqs_version,
+			m.end_time,
+			floor(sysdate - m.end_time) days,
+			case when m.uqs_version ='004.001.001' then '首次随访' end as uqs_type
+		from (
+			select
+				a.project_id,
+				a.lcc_code,
+				a.patient_id,
+				ql.uqs_version,
+				ql.end_time,
+				a.answer
+			from pip_uqs_answer a
+			left join pip_uqs_answerqn_log ql
+			on a.patient_id = ql.patient_id and a.questionnaire_id = ql.uqs_version
+			where ql.state = 1 and a.questionset_id = '4' and a.question_id = '1' and (a.option_id = '1' or a.option_id = '3')
+			and ql.uqs_version = '004.001.001'
+		) m
+		left join (
+			select distinct project_id, lcc_code, patient_id
+			from pip_uqs_answerqn_log_min
+			where uqs_version = '004.007.001'
+		) t
+		on t.project_id = m.project_id and t.lcc_code = m.lcc_code and t.patient_id = m.patient_id
+		left join pip_comm_patient p on p.project_id = m.project_id and p.patient_id = m.patient_id
+		left join pip_comm_lcc lcc on lcc.project_id = m.project_id and lcc.lcc_code = m.lcc_code
+		where t.project_id is null
+		<if test="lccCode !=null and lccCode !=''">
+			and m.lcc_code = #{lccCode}
+		</if>
+		<if test="patientId !=null and patientId !=''">
+			and m.patient_Id  like  '%${patientId}%'
+		</if>
+		<if test="toNowDay !=null and toNowDay !=''">
+		   and	floor(sysdate - m.end_time) > #{toNowDay}
+		</if>
+		order by days desc, lcc_code desc
+		<if test="sidx != null and sidx != ''">
+			, ${sidx}
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+
+	<select id="getBloodGroupListAll" resultType="map">
+		select lcc_code,max(LCC_NAME) LCC_NAME,sum(ysfs) ysfs , sum(bycx) bycx,
+		sum(wycx) wycx,sum(wcx) wcx ,sum(ylr) ylr ,sum(wlr) wlr
+		  from (
+		select * from V_JXWJ_CXCOUNT union all
+		select * from V_CHATWJ_CXCOUNT
+		)
+		where 1=1
+		<if test="lccCode != null and lccCode != '' ">
+			and lcc_code = #{lccCode}
+		</if>
+		group by lcc_code
+		order by lcc_code asc
+	</select>
+    <select id="getBloodGroupListAll_LAST" resultType="map">
+        select lcc_code,max(LCC_NAME) LCC_NAME,sum(ysfs) ysfs , sum(bycx) bycx,
+        sum(wycx) wycx,sum(wcx) wcx ,sum(ylr) ylr ,sum(wlr) wlr
+        from (
+        select * from V_FGYMF_CXCOUNT_LAST union all
+        select * from V_GYSF_CXCOUNT_LAST
+        )
+        where 1=1
+        <if test="lccCode != null and lccCode != '' ">
+            and lcc_code = #{lccCode}
+        </if>
+        group by lcc_code
+        order by lcc_code asc
+    </select>
+	<select id="getBloodGroupListJX" resultType="map">
+		select * from V_JXWJ_CXCOUNT
+		where 1=1
+		<if test="lccCode != null and lccCode != '' ">
+			and lcc_code = #{lccCode}
+		</if>
+		order by lcc_code desc
+	</select>
+	<select id="getBloodGroupListCHAT" resultType="map">
+		select * from V_CHATWJ_CXCOUNT
+		where 1=1
+		<if test="lccCode != null and lccCode != '' ">
+			and lcc_code = #{lccCode}
+		</if>
+		order by lcc_code desc
+	</select>
+
+<!-- 非干预面访 -->
+    <select id="getBloodGroupFGYMF" resultType="map">
+        select * from V_FGYMF_CXCOUNT_LAST
+        where 1=1
+        <if test="lccCode != null and lccCode != '' ">
+            and lcc_code = #{lccCode}
+        </if>
+        order by lcc_code desc
+    </select>
+<!-- 干预随访 -->
+    <select id="getBloodGroupGYSF" resultType="map">
+        select * from V_GYSF_CXCOUNT_LAST
+        where 1=1
+        <if test="lccCode != null and lccCode != '' ">
+            and lcc_code = #{lccCode}
+        </if>
+        order by lcc_code desc
+    </select>
+
+
+	<select id="getBloodInfoFor6" resultType="map">
+		select * from (
+			with wcx as (
+			select lcc_code ,patient_id ,'2' as type,'B' as place  from pip_uqs_answer ua
+			where ua.questionnaire_id = '004.002.002'
+			and ua.questionset_id='4' and ua.question_id='1' and ua.option_id='1'
+			union all
+			select lcc_code ,patient_id ,'2' as type,'W' as place    from pip_uqs_answer ua
+			where ua.questionnaire_id = '004.002.002'
+			and ua.questionset_id='4' and ua.question_id='1' and ua.option_id='3'
+			union all
+			select lcc_code ,patient_id ,'11' as type,'B' as place   from pip_uqs_answer ua
+			where ua.questionnaire_id = '004.011.001'
+			and ua.questionset_id='1' and ua.question_id='1' and ua.option_id='1'
+			union all
+			select lcc_code ,patient_id ,'11' as type,'W' as place from pip_uqs_answer ua
+			where ua.questionnaire_id = '004.011.001'
+			and ua.questionset_id='1' and ua.question_id='1' and ua.option_id='3'
+		)
+		select wc.lcc_code , wc.patient_id ,
+		decode(wc.TYPe , '11','干预首次随访',decode( wc.TYPe,'2','非干预首次面访','' )) type
+		,
+		decode(wc.place , 'W','外院采血',decode( wc.place,'B','本院采血','' )) place ,
+		lcc.lcc_name, p.patient_name , ql.end_time,
+		floor(sysdate - ql.end_time) days
+		from wcx wc left join pip_comm_lcc lcc
+		on wc.lcc_code = lcc.lcc_code
+		left join pip_uqs_answerqn_log ql
+		on wc.patient_id =ql.patient_id
+		and ql.state = 1
+		and ql.uqs_version in ( '004.002.002','004.011.001' )
+		left join pip_comm_patient p on wc.patient_id = p.patient_id
+		where 1=1
+		and not exists(
+		select 1 from pip_uqs_answerqn_log_min ql where wc.patient_id = ql.patient_id
+		and ql.uqs_type_name = '6月随访'
+		)
+		<if test="lccCode != null and  lccCode != ''">
+			and wc.lcc_code = #{lccCode}
+		</if>
+		)
+		where 1=1
+		<if test="patientId != null and patientId != '' ">
+		and patient_id like '%'||#{patientId}||'%'
+		</if>
+		<if test="aduType != null and aduType != ''">
+		and type=#{aduType}
+		</if>
+		<if test="bloodType != null and bloodType != ''">
+		and place = #{bloodType}
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and patient_Name like '%'||#{patientName}||'%'
+		</if>
+        order by days desc,lcc_code desc
+	</select>
+
+
+
+	<select id="getBloodInfoFor12" resultType="map">
+		select * from (
+            with wcx as (
+            select lcc_code ,patient_id ,'15' as type,'B' as place  from pip_uqs_answer ua
+            where ua.questionnaire_id = '004.015.001'
+            and ua.questionset_id='4' and ua.question_id='1' and ua.option_id='1'
+            union all
+            select lcc_code ,patient_id ,'15' as type,'W' as place    from pip_uqs_answer ua
+            where ua.questionnaire_id = '004.015.001'
+            and ua.questionset_id='4' and ua.question_id='1' and ua.option_id='3'
+            union all
+            select lcc_code ,patient_id ,'14' as type,'B' as place   from pip_uqs_answer ua
+            where ua.questionnaire_id = '004.014.001'
+            and ua.questionset_id='4' and ua.question_id='1' and ua.option_id='1'
+            union all
+            select lcc_code ,patient_id ,'14' as type,'W' as place from pip_uqs_answer ua
+            where ua.questionnaire_id = '004.014.001'
+            and ua.questionset_id='4' and ua.question_id='1' and ua.option_id='3'
+            )
+            select wc.lcc_code , wc.patient_id ,
+            decode(wc.TYPe , '14','干预末次随访',decode( wc.TYPe,'15','非干预末次面访','' )) type
+            ,
+            decode(wc.place , 'W','外院采血',decode( wc.place,'B','本院采血','' )) place ,
+            lcc.lcc_name, p.patient_name , ql.end_time,
+            floor(sysdate - ql.end_time) days
+            from wcx wc left join pip_comm_lcc lcc
+            on wc.lcc_code = lcc.lcc_code
+            left join pip_uqs_answerqn_log ql
+            on wc.patient_id =ql.patient_id
+            and ql.state = 1
+            and ql.uqs_version in ( '004.015.001','004.014.001' )
+            left join pip_comm_patient p on wc.patient_id = p.patient_id
+            where 1=1
+            and not exists(
+            select 1 from pip_uqs_answerqn_log_min ql where wc.patient_id = ql.patient_id
+            and ql.uqs_type_name = '12月随访'
+            )
+		<if test="lccCode != null and  lccCode != ''">
+			and wc.lcc_code = #{lccCode}
+		</if>
+		)
+		where 1=1
+		<if test="patientId != null and patientId != '' ">
+			and patient_id like '%'||#{patientId}||'%'
+		</if>
+		<if test="aduType != null and aduType != ''">
+			and type=#{aduType}
+		</if>
+		<if test="bloodType != null and bloodType != ''">
+			and place = #{bloodType}
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and patient_Name like '%'||#{patientName}||'%'
+		</if>
+		order by days desc,lcc_code desc
+	</select>
+
+</mapper>

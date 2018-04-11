@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.PipQnReportDao">
+	<select id="getDbpListData" resultType="map">
+
+	    select lcc_code, patient_id, patient_name, type, is_yy, is_getresult, done_date, end_date, minusdays, create_name, create_date
+        from (
+            select p.lcc_code,p.patient_id,p.patient_name,
+            decode(ua.questionnaire_id,null,'否','是') as is_yy,
+            is_getresult,
+            to_char(db.done_date,'yyyy-mm-dd') done_date,
+            to_char(ql.end_time,'yyyy-mm-dd') end_date,
+            floor(trunc(db.done_date) - trunc(ql.create_date)) minusdays,
+            db.create_name,
+            to_char(db.create_date,'yyyy-mm-dd') create_date,
+            'CHAT研究干预随机门诊'  as TYPE
+            from pip_comm_patient p
+            left join pip_uqs_answer ua
+            on p.patient_id = ua.patient_id and ua.questionnaire_id = '004.010.001'
+            and ua.questionset_id='4' and ua.question_id='1' and ua.option_id='1'
+            left join pip_comm_patient_blooddbp db
+            on db.patient_id = p.patient_id and (db.clinic_type = '1' or db.clinic_type is null)
+            left join pip_uqs_answerqn_log ql
+            on ql.patient_id = p.patient_id and ql.state=1 and ql.uqs_version='004.011.001'
+            where p.belong_group is not null
+            <if test="lccCode != null and lccCode != '' ">
+                and p.lcc_code = #{lccCode}
+            </if>
+            <if test="patientId != null and patientId != '' ">
+                and p.patient_id = #{patientId}
+            </if>
+            <if test="patientName != null and patientName != '' ">
+                and p.patient_name like '%'||#{patientName}||'%'
+            </if>
+        )
+        where 1=1
+        <if test='isGetResult != null and isGetResult == "1" ' >
+            and is_getresult =1
+        </if>
+        <if test='isGetResult != null and isGetResult == "0" '>
+            and (is_getresult !=1 or is_getresult is null )
+        </if>
+        <if test="sidx!=null and sord!=null">
+            order by ${sidx} ${sord} nulls last,
+            lcc_code ASC, patient_id ASC
+        </if>
+	</select>
+
+    <select id="getDbpDataForExcel" resultType="map">
+        select p.lcc_code,p.patient_id,p.patient_name,
+        decode(ua.questionnaire_id,null,'否','是') as is_yy,
+        decode(is_getresult,1,'是','否') is_getresult,
+        to_char(db.done_date,'yyyy-mm-dd') done_date,
+        to_char(ql.end_time,'yyyy-mm-dd') end_date,
+        floor(trunc(db.done_date) - trunc(ql.create_date)) minusdays,
+        db.create_name,
+        to_char(db.create_date,'yyyy-mm-dd') create_date,
+        'CHAT研究干预随机门诊'  as TYPE
+        from pip_comm_patient p
+        left join pip_uqs_answer ua
+        on p.patient_id = ua.patient_id and ua.questionnaire_id = '004.010.001'
+        and ua.questionset_id='4' and ua.question_id='1' and ua.option_id='1'
+        left join pip_comm_patient_blooddbp db
+        on db.patient_id = p.patient_id and (db.clinic_type = '1' or db.clinic_type is null)
+        left join pip_uqs_answerqn_log ql
+        on ql.patient_id = p.patient_id and ql.state=1 and ql.uqs_version='004.011.001'
+        where p.belong_group is not null
+        <if test="lccCode != null and lccCode != '' ">
+            and p.lcc_code = #{lccCode}
+        </if>
+        <if test="patientId != null and patientId != '' ">
+            and p.patient_id = #{patientId}
+        </if>
+        <if test="patientName != null and patientName != '' ">
+            and p.patient_name like '%'||#{patientName}||'%'
+        </if>
+        <if test='isGetResult != null and isGetResult == "1" ' >
+            and is_getresult = 1
+        </if>
+        <if test='isGetResult != null and isGetResult == "0" '>
+            and (is_getresult !=1 or is_getresult is null )
+        </if>
+        order by lcc_code asc, patient_id asc
+    </select>
+
+
+    <insert id="insertDbpInfo" parameterType="map">
+            insert into pip_comm_patient_blooddbp(patient_id , is_getResult , done_date,create_date,create_id,create_name,clinic_type)
+            VALUES
+            (#{PATIENT_ID},#{IS_GETRESULT},to_date(#{DONE_DATE},'yyyy-MM-dd'),sysdate,#{create_id},#{create_name}, #{clinic_type})
+    </insert>
+
+    <update id="updateDbpInfo"  parameterType="map">
+            update pip_comm_patient_blooddbp
+                set IS_GETRESULT = ${IS_GETRESULT},
+                DONE_DATE = to_date(#{DONE_DATE},'yyyy-MM-dd'),
+                update_id = #{update_id},
+                update_name = #{update_name}
+            where patient_id = #{PATIENT_ID} and clinic_type = #{clinic_type}
+    </update>
+
+    <update id="deleteDbpInfo"  parameterType="map">
+        delete from pip_comm_patient_blooddbp where patient_id = #{PATIENT_ID} and clinic_type = #{clinic_type}
+    </update>
+
+    <select id="getDbpGroupData" resultType="map">
+        with tt as (
+        select lcc_code ,max(lcc_name) lcc_name , sum(is_belong) ysjs , sum(is_yy) yyys ,sum(is_sjhs) sjhss,
+        decode( sum(is_belong),0,0,floor(sum(is_sjhs)/sum(is_belong) * 100))||'%' hsl,
+        'CHAT研究干预随机门诊' as type
+        from ( select p.lcc_code,lcc.lcc_name,
+        decode(p.belong_group,null,0,1) is_belong,
+        decode(ua.questionnaire_id,null,0,1) is_yy,
+        decode(dbp.is_getresult,1,1,0) is_sjhs
+        from pip_comm_patient p
+        left join pip_uqs_answer ua
+        on p.patient_id = ua.patient_id and ua.questionnaire_id = '004.010.001'
+        and ua.questionset_id='4' and ua.question_id='1' and ua.option_id='1'
+        left join pip_comm_patient_blooddbp dbp
+        on p.patient_id = dbp.patient_id and (dbp.clinic_type = '1' or dbp.clinic_type is null)
+        left join pip_comm_lcc lcc on p.lcc_code = lcc.lcc_code
+        where p.belong_group is not null
+        )
+        group by lcc_code  order by lcc_code asc
+        )
+        select  ' ' as lCC_CODE , '全国合计' LCC_NAME , sum(ysjs) ysjs,sum(yyys) yyys ,sum(sjhss) sjhss,
+        decode( sum(ysjs),0,0,floor(sum(sjhss)/sum(ysjs) * 100))||'%' hsl,
+        max(type) type from tt
+        union all
+        select * from tt
+        where 1=1
+            <if test="lccCode != null and lccCode != '' " >
+                and lcc_code = #{lccCode}
+            </if>
+    </select>
+
+    <select id="getDbpGroupDataByLast" resultType="map">
+        with tt as (
+        select lcc_code ,max(lcc_name) lcc_name , sum(is_belong) ysjs , sum(is_yy) yyys ,sum(is_sjhs) sjhss,
+        decode( sum(is_belong),0,0,floor(sum(is_sjhs)/sum(is_belong) * 100))||'%' hsl,
+        'CHAT干预末次门诊' as type
+        from ( select p.lcc_code,lcc.lcc_name,
+        decode(ql.state,1,1,0) is_belong,
+        decode(ua.questionnaire_id,null,0,1) is_yy,
+        decode(dbp.is_getresult,1,1,0) is_sjhs
+        from pip_comm_patient p
+        left join pip_uqs_answer ua
+        on p.patient_id = ua.patient_id and ua.questionnaire_id = '004.014.001'
+        and ua.questionset_id='3' and ua.question_id='1' and ua.option_id='1'
+        left join pip_comm_patient_blooddbp dbp
+        on p.patient_id = dbp.patient_id and dbp.clinic_type = '2'
+        left join pip_comm_lcc lcc on p.lcc_code = lcc.lcc_code
+        left join pip_uqs_answerqn_log ql
+        on ql.patient_id = p.patient_id and ql.state=1 and ql.uqs_version='004.014.001'
+        where p.belong_group is not null
+        )
+        group by lcc_code  order by lcc_code asc
+        )
+        select  ' ' as lCC_CODE , '全国合计' LCC_NAME , sum(ysjs) ysjs,sum(yyys) yyys ,sum(sjhss) sjhss,
+        decode( sum(ysjs),0,0,floor(sum(sjhss)/sum(ysjs) * 100))||'%' hsl,
+        max(type) type from tt
+        union all
+        select * from tt
+        where 1=1
+        <if test="lccCode != null and lccCode != '' " >
+            and lcc_code = #{lccCode}
+        </if>
+    </select>
+
+    <select id="getDbpListDataByLast" resultType="map">
+        select * from (
+            select p.lcc_code,p.patient_id,p.patient_name,
+                decode(ua.questionnaire_id,null,'否','是') as is_yy,
+                is_getresult,
+                to_char(db.done_date,'yyyy-mm-dd') done_date,
+                to_char(ql.end_time,'yyyy-mm-dd') end_date,
+                floor(trunc(db.done_date) - trunc(ql.create_date)) minusdays,
+                db.create_name,
+                to_char(db.create_date,'yyyy-mm-dd') create_date,
+                'CHAT干预末次门诊'  as TYPE
+            from pip_comm_patient p
+            left join pip_uqs_answer ua
+            on p.patient_id = ua.patient_id and ua.questionnaire_id = '004.014.001'
+            and ua.questionset_id='3' and ua.question_id='1' and ua.option_id='1'
+            left join pip_comm_patient_blooddbp db
+            on db.patient_id = p.patient_id and db.clinic_type = '2'
+            left join pip_uqs_answerqn_log ql
+            on ql.patient_id = p.patient_id and ql.state=1 and ql.uqs_version='004.014.001'
+            where p.belong_group is not null and ql.state = 1
+            <if test="lccCode != null and lccCode != '' ">
+                and ql.lcc_code = #{lccCode}
+            </if>
+            <if test="patientId != null and patientId != '' ">
+                and p.patient_id = #{patientId}
+            </if>
+            <if test="patientName != null and patientName != '' ">
+                and p.patient_name like '%'||#{patientName}||'%'
+            </if>
+        )
+        where 1=1
+        <if test='isGetResult != null and isGetResult == "1" ' >
+            and is_getresult = 1
+        </if>
+        <if test='isGetResult != null and isGetResult == "0" '>
+            and (is_getresult !=1 or is_getresult is null )
+        </if>
+        <if test="sidx!=null and sord!=null">
+            order by ${sidx} ${sord} nulls last,
+            lcc_code ASC, patient_id ASC
+        </if>
+    </select>
+
+    <select id="getDbpDataForExcelByLast" resultType="map">
+        select p.lcc_code,p.patient_id,p.patient_name,
+        decode(ua.questionnaire_id,null,'否','是') as is_yy,
+        decode(is_getresult,1,'是','否') is_getresult,
+        to_char(db.done_date,'yyyy-mm-dd') done_date,
+        floor(trunc(db.done_date) - trunc(ql.create_date)) minusdays,
+        db.create_name,
+        to_char(ql.end_time,'yyyy-mm-dd') end_date,
+        to_char(db.create_date,'yyyy-mm-dd') create_date,
+        'CHAT干预末次门诊'  as TYPE
+        from pip_comm_patient p
+        left join pip_uqs_answer ua
+        on p.patient_id = ua.patient_id and ua.questionnaire_id = '004.014.001'
+        and ua.questionset_id='3' and ua.question_id='1' and ua.option_id='1'
+        left join pip_comm_patient_blooddbp db
+        on db.patient_id = p.patient_id and db.clinic_type = '2'
+        left join pip_uqs_answerqn_log ql
+        on ql.patient_id = p.patient_id and ql.state=1 and ql.uqs_version='004.014.001'
+        where p.belong_group is not null
+        <if test="lccCode != null and lccCode != '' ">
+            and ql.lcc_code = #{lccCode}
+        </if>
+        <if test="patientId != null and patientId != '' ">
+            and p.patient_id = #{patientId}
+        </if>
+        <if test="patientName != null and patientName != '' ">
+            and p.patient_name like '%'||#{patientName}||'%'
+        </if>
+        <if test='isGetResult != null and isGetResult == "1" ' >
+            and is_getresult = 1
+        </if>
+        <if test='isGetResult != null and isGetResult == "0" '>
+            and (is_getresult !=1 or is_getresult is null )
+        </if>
+        order by lcc_code asc, patient_id asc
+    </select>
+</mapper>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.material.supp.dao.SupplierDao">
+    <resultMap id="BaseResultMap" type="com.bdcor.pip.web.material.supp.domain.Supplier">
+        <constructor>
+            <arg column="SUPPLIER_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="SUPPLIER_NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="SUPPLIER_CLASS" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="LOCALITY_FLAG" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="CREDIT_CLASS" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="ADDRESS" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="ZIP_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="CONTACT_NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="CONTACT_TEL" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="CONTACT_EMAIL" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="BUSINESS_TEL" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="HELP_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="WANG_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="QUALIFICATION_DISABLE_DATE" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="STATUS" jdbcType="VARCHAR" javaType="java.lang.String" />
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+		SUPPLIER_CODE,SUPPLIER_NAME,SUPPLIER_CLASS,LOCALITY_FLAG,CREDIT_CLASS,ADDRESS,ZIP_CODE,CONTACT_NAME,
+		CONTACT_TEL,CONTACT_EMAIL,BUSINESS_TEL,HELP_CODE,WANG_CODE,QUALIFICATION_DISABLE_DATE,STATUS
+    </sql>
+    
+	<select id="getAllSuppliers" parameterType="com.bdcor.pip.web.material.supp.filter.SupplierFilter" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>
+		from pip_mms_supplier where 1=1 
+		<if test="supplierName != null">
+			and SUPPLIER_NAME like '%'||#{supplierName}||'%'
+        </if>
+        <if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>    
+    
+    <select id="getSupplierByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    	select 
+    	<include refid="Base_Column_List"/>
+    	from pip_mms_supplier where supplier_code = #{supplierCode}
+    </select>
+    
+    <select id="checkNameExists" parameterType="java.lang.String" resultMap="BaseResultMap">
+    	select
+    	<include refid="Base_Column_List"/>
+    	from pip_mms_supplier where supplier_name = #{supplierName}
+    </select>
+    
+    <insert id="addSupplier" parameterType="com.bdcor.pip.web.material.supp.domain.Supplier">
+    	insert into pip_mms_supplier
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="supplierCode != null">
+				SUPPLIER_CODE,
+			</if>
+			<if test="supplierName != null">
+				SUPPLIER_NAME,
+			</if>
+			<if test="supplierClass != null">
+				SUPPLIER_CLASS,
+			</if>
+			<if test="localityFlag != null">
+				LOCALITY_FLAG,
+			</if>
+			<if test="creditClass != null">
+				CREDIT_CLASS,
+			</if>
+			<if test="address != null">
+				ADDRESS,
+			</if>
+			<if test="zipCode != null">
+				ZIP_CODE,
+			</if>
+			<if test="contactName != null">
+				CONTACT_NAME,
+			</if>
+			<if test="contactTel != null">
+				CONTACT_TEL,
+			</if>
+			<if test="contactEmail != null">
+				CONTACT_EMAIL,
+			</if>
+			<if test="businessTel != null">
+				BUSINESS_TEL,
+			</if>
+			<if test="helpCode != null">
+				HELP_CODE,
+			</if>
+			<if test="wangCode != null">
+				WANG_CODE,
+			</if>
+			<if test="qualificationDisableDate != null">
+				QUALIFICATION_DISABLE_DATE,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="supplierCode != null">
+				#{supplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierName != null">
+				#{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierClass != null">
+				#{supplierClass,jdbcType=INTEGER},
+			</if>
+			<if test="localityFlag != null">
+				#{localityFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="creditClass != null">
+				#{creditClass,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="zipCode != null">
+				#{zipCode,jdbcType=VARCHAR},
+			</if>
+			<if test="contactName != null">
+				#{contactName,jdbcType=VARCHAR},
+			</if>
+			<if test="contactTel != null">
+				#{contactTel,jdbcType=VARCHAR},
+			</if>
+			<if test="contactEmail != null">
+				#{contactEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="businessTel != null">
+				#{businessTel,jdbcType=VARCHAR},
+			</if>
+			<if test="helpCode != null">
+				#{helpCode,jdbcType=VARCHAR},
+			</if>
+			<if test="wangCode != null">
+				#{wangCode,jdbcType=VARCHAR},
+			</if>
+			<if test="qualificationDisableDate != null">
+				#{qualificationDisableDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+		</trim>
+    </insert>
+    
+    <update id="updateSupplier" parameterType="com.bdcor.pip.web.material.supp.domain.Supplier">
+    	update pip_mms_supplier
+		<set>
+			<if test="supplierName != null">
+				SUPPLIER_NAME = #{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierClass != null">
+				SUPPLIER_CLASS = #{supplierClass,jdbcType=INTEGER},
+			</if>
+			<if test="localityFlag != null">
+				LOCALITY_FLAG = #{localityFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="creditClass != null">
+				CREDIT_CLASS = #{creditClass,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="zipCode != null">
+				ZIP_CODE = #{zipCode,jdbcType=VARCHAR},
+			</if>
+			<if test="contactName != null">
+				CONTACT_NAME = #{contactName,jdbcType=VARCHAR},
+			</if>
+			<if test="contactTel != null">
+				CONTACT_TEL = #{contactTel,jdbcType=VARCHAR},
+			</if>
+			<if test="contactEmail != null">
+				CONTACT_EMAIL = #{contactEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="businessTel != null">
+				BUSINESS_TEL = #{businessTel,jdbcType=VARCHAR},
+			</if>
+			<if test="helpCode != null">
+				HELP_CODE = #{helpCode,jdbcType=VARCHAR},
+			</if>
+			<if test="wangCode != null">
+				WANG_CODE = #{wangCode,jdbcType=VARCHAR},
+			</if>
+			<if test="qualificationDisableDate != null">
+				QUALIFICATION_DISABLE_DATE = #{qualificationDisableDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where supplier_code = #{supplierCode,jdbcType=VARCHAR}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.String">
+    	<!-- 
+    	update pip_mms_supplier set status = 2 where supplier_code = #{supplierCode}
+    	 -->
+    	 delete from pip_mms_supplier where supplier_code = #{supplierCode}
+    </delete>
+</mapper>

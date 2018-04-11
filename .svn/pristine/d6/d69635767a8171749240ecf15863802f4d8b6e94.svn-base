@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.PipCommEventCheckErMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.qn.domain.PipCommEventCheckEr" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="EVENT_CODE" property="eventCode" jdbcType="VARCHAR" />
+    <result column="CURRENTDESC" property="currentdesc" jdbcType="VARCHAR" />
+    <result column="XJBZW" property="xjbzw" jdbcType="DECIMAL" />
+    <result column="XJBZWTYPE" property="xjbzwtype" jdbcType="DECIMAL" />
+    <result column="FZRESULT" property="fzresult" jdbcType="VARCHAR" />
+    <result column="FZUNIT" property="fzunit" jdbcType="DECIMAL" />
+    <result column="FZUPLIMIT" property="fzuplimit" jdbcType="VARCHAR" />
+    <result column="FZUPLIMITUNIT" property="fzuplimitunit" jdbcType="DECIMAL" />
+    <result column="ISXDT" property="isxdt" jdbcType="DECIMAL" />
+    <result column="XDTVERITY" property="xdtverity" jdbcType="DECIMAL" />
+    <result column="KILLIPRANK" property="killiprank" jdbcType="DECIMAL" />
+    <result column="GZXGCJ" property="gzxgcj" jdbcType="DECIMAL" />
+    <result column="ZCCD" property="zccd" jdbcType="DECIMAL" />
+    <result column="GSBW" property="gsbw" jdbcType="DECIMAL" />
+    <result column="CXTYPE" property="cxtype" jdbcType="DECIMAL" />
+    <result column="CXPLACE" property="cxplace" jdbcType="DECIMAL" />
+    <result column="NYHATYPE" property="nyhatype" jdbcType="DECIMAL" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, EVENT_CODE, CURRENTDESC, XJBZW, XJBZWTYPE, FZRESULT, FZUNIT, FZUPLIMIT, FZUPLIMITUNIT, 
+    ISXDT, XDTVERITY, KILLIPRANK, GZXGCJ, ZCCD, GSBW, CXTYPE, CXPLACE, NYHATYPE, CREATE_TIME, 
+    CREATE_BY, UPDATE_TIME, UPDATE_BY
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheckErExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_COMM_EVENT_CHECK_ER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_COMM_EVENT_CHECK_ER
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short" >
+    delete from PIP_COMM_EVENT_CHECK_ER
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheckErExample" >
+    delete from PIP_COMM_EVENT_CHECK_ER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheckEr" >
+    insert into PIP_COMM_EVENT_CHECK_ER (ID, EVENT_CODE, CURRENTDESC, 
+      XJBZW, XJBZWTYPE, FZRESULT, 
+      FZUNIT, FZUPLIMIT, FZUPLIMITUNIT, 
+      ISXDT, XDTVERITY, KILLIPRANK, 
+      GZXGCJ, ZCCD, GSBW, 
+      CXTYPE, CXPLACE, NYHATYPE, 
+      CREATE_TIME, CREATE_BY, UPDATE_TIME, 
+      UPDATE_BY)
+    values (#{id,jdbcType=DECIMAL}, #{eventCode,jdbcType=VARCHAR}, #{currentdesc,jdbcType=VARCHAR}, 
+      #{xjbzw,jdbcType=DECIMAL}, #{xjbzwtype,jdbcType=DECIMAL}, #{fzresult,jdbcType=VARCHAR}, 
+      #{fzunit,jdbcType=DECIMAL}, #{fzuplimit,jdbcType=VARCHAR}, #{fzuplimitunit,jdbcType=DECIMAL}, 
+      #{isxdt,jdbcType=DECIMAL}, #{xdtverity,jdbcType=DECIMAL}, #{killiprank,jdbcType=DECIMAL}, 
+      #{gzxgcj,jdbcType=DECIMAL}, #{zccd,jdbcType=DECIMAL}, #{gsbw,jdbcType=DECIMAL}, 
+      #{cxtype,jdbcType=DECIMAL}, #{cxplace,jdbcType=DECIMAL}, #{nyhatype,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+      #{updateBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheckEr" >
+    insert into PIP_COMM_EVENT_CHECK_ER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="eventCode != null" >
+        EVENT_CODE,
+      </if>
+      <if test="currentdesc != null" >
+        CURRENTDESC,
+      </if>
+      <if test="xjbzw != null" >
+        XJBZW,
+      </if>
+      <if test="xjbzwtype != null" >
+        XJBZWTYPE,
+      </if>
+      <if test="fzresult != null" >
+        FZRESULT,
+      </if>
+      <if test="fzunit != null" >
+        FZUNIT,
+      </if>
+      <if test="fzuplimit != null" >
+        FZUPLIMIT,
+      </if>
+      <if test="fzuplimitunit != null" >
+        FZUPLIMITUNIT,
+      </if>
+      <if test="isxdt != null" >
+        ISXDT,
+      </if>
+      <if test="xdtverity != null" >
+        XDTVERITY,
+      </if>
+      <if test="killiprank != null" >
+        KILLIPRANK,
+      </if>
+      <if test="gzxgcj != null" >
+        GZXGCJ,
+      </if>
+      <if test="zccd != null" >
+        ZCCD,
+      </if>
+      <if test="gsbw != null" >
+        GSBW,
+      </if>
+      <if test="cxtype != null" >
+        CXTYPE,
+      </if>
+      <if test="cxplace != null" >
+        CXPLACE,
+      </if>
+      <if test="nyhatype != null" >
+        NYHATYPE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="eventCode != null" >
+        #{eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="currentdesc != null" >
+        #{currentdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="xjbzw != null" >
+        #{xjbzw,jdbcType=DECIMAL},
+      </if>
+      <if test="xjbzwtype != null" >
+        #{xjbzwtype,jdbcType=DECIMAL},
+      </if>
+      <if test="fzresult != null" >
+        #{fzresult,jdbcType=VARCHAR},
+      </if>
+      <if test="fzunit != null" >
+        #{fzunit,jdbcType=DECIMAL},
+      </if>
+      <if test="fzuplimit != null" >
+        #{fzuplimit,jdbcType=VARCHAR},
+      </if>
+      <if test="fzuplimitunit != null" >
+        #{fzuplimitunit,jdbcType=DECIMAL},
+      </if>
+      <if test="isxdt != null" >
+        #{isxdt,jdbcType=DECIMAL},
+      </if>
+      <if test="xdtverity != null" >
+        #{xdtverity,jdbcType=DECIMAL},
+      </if>
+      <if test="killiprank != null" >
+        #{killiprank,jdbcType=DECIMAL},
+      </if>
+      <if test="gzxgcj != null" >
+        #{gzxgcj,jdbcType=DECIMAL},
+      </if>
+      <if test="zccd != null" >
+        #{zccd,jdbcType=DECIMAL},
+      </if>
+      <if test="gsbw != null" >
+        #{gsbw,jdbcType=DECIMAL},
+      </if>
+      <if test="cxtype != null" >
+        #{cxtype,jdbcType=DECIMAL},
+      </if>
+      <if test="cxplace != null" >
+        #{cxplace,jdbcType=DECIMAL},
+      </if>
+      <if test="nyhatype != null" >
+        #{nyhatype,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheckErExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_COMM_EVENT_CHECK_ER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_COMM_EVENT_CHECK_ER
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.eventCode != null" >
+        EVENT_CODE = #{record.eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currentdesc != null" >
+        CURRENTDESC = #{record.currentdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xjbzw != null" >
+        XJBZW = #{record.xjbzw,jdbcType=DECIMAL},
+      </if>
+      <if test="record.xjbzwtype != null" >
+        XJBZWTYPE = #{record.xjbzwtype,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fzresult != null" >
+        FZRESULT = #{record.fzresult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fzunit != null" >
+        FZUNIT = #{record.fzunit,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fzuplimit != null" >
+        FZUPLIMIT = #{record.fzuplimit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fzuplimitunit != null" >
+        FZUPLIMITUNIT = #{record.fzuplimitunit,jdbcType=DECIMAL},
+      </if>
+      <if test="record.isxdt != null" >
+        ISXDT = #{record.isxdt,jdbcType=DECIMAL},
+      </if>
+      <if test="record.xdtverity != null" >
+        XDTVERITY = #{record.xdtverity,jdbcType=DECIMAL},
+      </if>
+      <if test="record.killiprank != null" >
+        KILLIPRANK = #{record.killiprank,jdbcType=DECIMAL},
+      </if>
+      <if test="record.gzxgcj != null" >
+        GZXGCJ = #{record.gzxgcj,jdbcType=DECIMAL},
+      </if>
+      <if test="record.zccd != null" >
+        ZCCD = #{record.zccd,jdbcType=DECIMAL},
+      </if>
+      <if test="record.gsbw != null" >
+        GSBW = #{record.gsbw,jdbcType=DECIMAL},
+      </if>
+      <if test="record.cxtype != null" >
+        CXTYPE = #{record.cxtype,jdbcType=DECIMAL},
+      </if>
+      <if test="record.cxplace != null" >
+        CXPLACE = #{record.cxplace,jdbcType=DECIMAL},
+      </if>
+      <if test="record.nyhatype != null" >
+        NYHATYPE = #{record.nyhatype,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_COMM_EVENT_CHECK_ER
+    set ID = #{record.id,jdbcType=DECIMAL},
+      EVENT_CODE = #{record.eventCode,jdbcType=VARCHAR},
+      CURRENTDESC = #{record.currentdesc,jdbcType=VARCHAR},
+      XJBZW = #{record.xjbzw,jdbcType=DECIMAL},
+      XJBZWTYPE = #{record.xjbzwtype,jdbcType=DECIMAL},
+      FZRESULT = #{record.fzresult,jdbcType=VARCHAR},
+      FZUNIT = #{record.fzunit,jdbcType=DECIMAL},
+      FZUPLIMIT = #{record.fzuplimit,jdbcType=VARCHAR},
+      FZUPLIMITUNIT = #{record.fzuplimitunit,jdbcType=DECIMAL},
+      ISXDT = #{record.isxdt,jdbcType=DECIMAL},
+      XDTVERITY = #{record.xdtverity,jdbcType=DECIMAL},
+      KILLIPRANK = #{record.killiprank,jdbcType=DECIMAL},
+      GZXGCJ = #{record.gzxgcj,jdbcType=DECIMAL},
+      ZCCD = #{record.zccd,jdbcType=DECIMAL},
+      GSBW = #{record.gsbw,jdbcType=DECIMAL},
+      CXTYPE = #{record.cxtype,jdbcType=DECIMAL},
+      CXPLACE = #{record.cxplace,jdbcType=DECIMAL},
+      NYHATYPE = #{record.nyhatype,jdbcType=DECIMAL},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheckEr" >
+    update PIP_COMM_EVENT_CHECK_ER
+    <set >
+      <if test="eventCode != null" >
+        EVENT_CODE = #{eventCode,jdbcType=VARCHAR},
+      </if>
+      <if test="currentdesc != null" >
+        CURRENTDESC = #{currentdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="xjbzw != null" >
+        XJBZW = #{xjbzw,jdbcType=DECIMAL},
+      </if>
+      <if test="xjbzwtype != null" >
+        XJBZWTYPE = #{xjbzwtype,jdbcType=DECIMAL},
+      </if>
+      <if test="fzresult != null" >
+        FZRESULT = #{fzresult,jdbcType=VARCHAR},
+      </if>
+      <if test="fzunit != null" >
+        FZUNIT = #{fzunit,jdbcType=DECIMAL},
+      </if>
+      <if test="fzuplimit != null" >
+        FZUPLIMIT = #{fzuplimit,jdbcType=VARCHAR},
+      </if>
+      <if test="fzuplimitunit != null" >
+        FZUPLIMITUNIT = #{fzuplimitunit,jdbcType=DECIMAL},
+      </if>
+      <if test="isxdt != null" >
+        ISXDT = #{isxdt,jdbcType=DECIMAL},
+      </if>
+      <if test="xdtverity != null" >
+        XDTVERITY = #{xdtverity,jdbcType=DECIMAL},
+      </if>
+      <if test="killiprank != null" >
+        KILLIPRANK = #{killiprank,jdbcType=DECIMAL},
+      </if>
+      <if test="gzxgcj != null" >
+        GZXGCJ = #{gzxgcj,jdbcType=DECIMAL},
+      </if>
+      <if test="zccd != null" >
+        ZCCD = #{zccd,jdbcType=DECIMAL},
+      </if>
+      <if test="gsbw != null" >
+        GSBW = #{gsbw,jdbcType=DECIMAL},
+      </if>
+      <if test="cxtype != null" >
+        CXTYPE = #{cxtype,jdbcType=DECIMAL},
+      </if>
+      <if test="cxplace != null" >
+        CXPLACE = #{cxplace,jdbcType=DECIMAL},
+      </if>
+      <if test="nyhatype != null" >
+        NYHATYPE = #{nyhatype,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.qn.domain.PipCommEventCheckEr" >
+    update PIP_COMM_EVENT_CHECK_ER
+    set EVENT_CODE = #{eventCode,jdbcType=VARCHAR},
+      CURRENTDESC = #{currentdesc,jdbcType=VARCHAR},
+      XJBZW = #{xjbzw,jdbcType=DECIMAL},
+      XJBZWTYPE = #{xjbzwtype,jdbcType=DECIMAL},
+      FZRESULT = #{fzresult,jdbcType=VARCHAR},
+      FZUNIT = #{fzunit,jdbcType=DECIMAL},
+      FZUPLIMIT = #{fzuplimit,jdbcType=VARCHAR},
+      FZUPLIMITUNIT = #{fzuplimitunit,jdbcType=DECIMAL},
+      ISXDT = #{isxdt,jdbcType=DECIMAL},
+      XDTVERITY = #{xdtverity,jdbcType=DECIMAL},
+      KILLIPRANK = #{killiprank,jdbcType=DECIMAL},
+      GZXGCJ = #{gzxgcj,jdbcType=DECIMAL},
+      ZCCD = #{zccd,jdbcType=DECIMAL},
+      GSBW = #{gsbw,jdbcType=DECIMAL},
+      CXTYPE = #{cxtype,jdbcType=DECIMAL},
+      CXPLACE = #{cxplace,jdbcType=DECIMAL},
+      NYHATYPE = #{nyhatype,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

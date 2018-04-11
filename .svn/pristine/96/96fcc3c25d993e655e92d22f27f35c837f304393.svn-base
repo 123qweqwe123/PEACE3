@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.dict.dao.DictMetaDataDao" >
+ 
+ 
+ 
+ 
+	<resultMap type="com.bdcor.pip.dict.domain.DictMetaDataVo" id="metaDataMap">
+		<id property="id" column="id"/>
+		<result property="colName" column="col_name"/>
+		<result property="tableName" column="table_name"/>
+		<result property="dictType" column="dict_type"/>
+		<result property="colLength" column="col_lenght"/>
+		<result property="isRequired" column="is_required"/>
+		<result property="isUpdate" column="isupdate"/>
+		<result property="isShow" column="isshow"/>
+		<result property="showName" column="showname"/>
+		<result property="conditionType" column="condition_type"/>
+		<result property="conditionShowType" column="condition_show_type"/>
+		<result property="isRemoved" column="is_removed"/>
+	</resultMap>
+	
+	<select id="getAllMetaDate" resultMap="metaDataMap" parameterType="com.bdcor.pip.dict.domain.DictMetaDataHandle">
+		select * from COMM_INDEX_DICTMETADATA  where is_removed != 1
+		<if test="colName != null">
+			and col_name like '%${colName}%'
+		</if>
+	</select>
+	
+	<update id="updateMetaData" parameterType="com.bdcor.pip.dict.domain.DictMetaDataVo">
+		update COMM_INDEX_DICTMETADATA 
+		set  is_required=${isRequired} ,
+		     isshow=${isShow},
+		     showname=#{showName}
+		where id=${id}
+	</update>
+	
+	<insert id="addMetaData" parameterType="com.bdcor.pip.dict.domain.DictMetaDataVo">
+		<selectKey resultType="int" order="BEFORE" keyProperty="id">
+      		SELECT metadata_seq.nextval FROM DUAL
+      	</selectKey>
+		insert into COMM_INDEX_DICTMETADATA(id,is_required,isupdate,isshow,showname,condition_type,condition_show_type) 
+		    values (#{id,jdbcType=INTEGER},#{isRequired},#{isUpdate},#{isShow},#{showName},#{conditionType},#{conditionShowType})
+	</insert>
+	
+	<update id="delMetaData"  parameterType="com.bdcor.pip.dict.domain.DictMetaDataVo">
+		update COMM_INDEX_DICTMETADATA set is_removed=${isRemoved} where id=${id}
+	</update>
+</mapper>
+
+
+
+
+

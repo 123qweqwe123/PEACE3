@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.common.dao.PipCommRemarkMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.common.domain.PipCommRemark" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="MODULE_ID" property="moduleId" jdbcType="INTEGER" />
+    <result column="REMARK1" property="remark1" jdbcType="VARCHAR" />
+    <result column="PK1" property="pk1" jdbcType="VARCHAR" />
+    <result column="PK2" property="pk2" jdbcType="VARCHAR" />
+    <result column="PK3" property="pk3" jdbcType="VARCHAR" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="REMARK2" property="remark2" jdbcType="VARCHAR" />
+    <result column="REMARK3" property="remark3" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="IS_DELETE" property="isDelete" jdbcType="INTEGER" />
+    <result column="UPDATE_USER_ID" property="updateUserId" jdbcType="VARCHAR" />
+    <result column="APPLY_BY" property="applyBy" jdbcType="VARCHAR" />
+    <result column="APPLY_DATE" property="applyDate" jdbcType="TIMESTAMP" />
+    <result column="MODIFY_BY" property="modifyBy" jdbcType="VARCHAR" />
+    <result column="MODIFY_DATE" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="BZ" property="bz" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, MODULE_ID, REMARK1, PK1, PK2, PK3, UPDATE_BY, REMARK2, REMARK3, UPDATE_TIME,
+    IS_DELETE, UPDATE_USER_ID, APPLY_BY, APPLY_DATE, MODIFY_BY, MODIFY_DATE, BZ
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.common.domain.PipCommRemarkExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_COMM_REMARK
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.common.domain.PipCommRemarkExample" >
+    delete from PIP_COMM_REMARK
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.common.domain.PipCommRemark" >
+    insert into PIP_COMM_REMARK (ID, MODULE_ID, REMARK1,
+    PK1, PK2, PK3, UPDATE_BY,
+    REMARK2, REMARK3, UPDATE_TIME,
+    IS_DELETE, UPDATE_USER_ID, APPLY_BY,
+    APPLY_DATE, MODIFY_BY, MODIFY_DATE,
+    BZ)
+    values (#{id,jdbcType=VARCHAR}, #{moduleId,jdbcType=INTEGER}, #{remark1,jdbcType=VARCHAR},
+    #{pk1,jdbcType=VARCHAR}, #{pk2,jdbcType=VARCHAR}, #{pk3,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR},
+    #{remark2,jdbcType=VARCHAR}, #{remark3,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+    #{isDelete,jdbcType=INTEGER}, #{updateUserId,jdbcType=VARCHAR}, #{applyBy,jdbcType=VARCHAR},
+    #{applyDate,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP},
+    #{bz,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.common.domain.PipCommRemark" >
+    insert into PIP_COMM_REMARK
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="moduleId != null" >
+        MODULE_ID,
+      </if>
+      <if test="remark1 != null" >
+        REMARK1,
+      </if>
+      <if test="pk1 != null" >
+        PK1,
+      </if>
+      <if test="pk2 != null" >
+        PK2,
+      </if>
+      <if test="pk3 != null" >
+        PK3,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="remark2 != null" >
+        REMARK2,
+      </if>
+      <if test="remark3 != null" >
+        REMARK3,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="isDelete != null" >
+        IS_DELETE,
+      </if>
+      <if test="updateUserId != null" >
+        UPDATE_USER_ID,
+      </if>
+      <if test="applyBy != null" >
+        APPLY_BY,
+      </if>
+      <if test="applyDate != null" >
+        APPLY_DATE,
+      </if>
+      <if test="modifyBy != null" >
+        MODIFY_BY,
+      </if>
+      <if test="modifyDate != null" >
+        MODIFY_DATE,
+      </if>
+      <if test="bz != null" >
+        BZ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleId != null" >
+        #{moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="remark1 != null" >
+        #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="pk1 != null" >
+        #{pk1,jdbcType=VARCHAR},
+      </if>
+      <if test="pk2 != null" >
+        #{pk2,jdbcType=VARCHAR},
+      </if>
+      <if test="pk3 != null" >
+        #{pk3,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="remark3 != null" >
+        #{remark3,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyBy != null" >
+        #{applyBy,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null" >
+        #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null" >
+        #{modifyBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bz != null" >
+        #{bz,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.common.domain.PipCommRemarkExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_COMM_REMARK
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_COMM_REMARK
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.moduleId != null" >
+        MODULE_ID = #{record.moduleId,jdbcType=INTEGER},
+      </if>
+      <if test="record.remark1 != null" >
+        REMARK1 = #{record.remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pk1 != null" >
+        PK1 = #{record.pk1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pk2 != null" >
+        PK2 = #{record.pk2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pk3 != null" >
+        PK3 = #{record.pk3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateBy != null" >
+        UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark2 != null" >
+        REMARK2 = #{record.remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark3 != null" >
+        REMARK3 = #{record.remark3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDelete != null" >
+        IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        UPDATE_USER_ID = #{record.updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyBy != null" >
+        APPLY_BY = #{record.applyBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyDate != null" >
+        APPLY_DATE = #{record.applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyBy != null" >
+        MODIFY_BY = #{record.modifyBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifyDate != null" >
+        MODIFY_DATE = #{record.modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bz != null" >
+        BZ = #{record.bz,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_COMM_REMARK
+    set ID = #{record.id,jdbcType=VARCHAR},
+    MODULE_ID = #{record.moduleId,jdbcType=INTEGER},
+    REMARK1 = #{record.remark1,jdbcType=VARCHAR},
+    PK1 = #{record.pk1,jdbcType=VARCHAR},
+    PK2 = #{record.pk2,jdbcType=VARCHAR},
+    PK3 = #{record.pk3,jdbcType=VARCHAR},
+    UPDATE_BY = #{record.updateBy,jdbcType=VARCHAR},
+    REMARK2 = #{record.remark2,jdbcType=VARCHAR},
+    REMARK3 = #{record.remark3,jdbcType=VARCHAR},
+    UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+    IS_DELETE = #{record.isDelete,jdbcType=INTEGER},
+    UPDATE_USER_ID = #{record.updateUserId,jdbcType=VARCHAR},
+    APPLY_BY = #{record.applyBy,jdbcType=VARCHAR},
+    APPLY_DATE = #{record.applyDate,jdbcType=TIMESTAMP},
+    MODIFY_BY = #{record.modifyBy,jdbcType=VARCHAR},
+    MODIFY_DATE = #{record.modifyDate,jdbcType=TIMESTAMP},
+    BZ = #{record.bz,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.common.domain.PipCommRemark" >
+    update PIP_COMM_REMARK
+    <set >
+      <if test="moduleId != null" >
+        MODULE_ID = #{moduleId,jdbcType=DECIMAL},
+      </if>
+      <if test="remark1 != null" >
+        REMARK1 = #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="pk1 != null" >
+        PK1 = #{pk1,jdbcType=VARCHAR},
+      </if>
+      <if test="pk2 != null" >
+        PK2 = #{pk2,jdbcType=VARCHAR},
+      </if>
+      <if test="pk3 != null" >
+        PK3 = #{pk3,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        REMARK2 = #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="remark3 != null" >
+        REMARK3 = #{remark3,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelete != null" >
+        IS_DELETE = #{isDelete,jdbcType=DECIMAL},
+      </if>
+      <if test="updateUserId != null" >
+        UPDATE_USER_ID = #{updateUserId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.common.domain.PipCommRemark" >
+    update PIP_COMM_REMARK
+    set MODULE_ID = #{moduleId,jdbcType=DECIMAL},
+    REMARK1 = #{remark1,jdbcType=VARCHAR},
+    PK1 = #{pk1,jdbcType=VARCHAR},
+    PK2 = #{pk2,jdbcType=VARCHAR},
+    PK3 = #{pk3,jdbcType=VARCHAR},
+    UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+    REMARK2 = #{remark2,jdbcType=VARCHAR},
+    REMARK3 = #{remark3,jdbcType=VARCHAR},
+    UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+    IS_DELETE = #{isDelete,jdbcType=DECIMAL},
+    UPDATE_USER_ID = #{updateUserId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectCountByModuleId" parameterType="com.bdcor.pip.web.common.domain.PipCommRemark" resultType="com.bdcor.pip.web.common.domain.PipCommRemarkVO">
+    select
+    pk1,pk2,pk3,count(*) count
+    from pip_comm_remark
+    where 1=1
+    and is_delete=1
+    group by pk1,pk2,pk3
+  </select>
+
+</mapper>

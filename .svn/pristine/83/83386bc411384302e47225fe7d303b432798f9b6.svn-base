@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.qn.dao.TimeStatisticDao">
+	<select id="list" parameterType="com.bdcor.pip.web.qn.filter.TimeStatisticFilter" resultType="map">
+
+select * from (
+		with
+		pMinutes as
+		(
+			select lcc_code, patient_id,(max(end_time)-min(start_time))*24*60 as pTime
+			from pip_uqs_answerqn_log nlog
+			where
+			substr(nlog.UQS_VERSION,5,3)=#{qnLabel}
+			and exists (
+			select * from pip_uqs_answerqn_log lg where nlog.patient_id = lg.patient_id
+			and substr(lg.UQS_VERSION,5,3)=#{qnLabel}
+			and state = '1'
+			)
+			group by patient_id,lcc_code
+		),
+		lccStatic as
+		(
+			select floor((count(*)+1)*0.25) row4_1,floor((count(*)+1)*0.75) row4_3,
+			round(avg(pTime)) avgTime,round(median(pTime)) medianTime,round(max(pTime)) maxTime,
+			round(min(pTime))as mintime from pMinutes
+		),
+		pRowNum as
+		(
+			select patient_id,pTime, row_number() OVER (ORDER BY pTime)rn,
+			lead(pTime,1) over(ORDER BY pTime)as eTime
+			from  pMinutes
+		)
+		select
+		' ' LCC_CODE,
+		'全国统计' LCC_NAME,
+		l.AVGTIME,
+		l.MEDIANTIME,
+		l.MINTIME,
+		l.MAXTIME,
+		(case when prn4_1.pTime is null or prn4_3.eTime is null then '不可计算'
+		else to_char(round((prn4_1.pTime*0.25+prn4_1.eTime*0.75)-(prn4_3.pTime*0.75+prn4_3.eTime*0.25)))
+		end) as FTIME
+		from
+		lccStatic l
+		left join pRowNum prn4_1 on l.row4_1=prn4_1.rn
+		left join pRowNum prn4_3 on l.row4_3=prn4_3.rn
+		)
+UNION ALL
+select * from (
+		with
+		pMinutes as
+		(
+			select lcc_code, patient_id,(max(end_time)-min(start_time))*24*60 as pTime
+			from pip_uqs_answerqn_log nlog
+			where <!-- uqs_version='004.010.001' -->
+			substr(nlog.UQS_VERSION,5,3)=#{qnLabel}
+			and exists (
+				select * from pip_uqs_answerqn_log lg where nlog.patient_id = lg.patient_id
+				and substr(lg.UQS_VERSION,5,3)=#{qnLabel} <!-- lg.uqs_version = '004.010.001' -->
+				and state = '1'
+			)
+			group by patient_id,lcc_code
+		),
+		lccStatic as
+		(select LCC_CODE,floor((count(*)+1)*0.25) row4_1,floor((count(*)+1)*0.75) row4_3,round(avg(pTime)) avgTime,round(median(pTime)) medianTime,round(max(pTime)) maxTime,round(min(pTime))as mintime from pMinutes group by LCC_CODE),
+		pRowNum as
+		(select LCC_CODE,pTime,row_number() OVER (PARTITION BY LCC_CODE ORDER BY pTime)rn,
+		lead(pTime,1) over(PARTITION BY LCC_CODE ORDER BY pTime)as eTime
+		from  pMinutes)
+
+		select
+		l.LCC_CODE,
+		lcc.LCC_NAME,
+		l.AVGTIME,
+		l.MEDIANTIME,
+		l.MINTIME,
+		l.MAXTIME,
+		(case when prn4_1.pTime is null or prn4_3.eTime is null then '不可计算'
+		else to_char(round((prn4_1.pTime*0.25+prn4_1.eTime*0.75)-(prn4_3.pTime*0.75+prn4_3.eTime*0.25)))
+		end) as FTIME
+
+		from
+		lccStatic l
+		left join PIP_COMM_LCC lcc on lcc.LCC_CODE=l.LCC_CODE
+		left join pRowNum prn4_1 on l.row4_1=prn4_1.rn and l.LCC_CODE=prn4_1.LCC_CODE
+		left join pRowNum prn4_3 on l.row4_3=prn4_3.rn and l.LCC_CODE=prn4_3.LCC_CODE
+		where l.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="lccCode !=null and lccCode !=''">
+			and l.lcc_code = #{lccCode}
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx}
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+
+		)
+	</select>
+</mapper>

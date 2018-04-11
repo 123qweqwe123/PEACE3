@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.material.supp.dao.PipMmsExscmmasterMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.material.supp.domain.PipMmsExscmmaster" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="VARCHAR" />
+    <result column="EXORDER_NO" property="exorderNo" jdbcType="VARCHAR" />
+    <result column="ACTIVECLASS_CODE" property="activeclassCode" jdbcType="VARCHAR" />
+    <result column="ACTIVECLASS_NAME" property="activeclassName" jdbcType="VARCHAR" />
+    <result column="LCC_CODE" property="lccCode" jdbcType="VARCHAR" />
+    <result column="LCC_NAME" property="lccName" jdbcType="VARCHAR" />
+    <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+    <result column="EXPORT_DATE" property="exportDate" jdbcType="TIMESTAMP" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="RECEIVER_CODE" property="receiverCode" jdbcType="VARCHAR" />
+    <result column="RECEIVER_NAME" property="receiverName" jdbcType="VARCHAR" />
+    <result column="RECEIVER_DATE" property="receiverDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="IS_REMOVED" property="isRemoved" jdbcType="DECIMAL" />
+    <result column="STOCK_CODE" property="stockCode" jdbcType="VARCHAR" />
+    <result column="STOCK_NAME" property="stockName" jdbcType="VARCHAR" />
+    <result column="EXPORT_LCC_CODE" property="exportLccCode" jdbcType="VARCHAR" />
+    <result column="EXPORT_LCC_NAME" property="exportLccName" jdbcType="VARCHAR" />
+    <result column="EXPORT_STOCK_CODE" property="exportStockCode" jdbcType="VARCHAR" />
+    <result column="IMPORT_STATE" property="importState" jdbcType="DECIMAL" />
+  	<result column="EXPORT_STOCK_NAME" property="exportStockName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, PROJECT_ID, EXORDER_NO, ACTIVECLASS_CODE, LCC_CODE, USER_CODE, EXPORT_DATE, USER_NAME, 
+    RECEIVER_CODE, RECEIVER_NAME, RECEIVER_DATE, CREATE_DATE, CREATE_BY, IS_REMOVED, 
+    STOCK_CODE, EXPORT_LCC_CODE, EXPORT_STOCK_CODE, IMPORT_STATE
+  </sql>
+  <select id="selectByFilterForAdmin" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.filter.PipMmsExscmmasterFilter">
+  	select l.lcc_name EXPORT_LCC_NAME,d.stock_name EXPORT_STOCK_NAME, t.*,cl.lcc_name, md.stock_name 
+    from PIP_MMS_EXSCMMASTER t 
+	  left join pip_comm_lcc l on t.project_id = l.project_id and t.export_lcc_code = l.lcc_code
+	  left join pip_comm_lcc cl on t.project_id = cl.project_id  and cl.lcc_code = t.lcc_code
+	  left join  PIP_MMS_DEFSTOREHOUSE md on md.project_id = t.project_id and t.stock_code = md.stock_code
+	  left join  PIP_MMS_DEFSTOREHOUSE d on d.project_id = t.project_id and t.export_stock_code = d.stock_code
+  where 
+	    t.project_id =#{projectId}
+      <!-- 过期时间校验 -->
+      and exists (
+      select 1 from PIP_MMS_EXSCMDETAL pe where t.exorder_no = pe.exorder_no
+      and trunc(pe.period_validity) > trunc(sysdate)
+      )
+
+      and l.lcc_code in
+	    ( select lcc_code from pip_sys_user_data_limit lt where lt.user_id =#{userId} )
+	    <if test ="stockCode != null and stockCode !=''">
+	    	and d.stock_Code =#{stockCode}
+	    </if>
+	    <if test ="exorderNo != null and exorderNo !=''">
+	    	and t.exorder_No like '%${exorderNo}%'
+	    </if>
+	     order by t.EXORDER_NO desc
+  </select>
+  <select id="selectByFilter" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.filter.PipMmsExscmmasterFilter">
+  	select l.lcc_name EXPORT_LCC_NAME,d.stock_name EXPORT_STOCK_NAME, t.*,cl.lcc_name, md.stock_name 
+    from PIP_MMS_EXSCMMASTER t 
+	  left join pip_comm_lcc l on t.project_id = l.project_id and t.export_lcc_code = l.lcc_code
+	  left join pip_comm_lcc cl on t.project_id = cl.project_id  and cl.lcc_code = t.lcc_code
+	  left join  PIP_MMS_DEFSTOREHOUSE md on md.project_id = t.project_id and t.stock_code = md.stock_code
+	  left join  PIP_MMS_DEFSTOREHOUSE d on d.project_id = t.project_id and t.export_stock_code = d.stock_code
+  	where 
+	    t.project_id =#{projectId}
+      <!-- 过期时间校验
+      and exists (
+      select 1 from PIP_MMS_EXSCMDETAL pe where t.exorder_no = pe.exorder_no
+      and trunc(pe.period_validity) > trunc(sysdate)
+      ) -->
+	    and l.lcc_code = #{lccCode} 
+	    <if test ="stockCode != null and stockCode !=''">
+	    	and d.stock_Code =#{stockCode}
+	    </if>
+	    <if test ="exorderNo != null and exorderNo !=''">
+	    	and t.exorder_No like '%${exorderNo}%'
+	    </if>
+	    order by t.EXORDER_NO desc
+  </select>
+    
+    
+    <select id="checkIsExpired" resultType="int">
+        select count(1) from pip_Mms_Exscmdetal me
+        where exorder_no in (
+        select exorder_no from PIP_MMS_EXSCMMASTER
+        where id in (${ids})
+        )
+        and trunc(sysdate) > trunc( me.period_validity)
+    </select>
+    
+  <select id="changeState" parameterType="string">
+  	update PIP_MMS_EXSCMMASTER set
+  		IMPORT_STATE =#{state}
+  	where id in (${ids})
+  	 
+  </select>
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsExscmmasterExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_MMS_EXSCMMASTER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_MMS_EXSCMMASTER
+    where ID = #{id}
+  </select>
+  <select id="listByIds" resultMap="BaseResultMap" parameterType="string" >
+   select 
+	    a.ID, a.PROJECT_ID, a.EXORDER_NO, a.ACTIVECLASS_CODE,  c.ACTIVECLASS_NAME, a.LCC_CODE, a.USER_CODE, a.EXPORT_DATE, a.USER_NAME, 
+	    a.RECEIVER_CODE, a.RECEIVER_NAME, a.RECEIVER_DATE, a.CREATE_DATE, a.CREATE_BY, a.IS_REMOVED, 
+	    a.STOCK_CODE, a.EXPORT_LCC_CODE, a.EXPORT_STOCK_CODE, a.IMPORT_STATE,b.lcc_name EXPORT_LCC_NAME,
+	    pmd.stock_name as EXPORT_STOCK_NAME
+    from PIP_MMS_EXSCMMASTER a 
+    left join  pip_comm_lcc b on a.lcc_code = b.lcc_code and b.project_id = a.project_id
+    left join pip_mms_active_type c on c.ACTIVECLASS_CODE =a.ACTIVECLASS_CODE and c.project_id  = a.project_id
+    left join PIP_MMS_DEFSTOREHOUSE pmd on pmd.project_id = a.PROJECT_ID  and pmd.STOCK_CODE = a.EXPORT_STOCK_CODE
+    where 1=1 
+    <if test="exorderNos != null and exorderNos != ''" >
+    and a.exorder_No in 
+	    <foreach collection="exorderNos" item="item" index="index" open="(" separator="," close=")">
+	  		#{item}
+		</foreach>
+    </if>
+  </select>
+  <select id="selectModelByExorderNo" resultMap="BaseResultMap" parameterType="string" >
+   select 
+	    a.ID, a.PROJECT_ID, a.EXORDER_NO, a.ACTIVECLASS_CODE,  c.ACTIVECLASS_NAME, a.LCC_CODE, a.USER_CODE, a.EXPORT_DATE, a.USER_NAME, 
+	    a.RECEIVER_CODE, a.RECEIVER_NAME, a.RECEIVER_DATE, a.CREATE_DATE, a.CREATE_BY, a.IS_REMOVED, 
+	    a.STOCK_CODE, a.EXPORT_LCC_CODE, a.EXPORT_STOCK_CODE, a.IMPORT_STATE,b.lcc_name EXPORT_LCC_NAME,
+	    pmd.stock_name as EXPORT_STOCK_NAME
+    from PIP_MMS_EXSCMMASTER a 
+    left join  pip_comm_lcc b on a.export_lcc_code = b.lcc_code and b.project_id = a.project_id
+    left join pip_mms_active_type c on c.ACTIVECLASS_CODE =a.ACTIVECLASS_CODE and c.project_id  = a.project_id
+    left join PIP_MMS_DEFSTOREHOUSE pmd on pmd.project_id = a.PROJECT_ID  and pmd.STOCK_CODE = a.EXPORT_STOCK_CODE
+    where 1=1 
+    <if test="exorderNo != null and exorderNo != ''" >
+    and a.exorder_No = #{exorderNo,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="selectPipMmsExscmmasterByFilter" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.filter.PipMmsExscmmasterFilter" >
+   select 
+	    a.ID, a.PROJECT_ID, a.EXORDER_NO, a.ACTIVECLASS_CODE,  c.ACTIVECLASS_NAME, a.LCC_CODE, a.USER_CODE, a.EXPORT_DATE, a.USER_NAME, 
+	    a.RECEIVER_CODE, a.RECEIVER_NAME, a.RECEIVER_DATE, a.CREATE_DATE, a.CREATE_BY, a.IS_REMOVED, 
+	    a.STOCK_CODE, a.EXPORT_LCC_CODE, a.EXPORT_STOCK_CODE, a.IMPORT_STATE,b.lcc_name EXPORT_LCC_NAME,
+	    pmd.stock_name as EXPORT_STOCK_NAME
+    from PIP_MMS_EXSCMMASTER a 
+    left join  pip_comm_lcc b on a.export_lcc_code = b.lcc_code and b.project_id = a.project_id
+    left join pip_mms_active_type c on c.ACTIVECLASS_CODE =a.ACTIVECLASS_CODE and c.project_id  = a.project_id
+    left join PIP_MMS_DEFSTOREHOUSE pmd on pmd.project_id = a.PROJECT_ID  and pmd.STOCK_CODE = a.EXPORT_STOCK_CODE
+    where 1=1 
+    and a.lcc_code in  (select lcc_code from pip_sys_user_data_limit  lt where lt.user_id = #{userId})
+    <if test="lccCode != null and lccCode != ''" >
+    and a.LCC_CODE = #{lccCode,jdbcType=VARCHAR}
+    </if>
+    <if test="stockCode != null and stockCode != ''" >
+    and a.Stock_Code = #{stockCode,jdbcType=VARCHAR}
+    </if>
+    <if test="exorderNo != null and exorderNo != ''" >
+    and a.exorder_No like '%${exorderNo}%'
+    </if>
+    <if test="exportLccName != null and exportLccName != ''">
+		and b.LCC_NAME like '%${exportLccName}%'
+	</if>
+	<if test="exportStartDate != null and exportStartDate != ''">
+		and to_char(a.EXPORT_DATE,'yyyy-MM-dd') >= '${exportStartDate}'
+	</if>
+	<if test="exportEndDate != null and exportEndDate != ''">
+		and to_char(a.EXPORT_DATE,'yyyy-MM-dd') <![CDATA[<=]]>  '${exportEndDate}'
+	</if>
+	<if test="orderStartDate != null and orderStartDate != ''">
+		and to_char(a.CREATE_DATE,'yyyy-MM-dd') >= '${orderStartDate}'
+	</if>
+	<if test="orderEndDate != null and orderEndDate != ''">
+		and to_char(a.CREATE_DATE,'yyyy-MM-dd') <![CDATA[<=]]>  '${orderEndDate}'
+	</if>
+    order by a.CREATE_DATE desc, a.EXORDER_NO desc, a.lcc_code desc  
+  </select>
+  <select id="selectPipMmsExscmmasterByLccCode" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsExscmmaster" >
+   select 
+	    a.ID, a.PROJECT_ID, a.EXORDER_NO, a.ACTIVECLASS_CODE,  c.ACTIVECLASS_NAME, a.LCC_CODE, a.USER_CODE, a.EXPORT_DATE, a.USER_NAME, 
+	    a.RECEIVER_CODE, a.RECEIVER_NAME, a.RECEIVER_DATE, a.CREATE_DATE, a.CREATE_BY, a.IS_REMOVED, 
+	    a.STOCK_CODE, a.EXPORT_LCC_CODE, a.EXPORT_STOCK_CODE, a.IMPORT_STATE,b.lcc_name EXPORT_LCC_NAME,
+	    pmd.stock_name as EXPORT_STOCK_NAME
+    from PIP_MMS_EXSCMMASTER a 
+    left join  pip_comm_lcc b on a.lcc_code = b.lcc_code and b.project_id = a.project_id
+    left join pip_mms_active_type c on c.ACTIVECLASS_CODE =a.ACTIVECLASS_CODE and c.project_id  = a.project_id
+    left join PIP_MMS_DEFSTOREHOUSE pmd on pmd.project_id = a.PROJECT_ID  and pmd.STOCK_CODE = a.EXPORT_STOCK_CODE
+    where 1=1 
+    and a.lcc_code in  (select lcc_code from pip_sys_user_data_limit  lt where lt.user_id = #{userId})
+    <if test="lccCode != null and lccCode != ''" >
+    and a.LCC_CODE = #{lccCode,jdbcType=VARCHAR}
+    </if>
+    <if test="stockCode != null and stockCode != ''" >
+    and a.Stock_Code = #{stockCode,jdbcType=VARCHAR}
+    </if>
+    <if test="exorderNo != null and exorderNo != ''" >
+    and a.exorder_No = #{exorderNo,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <resultMap id="OrderDetalMap" type="com.bdcor.pip.web.material.supp.domain.OrderDetal" >
+   <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="lcc_code" property="lccCode" jdbcType="VARCHAR" />
+    <result column="lcc_name" property="lccName" jdbcType="VARCHAR" />
+    <result column="stock_code" property="stockCode" jdbcType="VARCHAR" />
+    <result column="stock_name" property="stockName" jdbcType="VARCHAR" />
+    <result column="archives_no" property="archivesNo" jdbcType="VARCHAR" />
+    <result column="materlinfo_code" property="materlinfoCode" jdbcType="VARCHAR" />
+    <result column="materlinfo_name" property="materlinfoName" jdbcType="VARCHAR" />
+    <result column="materl_batch" property="materlBatch" jdbcType="VARCHAR" />
+    <result column="materl_price" property="materlPrice" jdbcType="VARCHAR" />
+    <result column="wholesale_price" property="wholesalePrice" jdbcType="VARCHAR" />
+    <result column="export_lcc_code" property="exportLccCode" jdbcType="VARCHAR" />
+    <result column="export_lcc_name" property="exportLccName" jdbcType="VARCHAR" />
+    <result column="stock_num" property="stockNum" jdbcType="VARCHAR" />
+    <result column="store_unit" property="storeUnit" jdbcType="VARCHAR" />
+    <result column="period_validity" property="periodValidity" jdbcType="TIMESTAMP" />
+    <result column="manufacturer_code" property="manufacturerCode" jdbcType="VARCHAR" />
+    <result column="manufacturer_name" property="manufacturerName" jdbcType="VARCHAR" />
+  </resultMap>
+   <select id="selectPipMmsExscmmasterByArchivesNo" resultMap="OrderDetalMap" parameterType="com.bdcor.pip.web.material.supp.domain.OrderDetal" >
+ select   
+    chive.id  id , 
+    lcc.lcc_code  lcc_code,
+    lcc.lcc_name  lcc_name,
+    house.stock_name stock_name , 
+    stock.archives_no archives_no, 
+    stock.materlinfo_code materlinfo_code, chive.materl_batch materl_batch,
+    stock.materl_price materl_price,
+    stock.manufacturer_code,
+    stock.wholesale_price wholesale_price,stock.store_unit storeUnit,
+    chive.period_validity periodValidity
+    from PIP_MMS_SCMARCHIVES chive 
+    ,pip_mms_storehouse house 
+    ,PIP_MMS_SCMSTOCK stock  
+    ,pip_comm_lcc  lcc
+    where 1=1  and stock.STOCK_NUM=1  and stock.STOCK_STATE=0
+    and stock.stock_code= house.stock_code 
+    and chive.archives_no= stock.archives_no 
+    and chive.project_id= stock.project_id
+    and lcc.lcc_code = stock.lcc_code
+    <if test="lccCode != null and lccCode != ''" >
+    and stock.LCC_CODE = #{lccCode,jdbcType=VARCHAR}
+    </if>
+    and stock.archives_no = #{archivesNo,jdbcType=VARCHAR}
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short" >
+    delete from PIP_MMS_EXSCMMASTER
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsExscmmasterExample" >
+    delete from PIP_MMS_EXSCMMASTER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsExscmmaster" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_MMS_EXSCMMASTER_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_MMS_EXSCMMASTER (ID, PROJECT_ID, EXORDER_NO, 
+      ACTIVECLASS_CODE, LCC_CODE, USER_CODE, 
+      EXPORT_DATE, USER_NAME, RECEIVER_CODE, 
+      RECEIVER_NAME, RECEIVER_DATE, CREATE_DATE, 
+      CREATE_BY, IS_REMOVED, STOCK_CODE, 
+      EXPORT_LCC_CODE, EXPORT_STOCK_CODE, IMPORT_STATE
+      )
+    values (#{id,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{exorderNo,jdbcType=VARCHAR}, 
+      #{activeclassCode,jdbcType=VARCHAR}, #{lccCode,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, 
+      #{exportDate,jdbcType=TIMESTAMP}, #{userName,jdbcType=VARCHAR}, #{receiverCode,jdbcType=VARCHAR}, 
+      #{receiverName,jdbcType=VARCHAR}, #{receiverDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{isRemoved,jdbcType=DECIMAL}, #{stockCode,jdbcType=VARCHAR}, 
+      #{exportLccCode,jdbcType=VARCHAR}, #{exportStockCode,jdbcType=VARCHAR}, #{importState,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsExscmmaster" >
+    <selectKey keyProperty="id" resultType="string" order="BEFORE">
+     select PIP_MMS_EXSCMMASTER_SEQ.nextval from dual
+    </selectKey>
+    insert into PIP_MMS_EXSCMMASTER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="exorderNo != null" >
+        EXORDER_NO,
+      </if>
+      <if test="activeclassCode != null" >
+        ACTIVECLASS_CODE,
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE,
+      </if>
+      <if test="userCode != null" >
+        USER_CODE,
+      </if>
+      <if test="exportDate != null" >
+        EXPORT_DATE,
+      </if>
+      <if test="userName != null" >
+        USER_NAME,
+      </if>
+      <if test="receiverCode != null" >
+        RECEIVER_CODE,
+      </if>
+      <if test="receiverName != null" >
+        RECEIVER_NAME,
+      </if>
+      <if test="receiverDate != null" >
+        RECEIVER_DATE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="isRemoved != null" >
+        IS_REMOVED,
+      </if>
+      <if test="stockCode != null" >
+        STOCK_CODE,
+      </if>
+      <if test="exportLccCode != null" >
+        EXPORT_LCC_CODE,
+      </if>
+      <if test="exportStockCode != null" >
+        EXPORT_STOCK_CODE,
+      </if>
+      <if test="importState != null" >
+        IMPORT_STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="exorderNo != null" >
+        #{exorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="activeclassCode != null" >
+        #{activeclassCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exportDate != null" >
+        #{exportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverCode != null" >
+        #{receiverCode,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null" >
+        #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverDate != null" >
+        #{receiverDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isRemoved != null" >
+        #{isRemoved,jdbcType=DECIMAL},
+      </if>
+      <if test="stockCode != null" >
+        #{stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exportLccCode != null" >
+        #{exportLccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exportStockCode != null" >
+        #{exportStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="importState != null" >
+        #{importState,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsExscmmasterExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_MMS_EXSCMMASTER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_MMS_EXSCMMASTER
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectId != null" >
+        PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.exorderNo != null" >
+        EXORDER_NO = #{record.exorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activeclassCode != null" >
+        ACTIVECLASS_CODE = #{record.activeclassCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lccCode != null" >
+        LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userCode != null" >
+        USER_CODE = #{record.userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.exportDate != null" >
+        EXPORT_DATE = #{record.exportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.userName != null" >
+        USER_NAME = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receiverCode != null" >
+        RECEIVER_CODE = #{record.receiverCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receiverName != null" >
+        RECEIVER_NAME = #{record.receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receiverDate != null" >
+        RECEIVER_DATE = #{record.receiverDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isRemoved != null" >
+        IS_REMOVED = #{record.isRemoved,jdbcType=DECIMAL},
+      </if>
+      <if test="record.stockCode != null" >
+        STOCK_CODE = #{record.stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.exportLccCode != null" >
+        EXPORT_LCC_CODE = #{record.exportLccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.exportStockCode != null" >
+        EXPORT_STOCK_CODE = #{record.exportStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.importState != null" >
+        IMPORT_STATE = #{record.importState,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_MMS_EXSCMMASTER
+    set ID = #{record.id,jdbcType=VARCHAR},
+      PROJECT_ID = #{record.projectId,jdbcType=VARCHAR},
+      EXORDER_NO = #{record.exorderNo,jdbcType=VARCHAR},
+      ACTIVECLASS_CODE = #{record.activeclassCode,jdbcType=VARCHAR},
+      LCC_CODE = #{record.lccCode,jdbcType=VARCHAR},
+      USER_CODE = #{record.userCode,jdbcType=VARCHAR},
+      EXPORT_DATE = #{record.exportDate,jdbcType=TIMESTAMP},
+      USER_NAME = #{record.userName,jdbcType=VARCHAR},
+      RECEIVER_CODE = #{record.receiverCode,jdbcType=VARCHAR},
+      RECEIVER_NAME = #{record.receiverName,jdbcType=VARCHAR},
+      RECEIVER_DATE = #{record.receiverDate,jdbcType=TIMESTAMP},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      IS_REMOVED = #{record.isRemoved,jdbcType=DECIMAL},
+      STOCK_CODE = #{record.stockCode,jdbcType=VARCHAR},
+      EXPORT_LCC_CODE = #{record.exportLccCode,jdbcType=VARCHAR},
+      EXPORT_STOCK_CODE = #{record.exportStockCode,jdbcType=VARCHAR},
+      IMPORT_STATE = #{record.importState,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsExscmmaster" >
+    update PIP_MMS_EXSCMMASTER
+    <set >
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="exorderNo != null" >
+        EXORDER_NO = #{exorderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="activeclassCode != null" >
+        ACTIVECLASS_CODE = #{activeclassCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lccCode != null" >
+        LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        USER_CODE = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exportDate != null" >
+        EXPORT_DATE = #{exportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userName != null" >
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverCode != null" >
+        RECEIVER_CODE = #{receiverCode,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null" >
+        RECEIVER_NAME = #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverDate != null" >
+        RECEIVER_DATE = #{receiverDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isRemoved != null" >
+        IS_REMOVED = #{isRemoved,jdbcType=DECIMAL},
+      </if>
+      <if test="stockCode != null" >
+        STOCK_CODE = #{stockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exportLccCode != null" >
+        EXPORT_LCC_CODE = #{exportLccCode,jdbcType=VARCHAR},
+      </if>
+      <if test="exportStockCode != null" >
+        EXPORT_STOCK_CODE = #{exportStockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="importState != null" >
+        IMPORT_STATE = #{importState,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.material.supp.domain.PipMmsExscmmaster" >
+    update PIP_MMS_EXSCMMASTER
+    set PROJECT_ID = #{projectId,jdbcType=VARCHAR},
+      EXORDER_NO = #{exorderNo,jdbcType=VARCHAR},
+      ACTIVECLASS_CODE = #{activeclassCode,jdbcType=VARCHAR},
+      LCC_CODE = #{lccCode,jdbcType=VARCHAR},
+      USER_CODE = #{userCode,jdbcType=VARCHAR},
+      EXPORT_DATE = #{exportDate,jdbcType=TIMESTAMP},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      RECEIVER_CODE = #{receiverCode,jdbcType=VARCHAR},
+      RECEIVER_NAME = #{receiverName,jdbcType=VARCHAR},
+      RECEIVER_DATE = #{receiverDate,jdbcType=TIMESTAMP},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      IS_REMOVED = #{isRemoved,jdbcType=DECIMAL},
+      STOCK_CODE = #{stockCode,jdbcType=VARCHAR},
+      EXPORT_LCC_CODE = #{exportLccCode,jdbcType=VARCHAR},
+      EXPORT_STOCK_CODE = #{exportStockCode,jdbcType=VARCHAR},
+      IMPORT_STATE = #{importState,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

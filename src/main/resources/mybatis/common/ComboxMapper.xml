@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.common.dao.ComboxMapper" >
+	<select id="getDict_PUB" parameterType="map" resultType="map">
+		select m.*
+		from 
+		(select 
+		VCODE||'_'||V_ID as "vCode",
+		VNAME as "vName"
+		from PIP_COMM_DICT_PUBLIC dict
+		where VCODE||'_'||V_ID||VNAME||HELP_CODE like '%'||#{q}||'%' and  DICT_CODE=#{code}
+		order by length(VNAME))m where rownum&lt;=#{limit}
+	</select>
+	
+	<select id="getName_PUB" parameterType="map" resultType="String">
+		select VNAME 
+		from PIP_COMM_DICT_PUBLIC
+		where DICT_CODE=#{dictCode} and VCODE||'_'||V_ID=#{vCode}
+	</select>
+	
+	<select id="getDict_ICD" parameterType="map" resultType="map">
+		select m.*
+		from 
+		(select 
+		VCODE||'_'||ID as "vCode",
+		VNAME as "vName"
+		from PIP_COMM_DICT_ICD dict
+		where VCODE||'_'||ID||VNAME||HELP_CODE like '%'||#{q}||'%' and  DICT_CODE=#{code}
+		order by length(VNAME))m where rownum&lt;=#{limit}
+	</select>
+	
+	<select id="getName_ICD" parameterType="map" resultType="String">
+		select VNAME 
+		from PIP_COMM_DICT_ICD
+		where DICT_CODE=#{dictCode} and VCODE||'_'||ID=#{vCode}
+	</select>
+	
+	<select id="getICDNameById" parameterType="String" resultType="String">
+		select VNAME 
+		from PIP_COMM_DICT_ICD
+		where ID=#{id}
+	</select>
+	
+	<select id="getDict_DISTRICT" parameterType="map" resultType="map">
+		select m.*
+		from 
+		(select 
+		VCODE as "vCode",
+		VNAME as "vName"
+		from PIP_COMM_DICT_DISTRICT dict
+		where VCODE||VNAME||HELP_CODE like '%'||#{q}||'%' and DICT_CODE=#{code}
+		<if test="code !='DISTRICT.01'">
+			and length(#{prevCode})>0 and VCODE like #{prevCode}||'%'
+		</if>
+		order by length(VNAME))m where rownum&lt;=#{limit}
+	</select>
+	
+	<select id="getName_DISTRICT" parameterType="map" resultType="String">
+		select VNAME 
+		from PIP_COMM_DICT_DISTRICT
+		where DICT_CODE=#{dictCode} and VCODE=#{vCode}
+	</select>
+	<select id="getAreaName" parameterType="String" resultType="String">
+		select VNAME 
+		from PIP_COMM_DICT_DISTRICT
+		where  VCODE=#{vCode}
+	</select>
+
+	<select id="getPatientByName" resultType="map">
+
+		select patient_name , patient_id from pip_comm_patient p
+		where 1=1
+		and ( Regexp_like(p.patient_name,#{q},'i' ) or Regexp_like(p.help_code,#{q},'i' ) ) <!-- 大小写不敏感的模糊查询 -->
+		<if test="limit != null and limit != ''">
+			and rownum &lt;= #{limit}
+		</if>
+	</select>
+
+	<select id="getUserByName" resultType="map">
+
+		select lu.name , lc.lcc_name from PIP_COMM_LCC_USER lu left join pip_comm_lcc lc on lu.lcc_code = lc.lcc_code
+		where 1=1
+		and lc.lcc_code = #{lccCode}
+		and ( Regexp_like(lu.name,#{q},'i' ) or Regexp_like(lu.help_code,#{q},'i' ) ) <!-- 大小写不敏感的模糊查询 -->
+		<if test="limit != null and limit != ''">
+			and rownum &lt;= #{limit}
+		</if>
+
+	</select>
+</mapper>

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.msg.dao.PipMsgHandlerMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.msg.domain.PipMsgHandler" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PATIENT_ID" property="patientId" jdbcType="VARCHAR" />
+    <result column="MSGSEND_ID" property="msgsendId" jdbcType="VARCHAR" />
+    <result column="MSG_NAME" property="msgName" jdbcType="VARCHAR" />
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+    <result column="IS_HANDLER" property="isHandler" jdbcType="INTEGER" />
+    <result column="IS_PASS" property="isPass" jdbcType="INTEGER" />
+    <result column="HANDLER_DATE" property="handlerDate" jdbcType="TIMESTAMP" />
+    <result column="IS_GETMSG" property="isGetmsg" jdbcType="INTEGER" />
+    <result column="NOREPLY_REASON" property="noreplyReason" jdbcType="VARCHAR" />
+    <result column="CREATE_NAME" property="createName" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="BZ" property="bz" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, PATIENT_ID, MSGSEND_ID, MSG_NAME, MOBILE, IS_HANDLER, IS_PASS, HANDLER_DATE, 
+    IS_GETMSG, NOREPLY_REASON, CREATE_NAME, CREATE_BY, CREATE_DATE, BZ
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.msg.domain.PipMsgHandlerExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_MSG_HANDLER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_MSG_HANDLER
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PIP_MSG_HANDLER
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.msg.domain.PipMsgHandlerExample" >
+    delete from PIP_MSG_HANDLER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.msg.domain.PipMsgHandler" >
+    insert into PIP_MSG_HANDLER (ID, PATIENT_ID, MSGSEND_ID, 
+      MSG_NAME, MOBILE, IS_HANDLER, 
+      IS_PASS, HANDLER_DATE, IS_GETMSG, 
+      NOREPLY_REASON, CREATE_NAME, CREATE_BY, 
+      CREATE_DATE, BZ)
+    values (#{id,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, #{msgsendId,jdbcType=VARCHAR}, 
+      #{msgName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{isHandler,jdbcType=INTEGER}, 
+      #{isPass,jdbcType=INTEGER}, #{handlerDate,jdbcType=TIMESTAMP}, #{isGetmsg,jdbcType=INTEGER}, 
+      #{noreplyReason,jdbcType=VARCHAR}, #{createName,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{bz,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.msg.domain.PipMsgHandler" >
+    insert into PIP_MSG_HANDLER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="patientId != null" >
+        PATIENT_ID,
+      </if>
+      <if test="msgsendId != null" >
+        MSGSEND_ID,
+      </if>
+      <if test="msgName != null" >
+        MSG_NAME,
+      </if>
+      <if test="mobile != null" >
+        MOBILE,
+      </if>
+      <if test="isHandler != null" >
+        IS_HANDLER,
+      </if>
+      <if test="isPass != null" >
+        IS_PASS,
+      </if>
+      <if test="handlerDate != null" >
+        HANDLER_DATE,
+      </if>
+      <if test="isGetmsg != null" >
+        IS_GETMSG,
+      </if>
+      <if test="noreplyReason != null" >
+        NOREPLY_REASON,
+      </if>
+      <if test="createName != null" >
+        CREATE_NAME,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="bz != null" >
+        BZ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null" >
+        #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="msgsendId != null" >
+        #{msgsendId,jdbcType=VARCHAR},
+      </if>
+      <if test="msgName != null" >
+        #{msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isHandler != null" >
+        #{isHandler,jdbcType=INTEGER},
+      </if>
+      <if test="isPass != null" >
+        #{isPass,jdbcType=INTEGER},
+      </if>
+      <if test="handlerDate != null" >
+        #{handlerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isGetmsg != null" >
+        #{isGetmsg,jdbcType=INTEGER},
+      </if>
+      <if test="noreplyReason != null" >
+        #{noreplyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bz != null" >
+        #{bz,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.msg.domain.PipMsgHandlerExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_MSG_HANDLER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_MSG_HANDLER
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientId != null" >
+        PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgsendId != null" >
+        MSGSEND_ID = #{record.msgsendId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgName != null" >
+        MSG_NAME = #{record.msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isHandler != null" >
+        IS_HANDLER = #{record.isHandler,jdbcType=INTEGER},
+      </if>
+      <if test="record.isPass != null" >
+        IS_PASS = #{record.isPass,jdbcType=INTEGER},
+      </if>
+      <if test="record.handlerDate != null" >
+        HANDLER_DATE = #{record.handlerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isGetmsg != null" >
+        IS_GETMSG = #{record.isGetmsg,jdbcType=INTEGER},
+      </if>
+      <if test="record.noreplyReason != null" >
+        NOREPLY_REASON = #{record.noreplyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createName != null" >
+        CREATE_NAME = #{record.createName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bz != null" >
+        BZ = #{record.bz,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_MSG_HANDLER
+    set ID = #{record.id,jdbcType=VARCHAR},
+      PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      MSGSEND_ID = #{record.msgsendId,jdbcType=VARCHAR},
+      MSG_NAME = #{record.msgName,jdbcType=VARCHAR},
+      MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      IS_HANDLER = #{record.isHandler,jdbcType=INTEGER},
+      IS_PASS = #{record.isPass,jdbcType=INTEGER},
+      HANDLER_DATE = #{record.handlerDate,jdbcType=TIMESTAMP},
+      IS_GETMSG = #{record.isGetmsg,jdbcType=INTEGER},
+      NOREPLY_REASON = #{record.noreplyReason,jdbcType=VARCHAR},
+      CREATE_NAME = #{record.createName,jdbcType=VARCHAR},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      BZ = #{record.bz,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.msg.domain.PipMsgHandler" >
+    update PIP_MSG_HANDLER
+    <set >
+      <if test="patientId != null" >
+        PATIENT_ID = #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="msgsendId != null" >
+        MSGSEND_ID = #{msgsendId,jdbcType=VARCHAR},
+      </if>
+      <if test="msgName != null" >
+        MSG_NAME = #{msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        MOBILE = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isHandler != null" >
+        IS_HANDLER = #{isHandler,jdbcType=INTEGER},
+      </if>
+      <if test="isPass != null" >
+        IS_PASS = #{isPass,jdbcType=INTEGER},
+      </if>
+      <if test="handlerDate != null" >
+        HANDLER_DATE = #{handlerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isGetmsg != null" >
+        IS_GETMSG = #{isGetmsg,jdbcType=INTEGER},
+      </if>
+      <if test="noreplyReason != null" >
+        NOREPLY_REASON = #{noreplyReason,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        CREATE_NAME = #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bz != null" >
+        BZ = #{bz,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.msg.domain.PipMsgHandler" >
+    update PIP_MSG_HANDLER
+    set PATIENT_ID = #{patientId,jdbcType=VARCHAR},
+      MSGSEND_ID = #{msgsendId,jdbcType=VARCHAR},
+      MSG_NAME = #{msgName,jdbcType=VARCHAR},
+      MOBILE = #{mobile,jdbcType=VARCHAR},
+      IS_HANDLER = #{isHandler,jdbcType=INTEGER},
+      IS_PASS = #{isPass,jdbcType=INTEGER},
+      HANDLER_DATE = #{handlerDate,jdbcType=TIMESTAMP},
+      IS_GETMSG = #{isGetmsg,jdbcType=INTEGER},
+      NOREPLY_REASON = #{noreplyReason,jdbcType=VARCHAR},
+      CREATE_NAME = #{createName,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      BZ = #{bz,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

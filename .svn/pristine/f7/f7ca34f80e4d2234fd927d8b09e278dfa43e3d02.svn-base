@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.data.dao.PipCommPatientNewjoinMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.data.domain.PipCommPatientNewjoin" >
+    <id column="PATIENT_ID" property="patientId" jdbcType="VARCHAR" />
+    <result column="PATIENT_NAME" property="patientName" jdbcType="VARCHAR" />
+    <result column="SEX" property="sex" jdbcType="VARCHAR" />
+    <result column="IDNUMBER" property="idnumber" jdbcType="VARCHAR" />
+    <result column="EDU_LEVEL" property="eduLevel" jdbcType="VARCHAR" />
+    <result column="F_LANGUAGE" property="fLanguage" jdbcType="VARCHAR" />
+    <result column="MANRHIS" property="manrhis" jdbcType="VARCHAR" />
+    <result column="WOMANRHIS" property="womanrhis" jdbcType="VARCHAR" />
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+    <result column="ISDIABETES" property="isdiabetes" jdbcType="VARCHAR" />
+    <result column="HOSPITALDATE" property="hospitaldate" jdbcType="TIMESTAMP" />
+    <result column="CANMSG" property="canmsg" jdbcType="VARCHAR" />
+    <result column="REQUIRECONSENT" property="requireconsent" jdbcType="VARCHAR" />
+    <result column="CANRADIOMSG" property="canradiomsg" jdbcType="VARCHAR" />
+    <result column="CANCHAT" property="canchat" jdbcType="VARCHAR" />
+    <result column="INOTHERPROJ" property="inotherproj" jdbcType="VARCHAR" />
+    <result column="CANTREATMENT" property="cantreatment" jdbcType="VARCHAR" />
+    <result column="AGEGRADE" property="agegrade" jdbcType="VARCHAR" />
+    <result column="BIRTHDAY" property="birthday" jdbcType="VARCHAR" />
+    <result column="BZ" property="bz" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    PATIENT_ID, PATIENT_NAME, SEX, IDNUMBER, EDU_LEVEL, F_LANGUAGE, MANRHIS, WOMANRHIS, 
+    MOBILE, ISDIABETES, HOSPITALDATE, CANMSG, REQUIRECONSENT, CANRADIOMSG, CANCHAT, INOTHERPROJ, 
+    CANTREATMENT, AGEGRADE, BIRTHDAY, BZ
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientNewjoinExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_COMM_PATIENT_NEWJOIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_COMM_PATIENT_NEWJOIN
+    where PATIENT_ID = #{patientId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PIP_COMM_PATIENT_NEWJOIN
+    where PATIENT_ID = #{patientId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientNewjoinExample" >
+    delete from PIP_COMM_PATIENT_NEWJOIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientNewjoin" >
+    insert into PIP_COMM_PATIENT_NEWJOIN (PATIENT_ID, PATIENT_NAME, SEX, 
+      IDNUMBER, EDU_LEVEL, F_LANGUAGE, 
+      MANRHIS, WOMANRHIS, MOBILE, 
+      ISDIABETES, HOSPITALDATE, CANMSG, 
+      REQUIRECONSENT, CANRADIOMSG, CANCHAT, 
+      INOTHERPROJ, CANTREATMENT, AGEGRADE, 
+      BIRTHDAY, BZ)
+    values (#{patientId,jdbcType=VARCHAR}, #{patientName,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{idnumber,jdbcType=VARCHAR}, #{eduLevel,jdbcType=VARCHAR}, #{fLanguage,jdbcType=VARCHAR}, 
+      #{manrhis,jdbcType=VARCHAR}, #{womanrhis,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{isdiabetes,jdbcType=VARCHAR}, #{hospitaldate,jdbcType=TIMESTAMP}, #{canmsg,jdbcType=VARCHAR}, 
+      #{requireconsent,jdbcType=VARCHAR}, #{canradiomsg,jdbcType=VARCHAR}, #{canchat,jdbcType=VARCHAR}, 
+      #{inotherproj,jdbcType=VARCHAR}, #{cantreatment,jdbcType=VARCHAR}, #{agegrade,jdbcType=VARCHAR}, 
+      #{birthday,jdbcType=VARCHAR}, #{bz,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientNewjoin" >
+    insert into PIP_COMM_PATIENT_NEWJOIN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="patientId != null" >
+        PATIENT_ID,
+      </if>
+      <if test="patientName != null" >
+        PATIENT_NAME,
+      </if>
+      <if test="sex != null" >
+        SEX,
+      </if>
+      <if test="idnumber != null" >
+        IDNUMBER,
+      </if>
+      <if test="eduLevel != null" >
+        EDU_LEVEL,
+      </if>
+      <if test="fLanguage != null" >
+        F_LANGUAGE,
+      </if>
+      <if test="manrhis != null" >
+        MANRHIS,
+      </if>
+      <if test="womanrhis != null" >
+        WOMANRHIS,
+      </if>
+      <if test="mobile != null" >
+        MOBILE,
+      </if>
+      <if test="isdiabetes != null" >
+        ISDIABETES,
+      </if>
+      <if test="hospitaldate != null" >
+        HOSPITALDATE,
+      </if>
+      <if test="canmsg != null" >
+        CANMSG,
+      </if>
+      <if test="requireconsent != null" >
+        REQUIRECONSENT,
+      </if>
+      <if test="canradiomsg != null" >
+        CANRADIOMSG,
+      </if>
+      <if test="canchat != null" >
+        CANCHAT,
+      </if>
+      <if test="inotherproj != null" >
+        INOTHERPROJ,
+      </if>
+      <if test="cantreatment != null" >
+        CANTREATMENT,
+      </if>
+      <if test="agegrade != null" >
+        AGEGRADE,
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY,
+      </if>
+      <if test="bz != null" >
+        BZ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="patientId != null" >
+        #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="patientName != null" >
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="idnumber != null" >
+        #{idnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="eduLevel != null" >
+        #{eduLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="fLanguage != null" >
+        #{fLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="manrhis != null" >
+        #{manrhis,jdbcType=VARCHAR},
+      </if>
+      <if test="womanrhis != null" >
+        #{womanrhis,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isdiabetes != null" >
+        #{isdiabetes,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitaldate != null" >
+        #{hospitaldate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="canmsg != null" >
+        #{canmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="requireconsent != null" >
+        #{requireconsent,jdbcType=VARCHAR},
+      </if>
+      <if test="canradiomsg != null" >
+        #{canradiomsg,jdbcType=VARCHAR},
+      </if>
+      <if test="canchat != null" >
+        #{canchat,jdbcType=VARCHAR},
+      </if>
+      <if test="inotherproj != null" >
+        #{inotherproj,jdbcType=VARCHAR},
+      </if>
+      <if test="cantreatment != null" >
+        #{cantreatment,jdbcType=VARCHAR},
+      </if>
+      <if test="agegrade != null" >
+        #{agegrade,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="bz != null" >
+        #{bz,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientNewjoinExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_COMM_PATIENT_NEWJOIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_COMM_PATIENT_NEWJOIN
+    <set >
+      <if test="record.patientId != null" >
+        PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientName != null" >
+        PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        SEX = #{record.sex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idnumber != null" >
+        IDNUMBER = #{record.idnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eduLevel != null" >
+        EDU_LEVEL = #{record.eduLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fLanguage != null" >
+        F_LANGUAGE = #{record.fLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manrhis != null" >
+        MANRHIS = #{record.manrhis,jdbcType=VARCHAR},
+      </if>
+      <if test="record.womanrhis != null" >
+        WOMANRHIS = #{record.womanrhis,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isdiabetes != null" >
+        ISDIABETES = #{record.isdiabetes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hospitaldate != null" >
+        HOSPITALDATE = #{record.hospitaldate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.canmsg != null" >
+        CANMSG = #{record.canmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requireconsent != null" >
+        REQUIRECONSENT = #{record.requireconsent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.canradiomsg != null" >
+        CANRADIOMSG = #{record.canradiomsg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.canchat != null" >
+        CANCHAT = #{record.canchat,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inotherproj != null" >
+        INOTHERPROJ = #{record.inotherproj,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cantreatment != null" >
+        CANTREATMENT = #{record.cantreatment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.agegrade != null" >
+        AGEGRADE = #{record.agegrade,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birthday != null" >
+        BIRTHDAY = #{record.birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bz != null" >
+        BZ = #{record.bz,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_COMM_PATIENT_NEWJOIN
+    set PATIENT_ID = #{record.patientId,jdbcType=VARCHAR},
+      PATIENT_NAME = #{record.patientName,jdbcType=VARCHAR},
+      SEX = #{record.sex,jdbcType=VARCHAR},
+      IDNUMBER = #{record.idnumber,jdbcType=VARCHAR},
+      EDU_LEVEL = #{record.eduLevel,jdbcType=VARCHAR},
+      F_LANGUAGE = #{record.fLanguage,jdbcType=VARCHAR},
+      MANRHIS = #{record.manrhis,jdbcType=VARCHAR},
+      WOMANRHIS = #{record.womanrhis,jdbcType=VARCHAR},
+      MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      ISDIABETES = #{record.isdiabetes,jdbcType=VARCHAR},
+      HOSPITALDATE = #{record.hospitaldate,jdbcType=TIMESTAMP},
+      CANMSG = #{record.canmsg,jdbcType=VARCHAR},
+      REQUIRECONSENT = #{record.requireconsent,jdbcType=VARCHAR},
+      CANRADIOMSG = #{record.canradiomsg,jdbcType=VARCHAR},
+      CANCHAT = #{record.canchat,jdbcType=VARCHAR},
+      INOTHERPROJ = #{record.inotherproj,jdbcType=VARCHAR},
+      CANTREATMENT = #{record.cantreatment,jdbcType=VARCHAR},
+      AGEGRADE = #{record.agegrade,jdbcType=VARCHAR},
+      BIRTHDAY = #{record.birthday,jdbcType=VARCHAR},
+      BZ = #{record.bz,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientNewjoin" >
+    update PIP_COMM_PATIENT_NEWJOIN
+    <set >
+      <if test="patientName != null" >
+        PATIENT_NAME = #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        SEX = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="idnumber != null" >
+        IDNUMBER = #{idnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="eduLevel != null" >
+        EDU_LEVEL = #{eduLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="fLanguage != null" >
+        F_LANGUAGE = #{fLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="manrhis != null" >
+        MANRHIS = #{manrhis,jdbcType=VARCHAR},
+      </if>
+      <if test="womanrhis != null" >
+        WOMANRHIS = #{womanrhis,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        MOBILE = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isdiabetes != null" >
+        ISDIABETES = #{isdiabetes,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitaldate != null" >
+        HOSPITALDATE = #{hospitaldate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="canmsg != null" >
+        CANMSG = #{canmsg,jdbcType=VARCHAR},
+      </if>
+      <if test="requireconsent != null" >
+        REQUIRECONSENT = #{requireconsent,jdbcType=VARCHAR},
+      </if>
+      <if test="canradiomsg != null" >
+        CANRADIOMSG = #{canradiomsg,jdbcType=VARCHAR},
+      </if>
+      <if test="canchat != null" >
+        CANCHAT = #{canchat,jdbcType=VARCHAR},
+      </if>
+      <if test="inotherproj != null" >
+        INOTHERPROJ = #{inotherproj,jdbcType=VARCHAR},
+      </if>
+      <if test="cantreatment != null" >
+        CANTREATMENT = #{cantreatment,jdbcType=VARCHAR},
+      </if>
+      <if test="agegrade != null" >
+        AGEGRADE = #{agegrade,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="bz != null" >
+        BZ = #{bz,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PATIENT_ID = #{patientId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.data.domain.PipCommPatientNewjoin" >
+    update PIP_COMM_PATIENT_NEWJOIN
+    set PATIENT_NAME = #{patientName,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=VARCHAR},
+      IDNUMBER = #{idnumber,jdbcType=VARCHAR},
+      EDU_LEVEL = #{eduLevel,jdbcType=VARCHAR},
+      F_LANGUAGE = #{fLanguage,jdbcType=VARCHAR},
+      MANRHIS = #{manrhis,jdbcType=VARCHAR},
+      WOMANRHIS = #{womanrhis,jdbcType=VARCHAR},
+      MOBILE = #{mobile,jdbcType=VARCHAR},
+      ISDIABETES = #{isdiabetes,jdbcType=VARCHAR},
+      HOSPITALDATE = #{hospitaldate,jdbcType=TIMESTAMP},
+      CANMSG = #{canmsg,jdbcType=VARCHAR},
+      REQUIRECONSENT = #{requireconsent,jdbcType=VARCHAR},
+      CANRADIOMSG = #{canradiomsg,jdbcType=VARCHAR},
+      CANCHAT = #{canchat,jdbcType=VARCHAR},
+      INOTHERPROJ = #{inotherproj,jdbcType=VARCHAR},
+      CANTREATMENT = #{cantreatment,jdbcType=VARCHAR},
+      AGEGRADE = #{agegrade,jdbcType=VARCHAR},
+      BIRTHDAY = #{birthday,jdbcType=VARCHAR},
+      BZ = #{bz,jdbcType=VARCHAR}
+    where PATIENT_ID = #{patientId,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insertGroup" parameterType="map">
+    insert into pip_comm_patient_info(project_id,patient_id,sex,age_grade,edu_level)
+    values('004',#{patientId,jdbcType=VARCHAR},#{sex,jdbcType=INTEGER},#{ageGrade,jdbcType=INTEGER},#{eduLevel,jdbcType=INTEGER})
+  </insert>
+
+    <!-- 获取新增人员的主键ID -->
+    <select id="getNewPatientid" resultType="string" parameterType="string">
+    select
+     decode(sign(to_number( nvl(max(patient_id),0))- to_number(substr(max(patient_id),0,3)||'99000') ),
+      -1,substr(nvl(max(patient_id),#{lccCode}||'000'),0,3)||'99001',(to_number( max(patient_id))+1)||''
+     )
+    from pip_comm_patient p where lcc_code = #{lccCode}
+</select>
+
+</mapper>

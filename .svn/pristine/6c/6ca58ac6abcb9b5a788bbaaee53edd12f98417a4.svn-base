@@ -1,0 +1,610 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="org.apache.shiro.web.filter.authc.FormAuthenticationFilter"%>
+<%@ page import="org.apache.shiro.authc.LockedAccountException"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>心血管病高危人群早期筛查与综合干预项目</title>
+<%@ include file="/WEB-INF/common/common-js-style.jsp"%>
+<%@ include file="/WEB-INF/common/table-js-style.jsp"%> 
+<%@ include file="/WEB-INF/common/less-common-js-style.jsp"%>
+<%@ include file="/WEB-INF/common/tree-js-style.jsp"%>
+<%@ include file="/WEB-INF/common/custom-js-style.jsp"%> 
+<%@ include file="/WEB-INF/common/backtop.jsp"%>
+<link type="text/css" rel="stylesheet" href="${ctx}/static/jquery-validation/1.11.1/validate.css"  />  
+<link type="text/css" href="${ctx }/static/login/css/reset.css" rel="stylesheet" />
+<link type="text/css" href="${ctx }/static/login/css/main-style.css" rel="stylesheet" />
+
+<style type="text/css">
+table{
+    width:100%;
+    height:44px;
+    margin: 0px  auto;  
+    background-color: #eeeeee;
+    background: -webkit-gradient(linear, 0%  0%, 0% 100%, from(#0064C8), to(#0064C8), color-stop(.5,#0096FF));
+}
+
+table td{
+    text-align:center;
+    width:137.25px;
+    font-size: 16px;
+    height: 100%;
+    border-right:1px solid #0064C8;
+    line-height:44px;
+}
+table tr{
+     height: 100%;
+     width:100%;
+    
+}
+
+table td a{
+    width:100%;
+    height: 100%;
+    font-family:"黑体"; 
+    font-weight:bold;
+    color: #ff0000; 
+    text-decoration: none;
+    display: block; 
+}
+
+table td a:hover{
+    height: 100%;
+    background-color: #33bcc2;
+    text-decoration: none;
+    display: block; 
+    color: #fff;
+}
+table .active{
+    background-color: #33bcc2;
+    color: #fff;
+}
+#brwrap{
+    background-color: #ffffff;
+    width: 1098px;
+    margin: 0 auto; 
+    font-family:Microsoft YaHei,"微软雅黑",Lucida,Verdana,Hiragino Sans GB,STHeiti,WenQuanYi Micro Hei,Droid Sans Fallback,SimSun,sans-serif;   
+}
+#banner{
+    max-width: 100%;
+    margin: 0px  auto;  
+}
+.logo{
+    max-width: 1098px;
+    margin: 0px auto;  
+}
+body{
+  background-color: #eeeeee;
+}
+.panel{
+  max-width: 960px;
+  text-align:center;
+  margin:0 auto;
+  borderTopWidth:0px;
+  font-family:"黑体"; 
+}
+.panel-heading{
+  text-align:left;
+  font-family:"黑体"; 
+  font-size: 16px;
+  font-weight:bold;
+  color:red !important ;
+}
+.panel-default{
+   margin-bottom: 18px;  
+}
+.username{
+    background: #fff url(${ctx}/static/login/images/icon01.png) no-repeat 165px 6px; 
+    margin-bottom: 15px;  
+}
+.password{
+    background: #fff url(${ctx}/static/login/images/icon02.png) no-repeat 165px 6px; 
+    margin-bottom: 15px;  
+}
+.blogin{
+    width: 80px;
+}
+.bcancel{
+   width: 80px;
+}
+.leg{   
+     font-weight:bold;
+     font-family:"黑体"; 
+     font-size: 13px; 
+     text-align:left;  
+     height: 30px; 
+     line-height:30px;                  
+}
+.leg>img {   
+    align:center;
+    vertical-align:middle;
+    line-height:30px;     
+ }
+.hospital{
+   list-style:square !important;
+   list-style-position:inside !important;
+} 
+.hospital>li{
+   list-style:square !important; 
+   list-style-position:inside !important;
+   width:95%;
+   text-align:left;  
+   border-bottom:1px solid #ddd;
+   margin: auto  10px;
+   white-space:nowrap;  
+} 
+.hospital>li>a{
+   line-height:34px;
+   margin: 0px  0px;
+   padding: 0px 0px;  
+   cursor:pointer;
+   text-decoration: none;
+}   
+.hospital>li>a>p{
+   line-height:8px;
+   margin: 0px  0px;
+   padding: 0px 0px;  
+} 
+.ylink{
+    text-align:center;
+    width:100%;
+    margin: 0px  100px;  
+}
+   
+.ylink>a{
+    cursor:pointer;
+    text-decoration: none;
+    float: left;
+    margin: 0 30px 0 0;
+    font-size: 16px;
+    height: 31px; 
+    color:red;
+}
+
+.uldefault{
+     float: left;
+     max-width: 485px;
+     list-style:disc !important;
+     list-style-position:inside !important;
+}
+.uldefault>li{
+     font-family:"黑体"; 
+     font-size: 13px; 
+     text-align:left;  
+     height: 34px; 
+     line-height:30px; 
+     list-style:disc !important;
+     list-style-position:inside !important;
+     margin: auto  10px;
+     white-space:nowrap; 
+     border-bottom:1px dashed #ddd; 
+}
+
+.uldefault2>li{
+     font-family:"黑体"; 
+     font-size: 13px; 
+     text-align:left;  
+     height: 26px; 
+     line-height:26px; 
+     list-style:disc !important;
+     list-style-position:inside !important;
+     white-space:nowrap; 
+}
+.uldefault>li>a{
+    color: #000000; 
+    cursor:pointer;
+    text-decoration: none;
+}
+.uldefault2>li>a{
+    color: #000000; 
+    cursor:pointer;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: none;
+    display: block; 
+    color: green !important;
+}
+
+</style>
+<!-- white-space:nowrap; -->
+<script type="text/javascript" src="${ctx}/static/jquery/js/jquery-1.10.2.min.js"></script>
+<script src="${ctx }/static/login/BreakingNews.js"></script>
+<script type="text/javascript" src="${ctx}/static/jquery-validation/1.11.1/jquery.validate.js" ></script>
+<script type="text/javascript" src="${ctx}/static/jquery-validation/1.11.1/messages_zh.js" ></script>
+
+</head>
+
+<body  >
+<div id="brwrap">
+	<header class="logo"><img src="${ctx }/static/login/images/logo_top.png" title="心血管病高危人群早期筛查与综合干预项目"/></header>
+   
+    <div id="banner">
+    
+  <%--   <img src="${ctx }/static/login/images/banner.png" width="960" height="229" /> --%>
+    
+     <table>
+        <tr> 
+            <td><a href="#" >首页</a></td>
+            <td><a href="#">项目介绍</a></td>
+            <td><a href="#">组织机构</a></td>
+            <td><a href="#">项目内容</a></td>
+            <td><a href="#">项目进展</a></td>
+            <td><a href="#">项目考核</a></td>
+            <td><a href="#">项目文件</a></td>
+            <td style='border-right:0px solid #0064C8;'><a href="#">联系我们</a></td>
+        </tr>
+    </table>
+    </div>
+  
+    <div class="panel panel-default">
+        <div class="panel-body">
+             <a href="#">心血管病高危人群早期筛查与综合干预项目启动暨培训会议于2014年9月29日召开！</a>
+        </div>
+    </div>
+   <script>
+	$(document).ready(function(){
+		
+		
+ 		$("#username").focus();
+ 		$("#loginForm").validate({
+ 			rules:{
+ 				username:{
+ 					required:true,
+ 					minlength:3,
+ 					maxlength:30
+ 				},
+ 				password:{
+ 					required:true,
+ 					maxlength:30,
+ 					minlength:6
+ 				},
+ 				project:{
+ 					required:true
+ 				}
+ 			},
+ 			messages:{
+	 			username:{
+	 				required:'请输入登录名',
+	 				maxlength:$.format('不能超过{0}个字符'),
+					minlength:$.format('不能少于{0}个字符')
+	 			},password:{
+					required:'请输入密码',
+					maxlength:$.format('不能超过{0}个字符'),
+					minlength:$.format('不能少于{0}个字符')
+	 			},
+	 			project:{
+ 					required:'请选择账户所在项目'
+ 				}
+ 			}
+ 		});
+});	
+	
+</script>
+    <div id="mainContent">
+    	<!--aside-->
+    	<aside>
+    	
+        <div class="panel panel-default">
+        <div class="panel-heading">用户登录</div>
+        <div class="panel-body">
+                <form id="loginForm" action="${ctx}/login" method="post">
+                        <fieldset>
+                            <ol>
+                                  <li>
+                                    <input id="username" name="username" class="username  form-control" type="text" placeholder="用户名" autofocus required />
+                                 </li> 
+                                 <li>
+                                    <input id="password" name="password" class="password form-control"  type="password" placeholder="密码" required  />
+                                 </li>
+                                 <div id="u4_rtf2">
+                                    <p style="text-align: center;">
+                                        <%
+                                            String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+                                            if(null == error){
+                                                error = (String) request.getAttribute("errorMessage");
+                                            }
+                                            if (error != null) {
+                                        %>
+                                        <span  id ="error" style="color: #ff0000">
+                                            <%
+                                            if (error.contains("DisabledAccountException")) {
+                                                out.print("用户已被屏蔽,请登录其他用户");
+                                            }else if(error.contains("UnknownAccountException")){
+                                                out.println("用户不存在");
+                                            }else if(error.contains("AuthenticationException")){
+                                                out.println("登录名或密码错误");
+                                            } else {
+                                                out.print("登录失败，请重试");
+                                            }
+                                        %>
+                                        </span>
+                                        <%}%>
+                                    </p>
+                               </div>
+                            </ol>
+                            <ol>
+                                 <li>
+                                    <button type="submit" id="submit" class="btn btn-primary btn-xs blogin">登录</button> 
+                                    <button type="reset" id="reset" class="btn btn-default btn-xs bcancel">取消</button>
+                                 </li>
+                                
+                            </ol>
+                        </fieldset>
+                    </form>
+        </div>
+        </div>
+        
+        <div class="panel panel-default">
+         <div class="panel-heading">项目参加单位</div>
+	        <div class="panel-body">
+	              <fieldset >  
+	                
+	                 <legend class='leg'><img src="${ctx}/static/login/images/area.png" alt="■"  />辽宁省</legend>  
+	                  <ul class='hospital'>
+	                  
+                                 <li>
+                                      <a>辽宁省人民医院</a>
+                                 </li> 
+                                 <li>
+                                      <a>大连经济技术开发区医院</a>
+                                 </li>
+                                 <li>
+                                      <a>盘锦市中心医院</a>
+                                 </li> 
+                                 <li>
+                                      <a>宽甸县中心医院</a>
+                                 </li>
+                                 <li>
+                                      <a>灯塔市中心医院</a>
+                                 </li> 
+	                  
+	                  </ul>
+	             </fieldset> 
+	             
+	             <fieldset >  
+                     <legend class='leg'><img src="${ctx}/static/login/images/area.png" alt="■"/>吉林省</legend>  
+                       <ul class='hospital'>
+                                  <li>
+                                      <a>吉林大学第一医院</a>
+                                 </li> 
+                                 <li>
+                                      <a>吉林市中心医院</a>
+                                 </li>
+                                 <li>
+                                      <a>延吉市市中医院</a>
+                                 </li>  
+                                 <li>
+                                      <a>辽源市第二人民医院</a>
+                                 </li>
+                                 <li>
+                                      <a>通化县医院</a>
+                                 </li>  
+                      </ul>
+                 </fieldset>  
+                 
+                  <fieldset >  
+                     <legend class='leg'><img src="${ctx}/static/login/images/area.png" alt="■"/>浙江省</legend>  
+                       <ul class='hospital'>
+                                  <li>
+                                      <a>丽水市中心医院</a>
+                                 </li> 
+                                 <li>
+                                      <a>诸暨市第二人民医院</a>
+                                 </li>
+                                 <li>
+                                      <a>昌化人民医院</a>
+                                 </li>  
+                                 <li>
+                                      <a>玉环县人民医院</a>
+                                 </li>
+                                 <li>
+                                      <a>义乌市北苑医院</a>
+                                 </li>  
+                      </ul>
+                 </fieldset> 
+                 
+                 
+                  <fieldset >  
+                     <legend class='leg'><img src="${ctx}/static/login/images/area.png" alt="■"/>广西壮族自治区</legend>  
+                       <ul class='hospital'>
+                                  <li>
+                                      <a>广西医科大学第一附属医院</a>
+                                 </li> 
+                                 <li>
+                                      <a>柳州市钢铁(集团)公司职工
+                                      <p>&nbsp;&nbsp;医院</p>
+                                      </a>
+                                 </li>
+                                 <li>
+                                      <a>柳江县人民医院</a>
+                                 </li>  
+                                 <li>
+                                      <a>武鸣县人民医院</a> 
+                                 </li>
+                                 
+                      </ul>
+                 </fieldset> 
+                 
+                 
+                  
+	        </div>
+        </div>
+        
+        
+        </aside>
+        <!--aside end-->
+        <div id="marginRight">
+        	<section>
+            	<header class="newTitle">
+                	<h3>项目新闻 </h3>
+                </header>
+                <div class="clearfix news row">
+                	<ul class='uldefault'>
+                	   <li><a>高危筛查项目组IT人员到英国牛津大学CTSU进行学习考察</a></li>
+                	   <li><a>国家心血管病中心项目工作人员到中国慢性病前瞻性研究现场进行观摩学习</a></li>
+                	   <li><a>国家心血管病中心项目工作人员到辽宁省进行现场调研</a></li>
+                	   <li><a>心血管病高危人群早期筛查与综合干预项目工作会在阜外医院召开</a></li> 
+                	   <li><a>国家心血管病中心项目工作人员到辽宁省进行现场调研</a></li>
+                	   <li><a>心血管病高危人群早期筛查与综合干预项目工作会在阜外医院召开</a></li> 
+                       <li style="border-bottom:0px dashed #ddd; "><a>国家心血管病中心项目工作人员到辽宁省进行现场调研</a></li>     
+                	</ul> 
+                    
+                   <figure class="imgRight"><img src="${ctx }/static/login/images/photoimg.png" alt=""/></figure>
+                </div>
+            </section>
+            <hr>
+            <section>
+                <header class="newTitle">
+                    <h3>心血管疾病可防可控，掌握疾病知识最关键 </h3>
+                </header>
+                <div class="news row ">
+                
+                <figure class="imgRight"><img src="${ctx }/static/login/images/dljk.png" alt=""/></figure>
+                    <ul class='uldefault2'>
+                       <li ><a>血脂异常是冠心病的独立危险因素</a></li>
+                       <li><a>体力活动于冠心病风险的剂量-反应关系</a></li>
+                       <li><a>社区心血管病二级预防应加强危险因素控制</a></li>
+                       <li><a>心血管病的主要危险因素及其预防</a></li>
+                       <li><a>社区心血管病二级预防应加强危险因素控制</a></li>   
+                       <li style='list-style-type:none !important;'><a href="#" class="more btn btn-primary btn-xs blogin">更多</a></li>   
+                    </ul>  
+                </div> 
+            </section>
+            <section class='row'>
+              <div  class="col-lg-6">
+                <header class="newTitle">
+                    <h3>项目进度</h3>
+                </header>
+            	<div class="moduleone">
+            	
+                	<figure><img src="${ctx }/static/login/images/file_icon02.png" alt=""/></figure>
+                    <div class="modulRight">
+                       <ol>
+                            <li>项目质量控制方案</li>
+                            <li>中心性数据监测</li>
+                            <li>中心校验血</li>
+                            <li>现场考核</li> 
+                            <li><a href="#" class="more">更多</a></li>
+                        </ol>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                 </div>
+                 <div class="col-lg-6">
+                 <header class="newTitle">
+                    <h3>质量监控</h3>
+                 </header>
+                <div class="moduletwo">
+                	<figure class="aa"><img src="${ctx }/static/login/images/file_icon01.png" alt=""/></figure>
+                    <div class="modulRight">
+                       <ol>
+                            <li>管理办法</li>
+                            <li>技术方案</li>
+                            <li>项目工作人员考核记录表</li>
+                            <li>现场考核记录表</li> 
+                            <li><a href="#" class="more">更多</a></li>
+                        </ol>
+                    </div>
+                </div>
+                 <br style="clear: both;"/>
+                </div>
+            </section>
+            <section class='row'>
+              <div  class="col-lg-6">
+              <header class="newTitle">
+                    <h3>工作流程</h3>
+                 </header>
+            	<div class="moduleone ">
+            	    <figure class="aa"><img src="${ctx }/static/login/images/file_icon04.png" alt=""/></figure>
+                	<div class="modulRight">
+                        <ol>
+                            <li>现场筛查操作手册V2.0</li>
+                            <li>心血管病干预指导手册V1.0</li>
+                            <li>超声技术指导手册V1.0</li>
+                            <li>&nbsp;</li>
+                            <li>&nbsp;</li>
+                            <li><a href="#" class="more">更多</a></li>
+                        </ol>
+                    </div>
+                   <br style="clear: both;"/>
+                </div>
+                </div>
+                <div  class="col-lg-6">
+                <header class="newTitle">
+                    <h3>经验交流</h3>
+                 </header>
+                <div class="moduletwo">
+                	<figure><img src="${ctx }/static/login/images/file_icon03.png" alt=""/></figure>
+                    <div class="modulRight">
+                        <ol>
+                            <li>血脂异常是冠心病的独立危险因素</li>
+                            <li>体力活动与冠心病风险的剂量-反应关系</li>
+                            <li>社区心血管病二级预防应加强危险因素控制</li>
+                            <li>心血管病的主要危险因素及其预防</li> 
+                            <li><a href="#" class="more">更多</a></li>
+                        </ol>
+                    </div>
+                </div>
+                 <br style="clear: both;"/>
+                 </div>
+            </section>
+            <%-- <section class='row'>
+            <div  class="col-lg-6">
+            
+            	<div class="moduleone">
+                	<figure><img src="${ctx }/static/login/images/file_icon02.png" alt=""/></figure>
+                    <div class="modulRight">
+                        <h4>学科前沿</h4>
+                        <ol>
+                            <li><a href="javascript:void(0);" style="font-size: 12px;color: black;text-decoration: none;" title="Lancet：过去十年中国急性心梗住院患者人数增长翻两倍">Lancet：过去十年中国急性心梗住院患</a></li>
+                            <li><a href="javascript:void(0);" style="font-size: 12px;color: black;text-decoration: none;" title="JAMA：干细胞治疗缺血性心肌病安全有效">JAMA：干细胞治疗缺血性心肌病安全</a></li>
+                            <li><a href="javascript:void(0);" style="font-size: 12px;color: black;text-decoration: none;" title="Circulation：青少年糖尿病患者的心血管病危险因素AHA">Circulation：青少年糖尿病患者的心血</a></li>
+                            <li><a href="javascript:void(0);" style="font-size: 12px;color: black;text-decoration: none;" title="Circulation：评估十二导联心电图检查对健康人群心血管病筛查的效果">Circulation：评估十二导联心电图检查</a></li> 
+                            <li><a href="#" class="more">更多</a></li>
+                        </ol>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                </div>
+                <div  class="col-lg-6">
+                <div class="moduletwo">
+                	<figure class="aa"><img src="${ctx }/static/login/images/file_icon01.png" alt=""/></figure>
+                    <div class="modulRight">
+                        <h4>在线评估</h4>
+                        <ol>
+                            <li>心血管病风险评估</li>
+                            <li>健康宣传手册</li>
+                            <li>&nbsp;</li>
+                            <li>&nbsp;</li>
+                            <li><a href="#" class="more">更多</a></li>
+                        </ol>
+                    </div>
+                </div>
+                 <br style="clear: both;"/>
+                 </div>
+            </section> --%>
+        </div>
+        <br style="clear: both;"/> 
+        
+         <div  class="row ylink">  
+                                           <a > 友情连接：</a>  
+                                           <a > 中华人民共和国国家卫生和计划生育委员会 </a>   
+                                           <a > 中国疾病预防控制中心 </a> 
+                                           <a > 中国医学科学院 阜外医院 </a>    
+         </div>
+        
+        
+    </div>
+    
+    
+     <div id="footer">    
+     	<p>Copyright © 2014. 国家心血管病中心 . All rights reserved</p>
+     </div>
+</div>
+</body>
+</html>

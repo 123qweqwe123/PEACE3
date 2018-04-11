@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.sys.logmgt.dao.LogDao">
+    <resultMap id="BaseResultMap" type="com.bdcor.pip.web.sys.logmgt.domain.Log">
+        <constructor>
+            <arg column="ID" jdbcType="CHAR" javaType="java.lang.String" />
+            <arg column="LOG_DATETIME" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="URL" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="USER_ID" jdbcType="CHAR" javaType="java.lang.String" />
+            <arg column="USER_NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="USER_IP" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="TENANT_ID" jdbcType="CHAR" javaType="java.lang.String" />
+            <arg column="LOG_TYPE" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="LOG_LEVEL" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="LOG_INFO" jdbcType="VARCHAR" javaType="java.lang.String" />
+        </constructor>
+    </resultMap>
+    <select id="list" parameterType="com.bdcor.pip.web.sys.logmgt.filter.LogFilter"
+        resultType="com.bdcor.pip.web.sys.logmgt.domain.LogDTO">
+        select l.id,
+        l.log_datetime as logDatetime,
+        case
+        when l.user_name is null then
+        'system'
+        else
+        l.user_name
+        end as userName,
+        l.user_ip as userIp,
+        case
+        when l.log_type = 1 then
+        '系统日志'
+        when l.log_type = 2 then
+        '安全日志'
+        when l.log_type = 3 then
+        '应用日志'
+        else
+        '操作日志'
+        end as logType,
+        u.login_name as loginName,
+        l.log_level as logLevel,
+        l.log_info as logInfo,
+        l.model as model
+        from pip_sys_log l
+        left join pip_sys_account u on l.user_id = u.id
+        <where>
+        
+        <if test="logType != null">
+            and l.log_type=#{logType,jdbcType=INTEGER}
+        </if>
+        <if test="logLevel != null">
+            and l.log_level=#{logLevel,jdbcType=INTEGER}
+        </if>
+        <if test="startDate != null">
+            <![CDATA[ 
+            and l.log_datetime>=#{startDate,jdbcType=TIMESTAMP}
+            ]]>
+        </if>
+        <if test="endDate != null">
+            <![CDATA[ 
+            and l.log_datetime<=#{endDate,jdbcType=TIMESTAMP}
+            ]]>
+        </if>
+        <if test="model != null">
+            and l.model = #{model,jdbcType=INTEGER}
+        </if>
+        </where>
+        <if test="sidx!=null and sord!=null">
+            order by ${sidx} 
+            ${sord}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="com.bdcor.pip.web.sys.logmgt.domain.Log">
+        insert into pip_sys_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="logDatetime != null">
+                LOG_DATETIME,
+            </if>
+            <if test="url != null">
+                URL,
+            </if>
+            <if test="userId != null">
+                USER_ID,
+            </if>
+            <if test="userName != null">
+                USER_NAME,
+            </if>
+            <if test="userIp != null">
+                USER_IP,
+            </if>
+            TENANT_ID,
+            <if test="logType != null">
+                LOG_TYPE,
+            </if>
+            <if test="logLevel != null">
+                LOG_LEVEL,
+            </if>
+            <if test="logInfo != null">
+                LOG_INFO,
+            </if>
+            <if test="model != null">
+                MODEL,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=CHAR},
+            </if>
+            <if test="logDatetime != null">
+                #{logDatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=CHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userIp != null">
+                #{userIp,jdbcType=VARCHAR},
+            </if>
+            #{tenantId,jdbcType=CHAR},
+            <if test="logType != null">
+                #{logType,jdbcType=INTEGER},
+            </if>
+            <if test="logLevel != null">
+                #{logLevel,jdbcType=INTEGER},
+            </if>
+            <if test="logInfo != null">
+                #{logInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="model != null">
+                #{model,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+</mapper>

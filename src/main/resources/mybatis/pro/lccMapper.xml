@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.pro.promgt.dao.LccDao">
+	<resultMap id="BaseResultMap" type="com.bdcor.pip.web.pro.promgt.domain.Lcc">
+		<constructor>
+			<arg column="PROJECT_ID" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="LCC_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="LCC_NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="COUNTRY_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="AREA_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="STATUS" jdbcType="INTEGER" javaType="java.lang.Integer" />
+			<arg column="CREATE_BY" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="CREATE_DATE" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+			<arg column="UPDATE_BY" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="UPDATE_DATE" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+			<arg column="IS_REMOVED" jdbcType="INTEGER" javaType="java.lang.Integer" />
+			<arg column="FTP_IP" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="FTP_PORT" jdbcType="INTEGER" javaType="java.lang.Integer" />
+			<arg column="FTP_USER" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="FTP_PASSWORD" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="COST_SUM" jdbcType="INTEGER" javaType="java.lang.Integer" />
+			<arg column="ENGLISH_NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="ADDRESS" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="PROJECT_MANAGER" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="PM_TEL" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="PM_EMAIL" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="CONTRACT_SIGN_DATE" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+			<arg column="IS_SIGN_CONTRACT" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="HIGHER_APPROVE_DATE" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+			<arg column="IS_TRAINING" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="EXPECT_START_DATE" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+			<arg column="LCC_TYPE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="IS_ETHICAL" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="ETHICAL_EFFECTIVE_DATE" jdbcType="TIMESTAMP"
+				javaType="java.util.Date" />
+			<arg column="ETHICAL_DISABLE_DATE" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+			<arg column="ETHICAL_PAPER_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="DELIVERY_ADDRESS" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="DELIVERY_CONTACT" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="DELIVERY_TEL" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="START_DATE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="CONTACT" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="TEL" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="RCC_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="IS_ADMIN_DEP" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="ORGAN" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="LCCROLE" jdbcType="VARCHAR" javaType="java.lang.String" />
+			<arg column="HELP_CODE" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		</constructor>
+		<result column="LCC_ROLE_TYPE" jdbcType="VARCHAR" property="lccRoleType"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		PROJECT_ID,LCC_CODE,LCC_NAME,COUNTRY_CODE,AREA_CODE,STATUS,CREATE_BY,CREATE_DATE,UPDATE_BY,
+		UPDATE_DATE,IS_REMOVED,FTP_IP,FTP_PORT,FTP_USER,FTP_PASSWORD,COST_SUM,ENGLISH_NAME,ADDRESS,
+		PROJECT_MANAGER,PM_TEL,PM_EMAIL,CONTRACT_SIGN_DATE,IS_SIGN_CONTRACT,HIGHER_APPROVE_DATE,
+		IS_TRAINING,EXPECT_START_DATE,LCC_TYPE,IS_ETHICAL,ETHICAL_EFFECTIVE_DATE,ETHICAL_DISABLE_DATE,
+		ETHICAL_PAPER_CODE,DELIVERY_ADDRESS,DELIVERY_CONTACT,DELIVERY_TEL,START_DATE,CONTACT,TEL,<!-- PARENT_CODE, -->
+		IS_ADMIN_DEP,ORGAN,LCCROLE,HELP_CODE
+	</sql>
+<resultMap id="LccFilterMap" type="com.bdcor.pip.web.pro.promgt.filter.LccFilter">
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="projectId" jdbcType="VARCHAR" property="projectId" />
+		<result column="userId" jdbcType="VARCHAR" property="userId" />
+		<result column="lccCode" jdbcType="VARCHAR" property="lccCode" />
+		<result column="vName" jdbcType="VARCHAR" property="vName" />
+		<result column="lccName" jdbcType="VARCHAR" property="lccName" />
+		<result column="hospitalType" jdbcType="VARCHAR" property="hospitalType" />
+		<result column="isSignContract" jdbcType="VARCHAR" property="isSignContract" />
+		<result column="contractSignDate" jdbcType="VARCHAR" property="contractSignDate" />
+		<result column="expectStartDate" jdbcType="VARCHAR" property="expectStartDate" />
+		<result column="projectManager" jdbcType="VARCHAR" property="projectManager" />
+		<result column="rccName" jdbcType="VARCHAR" property="rccName" />
+		<result column="STATUS" jdbcType="VARCHAR" property="status" />
+		<result column="isEthical" jdbcType="VARCHAR" property="isEthical"/>
+		<result column="totalCount" jdbcType="VARCHAR" property="totalCount"/>
+		<result column="lccRoleType" jdbcType="VARCHAR" property="lccRoleType"/>
+		
+	</resultMap>
+	<select id="getAllLccs" parameterType="com.bdcor.pip.web.pro.promgt.filter.LccFilter"
+		resultMap="LccFilterMap">
+		<!--select
+		l.*,rcc.rcc_name as parentName, d.vname as areaName
+		from pip_comm_lcc l left join pip_comm_rcc rcc on l.rcc_code = rcc.rcc_code  and l.project_id = rcc.project_id
+		left join PIP_COMM_DICT_DISTRICT d on l.area_code = d.vcode where 1=1  -->
+		
+		select  lcc.lcc_code as lccCode,t.vname areaName, lcc.lcc_name as
+		lccName,lcc.HOSPITAL_TYPE as hospitalType,
+		lcc.IS_SIGN_CONTRACT as isSignContract,lcc.CONTRACT_SIGN_DATE as contractSignDate
+		,lcc.EXPECT_START_DATE as expectStartDate,lcc.PROJECT_MANAGER as
+		projectManager,rcc.rcc_name as rccName ,lcc.status as status,lcc.IS_ETHICAL as isEthical,lcc.TOTAL_COUNT as totalCount
+		,lcc.lcc_role_type as lccRoleType
+		from  pip_comm_lcc lcc
+		left join pip_comm_dict_district t on t.vcode = lcc.area_code
+		left join pip_comm_rcc rcc on rcc.rcc_code = lcc.rcc_code
+		where 1=1 
+		and lcc.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="lccName != null">
+			and lcc.LCC_NAME like '%'||#{lccName}||'%'
+		</if>
+		<if test="lccCode != null">
+			and lcc.LCC_CODE = #{lccCode}
+		</if>
+		<if test="rccName != null">
+			and rcc.RCC_NAME like '%'||#{rccName}||'%'
+		</if>
+		<if test="rccCode != null">
+			and rcc.RCC_CODE = #{rccCode}
+		</if>
+		<if test="areaCode != null">
+			and lcc.area_code = #{areaCode}
+		</if>
+		and lcc.project_id = #{projectId}
+		<!-- order by lcc.lcc_code asc -->
+		<if test="sidx != null and sidx != ''">
+			order by lcc.${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+		<!-- where project_id = #{projectId} and creator = #{creator} -->
+	</select>
+	
+	<select id="getAllActiveLcc" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		lcc.*,rcc.rcc_name as parentName, d.vname as areaName
+		from pip_comm_lcc lcc 
+    	left join pip_comm_rcc rcc on lcc.rcc_code = rcc.rcc_code and lcc.project_id=rcc.project_id
+	  	left join PIP_COMM_DICT_DISTRICT d on lcc.area_code = d.vcode 
+		where lcc.PROJECT_ID = #{projectId, jdbcType=VARCHAR}
+		order by lcc.lcc_code
+		<!-- 
+		where l.status = 1
+		 -->
+	</select>
+	<select id="getAllActiveLccByAuthority" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		lcc.*,rcc.rcc_name as parentName, d.vname as areaName
+		from pip_comm_lcc lcc 
+    	left join pip_comm_rcc rcc on lcc.rcc_code = rcc.rcc_code and lcc.project_id=rcc.project_id
+	  	left join PIP_COMM_DICT_DISTRICT d on lcc.area_code = d.vcode 
+		where lcc.PROJECT_ID = #{projectId, jdbcType=VARCHAR}
+		and lcc.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		order by lcc.lcc_code
+		<!-- 
+		where l.status = 1
+		 -->
+	</select>
+	<select id="getDataLimitLccByFlag" resultMap="BaseResultMap">
+		select
+		lcc.*,rcc.rcc_name as parentName, d.vname as areaName
+		from pip_comm_lcc lcc 
+    	left join pip_comm_rcc rcc on lcc.rcc_code = rcc.rcc_code and lcc.project_id=rcc.project_id
+	  	left join PIP_COMM_DICT_DISTRICT d on lcc.area_code = d.vcode 
+		where lcc.PROJECT_ID = #{projectId, jdbcType=VARCHAR}
+		and  lcc.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		and lcc.LCC_ROLE_TYPE=#{flag}
+		order by lcc.lcc_code
+	</select>
+	<select id="getDataLimitLcc" resultMap="BaseResultMap">
+		select
+		lcc.*,rcc.rcc_name as parentName, d.vname as areaName
+		from pip_comm_lcc lcc 
+    	left join pip_comm_rcc rcc on lcc.rcc_code = rcc.rcc_code and lcc.project_id=rcc.project_id
+	  	left join PIP_COMM_DICT_DISTRICT d on lcc.area_code = d.vcode 
+		where lcc.PROJECT_ID = #{projectId, jdbcType=VARCHAR}
+		and  lcc.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		order by lcc.lcc_code
+	</select>
+	<select id="getLccList" resultMap="BaseResultMap" parameterType="string">
+		select
+		lcc.*,rcc.rcc_name as parentName, d.vname as areaName
+		from pip_comm_lcc lcc 
+    	left join pip_comm_rcc rcc on lcc.rcc_code = rcc.rcc_code and lcc.project_id=rcc.project_id
+	  	left join PIP_COMM_DICT_DISTRICT d on lcc.area_code = d.vcode 
+		where lcc.PROJECT_ID = #{projectId, jdbcType=VARCHAR}
+		order by lcc.lcc_code
+	</select>
+		<select id="getDataLimitLccForLccCode" resultMap="BaseResultMap">
+		select
+		lcc.*,rcc.rcc_name as parentName, d.vname as areaName
+		from pip_comm_lcc lcc 
+    	left join pip_comm_rcc rcc on lcc.rcc_code = rcc.rcc_code and lcc.project_id=rcc.project_id
+	  	left join PIP_COMM_DICT_DISTRICT d on lcc.area_code = d.vcode 
+		where lcc.PROJECT_ID = #{projectId, jdbcType=VARCHAR}
+		and  lcc.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId}    )
+		order by lcc.lcc_code
+	</select>
+	
+	<select id="getLccCode" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select max(lcc_code) + 1 from pip_comm_lcc where length(lcc_code)=6 and rcc_code = #{areaCode,
+		jdbcType=VARCHAR}
+	</select>
+
+	<select id="getLcc" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		l.*,o.name as organName,c.rcc_name as parentName
+		from pip_comm_lcc l 
+		left join pip_sys_organization o on l.organ = o.id
+		left join pip_comm_rcc c on l.rcc_code = c.rcc_code   and l.project_id = c.project_id
+		where l.LCC_CODE = #{lccCode, jdbcType=VARCHAR} and
+		l.PROJECT_ID = #{projectId, jdbcType=VARCHAR}
+	</select>
+
+	<insert id="addLcc" parameterType="com.bdcor.pip.web.pro.promgt.domain.Lcc">
+		insert into pip_comm_lcc
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="projectId != null">
+				PROJECT_ID,
+			</if>
+			<if test="lccCode != null">
+				LCC_CODE,
+			</if>
+			<if test="lccName != null">
+				LCC_NAME,
+			</if>
+			<if test="countryCode != null">
+				COUNTRY_CODE,
+			</if>
+			<if test="areaCode != null">
+				AREA_CODE,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="createBy != null">
+				CREATE_BY,
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE,
+			</if>
+			<if test="updateBy != null">
+				UPDATE_BY,
+			</if>
+			<if test="updateDate != null">
+				UPDATE_DATE,
+			</if>
+			<if test="isRemoved != null">
+				IS_REMOVED,
+			</if>
+			<if test="ftpIp != null">
+				FTP_IP,
+			</if>
+			<if test="ftpPort != null">
+				FTP_PORT,
+			</if>
+			<if test="ftpUser != null">
+				FTP_USER,
+			</if>
+			<if test="ftpPassword != null">
+				FTP_PASSWORD,
+			</if>
+			<if test="costSum != null">
+				COST_SUM,
+			</if>
+			<if test="englishName != null">
+				ENGLISH_NAME,
+			</if>
+			<if test="address != null">
+				ADDRESS,
+			</if>
+			<if test="projectManager != null">
+				PROJECT_MANAGER,
+			</if>
+			<if test="pmTel != null">
+				PM_TEL,
+			</if>
+			<if test="pmEmail != null">
+				PM_EMAIL,
+			</if>
+			<if test="contractSignDate != null">
+				CONTRACT_SIGN_DATE,
+			</if>
+			<if test="isSignContract != null">
+				IS_SIGN_CONTRACT,
+			</if>
+			<if test="higherApproveDate != null">
+				HIGHER_APPROVE_DATE,
+			</if>
+			<if test="isTraining != null">
+				IS_TRAINING,
+			</if>
+			<if test="expectStartDate != null">
+				EXPECT_START_DATE,
+			</if>
+			<if test="lccType != null">
+				LCC_TYPE,
+			</if>
+			<if test="isEthical != null">
+				IS_ETHICAL,
+			</if>
+			<if test="ethicalEffectiveDate != null">
+				ETHICAL_EFFECTIVE_DATE,
+			</if>
+			<if test="ethicalDisableDate != null">
+				ETHICAL_DISABLE_DATE,
+			</if>
+			<if test="ethicalPaperCode != null">
+				ETHICAL_PAPER_CODE,
+			</if>
+			<if test="deliveryAddress != null">
+				DELIVERY_ADDRESS,
+			</if>
+			<if test="deliveryContract != null">
+				DELIVERY_CONTACT,
+			</if>
+			<if test="deliveryTel != null">
+				DELIVERY_TEL,
+			</if>
+			<if test="startDate != null">
+				START_DATE,
+			</if>
+			<if test="contact != null">
+				CONTACT,
+			</if>
+			<if test="tel != null">
+				TEL,
+			</if>
+			<if test="rccCode != null">
+				RCC_CODE,
+			</if>
+			<if test="isAdminDep != null">
+				IS_ADMIN_DEP,
+			</if>
+			<if test="organ != null">
+				ORGAN,
+			</if>
+			<if test="lccRole != null">
+				LCCROLE,
+			</if>
+			<if test="lccRoleType != null">
+				LCC_ROLE_TYPE,
+			</if>
+			<if test="helpCode != null">
+				HELP_CODE
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="projectId != null">
+				#{projectId,jdbcType=VARCHAR},
+			</if>
+			<if test="lccCode != null">
+				#{lccCode,jdbcType=VARCHAR},
+			</if>
+			<if test="lccName != null">
+				#{lccName,jdbcType=VARCHAR},
+			</if>
+			<if test="countryCode != null">
+				#{countryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="areaCode != null">
+				#{areaCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isRemoved != null">
+				#{isRemoved,jdbcType=INTEGER},
+			</if>
+			<if test="ftpIp != null">
+				#{ftpIp,jdbcType=VARCHAR},
+			</if>
+			<if test="ftpPort != null">
+				#{ftpPort,jdbcType=INTEGER},
+			</if>
+			<if test="ftpUser != null">
+				#{ftpUser,jdbcType=VARCHAR},
+			</if>
+			<if test="ftpPassword != null">
+				#{ftpPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="costSum != null">
+				#{costSum,jdbcType=INTEGER},
+			</if>
+			<if test="englishName != null">
+				#{englishName,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="projectManager != null">
+				#{projectManager,jdbcType=VARCHAR},
+			</if>
+			<if test="pmTel != null">
+				#{pmTel,jdbcType=VARCHAR},
+			</if>
+			<if test="pmEmail != null">
+				#{pmEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="contractSignDate != null">
+				#{contractSignDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isSignContract != null">
+				#{isSignContract,jdbcType=VARCHAR},
+			</if>
+			<if test="higherApproveDate != null">
+				#{higherApproveDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isTraining != null">
+				#{isTraining,jdbcType=VARCHAR},
+			</if>
+			<if test="expectStartDate != null">
+				#{expectStartDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lccType != null">
+				#{lccType,jdbcType=VARCHAR},
+			</if>
+			<if test="isEthical != null">
+				#{isEthical,jdbcType=VARCHAR},
+			</if>
+			<if test="ethicalEffectiveDate != null">
+				#{ethicalEffectiveDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ethicalDisableDate != null">
+				#{ethicalDisableDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ethicalPaperCode != null">
+				#{ethicalPaperCode,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryAddress != null">
+				#{deliveryAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryContract != null">
+				#{deliveryContract,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryTel != null">
+				#{deliveryTel,jdbcType=VARCHAR},
+			</if>
+			<if test="startDate != null">
+				#{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="contact != null">
+				#{contact,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+				#{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="rccCode != null">
+				#{rccCode,jdbcType=VARCHAR},
+			</if>
+			<if test="isAdminDep != null">
+				#{isAdminDep,jdbcType=VARCHAR},
+			</if>
+			<if test="organ != null">
+				#{organ,jdbcType=VARCHAR},
+			</if>
+			<if test="lccRole != null">
+				#{lccRole,jdbcType=VARCHAR},
+			</if>
+			<if test="lccRoleType != null">
+				#{lccRoleType,jdbcType=VARCHAR},
+			</if>
+			<if test="helpCode != null">
+				#{helpCode, jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateLcc" parameterType="com.bdcor.pip.web.pro.promgt.domain.Lcc">
+		update pip_comm_lcc
+		<set>
+			<if test="lccName != null">
+				LCC_NAME = #{lccName,jdbcType=VARCHAR},
+			</if>
+			<if test="countryCode != null">
+				COUNTRY_CODE = #{countryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="areaCode != null">
+				AREA_CODE = #{areaCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="createBy != null">
+				CREATE_BY = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="lccRoleType != null">
+				LCC_ROLE_TYPE=#{lccRoleType,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+
+				CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+
+				UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+
+				UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isRemoved != null">
+
+				IS_REMOVED = #{isRemoved,jdbcType=INTEGER},
+			</if>
+			<if test="ftpIp != null">
+
+				FTP_IP = #{ftpIp,jdbcType=VARCHAR},
+			</if>
+			<if test="ftpPort != null">
+
+				FTP_PORT = #{ftpPort,jdbcType=INTEGER},
+			</if>
+			<if test="ftpUser != null">
+
+				FTP_USER = #{ftpUser,jdbcType=VARCHAR},
+			</if>
+			<if test="ftpPassword != null">
+
+				FTP_PASSWORD = #{ftpPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="costSum != null">
+
+				COST_SUM = #{costSum,jdbcType=INTEGER},
+			</if>
+			<if test="englishName != null">
+
+				ENGLISH_NAME = #{englishName,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="projectManager != null">
+
+				PROJECT_MANAGER = #{projectManager,jdbcType=VARCHAR},
+			</if>
+			<if test="pmTel != null">
+
+				PM_TEL = #{pmTel,jdbcType=VARCHAR},
+			</if>
+			<if test="pmEmail != null">
+
+				PM_EMAIL = #{pmEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="contractSignDate != null">
+
+				CONTRACT_SIGN_DATE = #{contractSignDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isSignContract != null">
+
+				IS_SIGN_CONTRACT = #{isSignContract,jdbcType=VARCHAR},
+			</if>
+			<if test="higherApproveDate != null">
+
+				HIGHER_APPROVE_DATE = #{higherApproveDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isTraining != null">
+
+				IS_TRAINING = #{isTraining,jdbcType=VARCHAR},
+			</if>
+			<if test="expectStartDate != null">
+
+				EXPECT_START_DATE = #{expectStartDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lccType != null">
+
+				LCC_TYPE = #{lccType,jdbcType=VARCHAR},
+			</if>
+			<if test="isEthical != null">
+
+				IS_ETHICAL = #{isEthical,jdbcType=VARCHAR},
+			</if>
+			<if test="ethicalEffectiveDate != null">
+
+				ETHICAL_EFFECTIVE_DATE = #{ethicalEffectiveDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ethicalDisableDate != null">
+
+				ETHICAL_DISABLE_DATE = #{ethicalDisableDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ethicalPaperCode != null">
+
+				ETHICAL_PAPER_CODE = #{ethicalPaperCode,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryAddress != null">
+
+				DELIVERY_ADDRESS = #{deliveryAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryContract != null">
+
+				DELIVERY_CONTACT = #{deliveryContract,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryTel != null">
+
+				DELIVERY_TEL = #{deliveryTel,jdbcType=VARCHAR},
+			</if>
+			<if test="startDate != null">
+
+				START_DATE = #{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="contact != null">
+
+				CONTACT = #{contact,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+
+				TEL = #{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="rccCode != null">
+
+				RCC_CODE = #{rccCode,jdbcType=VARCHAR},
+			</if>
+			<if test="isAdminDep != null">
+
+				IS_ADMIN_DEP = #{isAdminDep,jdbcType=VARCHAR},
+			</if>
+			<if test="organ != null">
+
+				ORGAN = #{organ,jdbcType=VARCHAR},
+			</if>
+			<if test="lccRole != null">
+
+				LCCROLE =#{lccRole,jdbcType=VARCHAR},
+			</if>
+			<if test="helpCode != null">
+				HELP_CODE = #{helpCode, jdbcType=VARCHAR}
+			</if>
+		</set>
+		where lcc_code = #{lccCode, jdbcType=VARCHAR} and PROJECT_ID = #{projectId, jdbcType=VARCHAR}
+	</update>
+	<delete id="delete" parameterType="java.lang.String">
+		delete from pip_comm_lcc where lcc_code = #{lccCode, jdbcType=VARCHAR} and project_id = #{projectId, jdbcType=VARCHAR}
+	</delete>
+  <select id="getAllValidLccs" parameterType="com.bdcor.pip.web.pro.promgt.filter.LccFilter"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from pip_comm_lcc where status = '1'
+		and project_id = #{projectId} and lcc_code != #{lccCode, jdbcType=VARCHAR}
+		<!-- where project_id = #{projectId} and creator = #{creator} -->
+	</select>
+	
+	<select id="getWorkload" parameterType="String" resultType="map">
+		select sum( lcc.workload ) as workload from pip_comm_lcc lcc, pip_comm_dict_district dis 
+		where lcc.project_id = #{projectId,jdbcType=VARCHAR} 
+		and dis.vcode = lcc.area_code 
+		<if test="mt != null" >
+		and dis.vname like #{mt}||'%' 
+		</if>
+	</select>
+	
+	<select id="getLccByOrganType" resultMap="BaseResultMap">
+		select * from pip_comm_lcc t,pip_sys_organization f where t.organ=f.id and f.type in 
+		<foreach collection="array" item="type" index="i" open="("
+			separator="," close=")">
+			#{type}
+		</foreach>
+	</select>
+	<!-- 通用取省份 -->
+	<select id="getProvinceList" parameterType="map" resultType="map">
+		select 
+		distinct
+		province.vcode as PROVINCE_CODE,
+		province.vname as PROVINCE_NAME,
+		province.help_code as HELP_CODE
+		
+		from pip_comm_dict_district province
+		where length(province.vcode) =2
+		order by province.vcode
+	</select>
+	<!-- 原先逻辑
+	<select id="getProvinceList" parameterType="map" resultType="map">
+		select 
+		distinct
+		province.vcode as PROVINCE_CODE,
+		province.vname as PROVINCE_NAME,
+		province.help_code as HELP_CODE
+		
+		from pip_comm_dict_district province
+		<if test="all == null">
+			inner join pip_comm_lcc lcc on substr(lcc.lcc_code,0,2)=province.vcode
+			inner join pip_sys_user_data_limit dataLimit on dataLimit.lcc_code=lcc.lcc_code
+		</if>
+		<if test="all != null">
+			inner join pip_comm_rcc rcc on substr(rcc.rcc_code,0,2)=province.vcode
+		</if>
+		where length(province.vcode)=2
+		<if test="all == null">
+			and
+			lcc.project_id=#{projectId}
+			and dataLimit.user_id=#{userId}
+		</if>
+		
+		order by province.vcode
+	</select> -->
+	
+	<select id="getRccList" parameterType="map" resultType="map">
+		select 
+		distinct
+		rcc.rcc_code,
+		rcc.rcc_name,
+		rcc.help_code
+		
+		from pip_comm_rcc rcc
+		<if test="noDataLimit == null">
+			 inner join pip_comm_lcc lcc
+			    on lcc.rcc_code = rcc.rcc_code
+			 inner join pip_sys_user_data_limit dataLimit
+			    on dataLimit.lcc_code = lcc.lcc_code
+		</if>
+		where 1=1
+		<if test="noDataLimit == null">
+			 and lcc.project_id=#{projectId}
+			 and dataLimit.user_id=#{userId}
+		</if>
+		<if test="provinceCode != null and provinceCode != ''">
+			and substr(rcc.rcc_code,0,2)=#{provinceCode}
+		</if>
+		order by rcc.rcc_code
+	</select>
+	
+	<select id="getLccListByProvinceCode" parameterType="map" resultType="map">
+		select 
+		lcc.lcc_code,
+		lcc.lcc_name,
+		lcc.help_code
+		
+		from pip_comm_lcc lcc
+		where lcc.project_id=#{projectId}
+		<if test="provinceCode != null and provinceCode != ''">
+			and substr(lcc.area_code,0,2)=#{provinceCode}
+		</if>
+		<if test="rccCode != null and rccCode != ''">
+			and substr(lcc.area_code,0,4)=#{rccCode}
+		</if>
+		order by lcc.lcc_code
+	</select>
+	
+	<select id="getDataLimitLccList" parameterType="map" resultType="map">
+		select 
+		lcc.lcc_code,
+		lcc.lcc_name,
+		lcc.help_code
+		
+		from pip_comm_lcc lcc
+		inner join pip_sys_user_data_limit dataLimit on dataLimit.lcc_code=lcc.lcc_code
+		where lcc.project_id=#{projectId} and dataLimit.user_id=#{userId}
+		<if test="provinceCode != null and provinceCode != ''">
+			and substr(lcc.area_code,0,2)=#{provinceCode}
+		</if>
+		<if test="rccCode != null and rccCode != ''">
+			and substr(lcc.area_code,0,4)=#{rccCode}
+		</if>
+		order by lcc.lcc_code
+	</select>
+	
+	
+	<select id="getOneForLccCodeAndProjectId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from pip_comm_lcc   where 1=1 
+		<if test="lccCode != null">
+			and LCC_CODE = #{lccCode, jdbcType=VARCHAR}
+		</if>
+		and project_id = #{projectId, jdbcType=VARCHAR}
+   	</select>
+	<update id="updateStatusForLcc" parameterType="java.lang.String">
+		update pip_comm_lcc set status = #{status, jdbcType=INTEGER} where project_id=#{projectId, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateStatus" parameterType="java.lang.String">
+		update pip_comm_lcc set status = #{status, jdbcType=INTEGER} where project_id=#{projectId, jdbcType=VARCHAR} and lcc_code=#{lccCode, jdbcType=VARCHAR} 
+	</update>
+	
+</mapper>

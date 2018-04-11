@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.msg.dao.MsgTdDao">
+	
+	<select id="list" parameterType="com.bdcor.pip.web.msg.filter.MsgTdFilter" resultType="com.bdcor.pip.web.msg.domain.MsgTdVo">
+		select
+		r.LCC_CODE as lccId,
+		r.PATIENT_ID as patientId,
+		p.PATIENT_NAME as patientName,
+		p.id_number as idNumber,
+		r.mobile as mobile,
+		p.belong_group as bGroup,
+		r.MSG_NAME as msgName,
+		r.REPLY_TIME as replyTime
+		
+		from PIP_MSG_REPLY r
+		left join PIP_COMM_PATIENT p on p.PROJECT_ID=r.PROJECT_ID and p.LCC_CODE=r.LCC_CODE and p.PATIENT_ID=r.PATIENT_ID
+		
+		where r.project_id=#{projectId} and 
+		r.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		and upper(replace(r.MSG_NAME,' ',''))='88' and p.IS_SUBSCRIBE=1
+		
+		<if test="lccCode != null and lccCode != ''">
+			and r.LCC_CODE=#{lccCode}
+		</if>
+		<if test="patientId != null and patientId != ''">
+			and r.PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and p.PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="group != null">
+			and p.belong_group =#{group}
+		</if>
+		<if test="replyTime != null and replyTime != ''">
+			and to_char(r.REPLY_TIME,'yyyy-MM-dd') = #{replyTime}
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+	
+	<update id="audits">
+		update PIP_COMM_PATIENT set IS_SUBSCRIBE=#{type} where PATIENT_ID in
+		<foreach collection="pIdArr" item="id" index="index"
+            open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+	</update>
+	
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.illness.dao.EventMapper">
+	<select id="getHisList" resultType="map">
+		select
+		VCODE,VNAME
+		from PIP_COMM_DICT_HIS
+		where DICT_CODE='HIS.003'
+	</select>
+	<select id="list" parameterType="com.bdcor.pip.web.illness.filter.EventFilter" resultType="map">
+		select 
+		LCC_CODE,
+		PATIENT_ID,
+		PATIENT_NAME,
+		EVENT_CODE,
+		EVENT_NAME as EVENT_TYPE,
+		to_char(IN_HOS_DATE,'yyyy-MM-dd') as IN_HOS_DATE,
+		to_char(OUT_HOS_DATE,'yyyy-MM-dd') as OUT_HOS_DATE,
+		HOS_NAME,
+		to_char(EVENT_DATE,'yyyy-MM-dd hh24:mi:ss') as EVENT_DATE,
+		IS_DEATH
+		from PIP_COMM_EVENT
+		where PROJECT_ID=#{projectId} and LCC_CODE in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId}) 
+		<if test="eventName != null and eventName != ''">
+			and EVENT_NAME=#{eventName}
+		</if>
+		<if test="patientId != null and patientId != ''">
+			and PATIENT_ID like '%'||#{patientId}||'%'
+		</if>
+		<if test="patientName != null and patientName != ''">
+			and PATIENT_NAME like '%'||#{patientName}||'%'
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+</mapper>

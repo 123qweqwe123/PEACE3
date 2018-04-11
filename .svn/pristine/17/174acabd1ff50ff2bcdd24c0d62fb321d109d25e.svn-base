@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.msg.dao.PipMsgMsgtmpMapper" >
+  <resultMap id="BaseResultMap" type="com.bdcor.pip.web.msg.domain.PipMsgMsgtmp" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="MSG_CODE" property="msgCode" jdbcType="VARCHAR" />
+    <result column="MSG_NAME" property="msgName" jdbcType="VARCHAR" />
+    <result column="MSG_TYPE_CODE" property="msgTypeCode" jdbcType="VARCHAR" />
+    <result column="MSG_TYPE_NAME" property="msgTypeName" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <select id="selectMsgForMap" parameterType="map"   resultMap="BaseResultMap">
+  	select  ID, MSG_TYPE_CODE MSG_CODE,MSG_NAME,
+  	substr(MSG_TYPE_CODE, length(MSG_TYPE_CODE) - 3 ) MSG_TYPE_CODE,MSG_TYPE_NAME,
+  	CREATE_DATE,CREATE_BY,IS_REPLY
+  	from PIP_MSG_MSGTMP p where not exists
+	(
+		select t.id from pip_msg_temp t where
+		t.msg_id = p.id
+		and t.patient_id=#{PATIENT_ID}
+		and t.flag =#{SMOKING}
+	)
+	  and msg_type_code like #{MSG_TYPE}||'%'
+
+  </select>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, MSG_CODE, MSG_NAME, MSG_TYPE_CODE, MSG_TYPE_NAME, CREATE_DATE, CREATE_BY
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bdcor.pip.web.msg.domain.PipMsgMsgtmpExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from PIP_MSG_MSGTMP
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="list" resultType="map" parameterType="com.bdcor.pip.web.msg.filter.PipMsgMsgtmpFilter" >
+    select
+    p.*,t.name as CREATE_NAME
+    from PIP_MSG_MSGTMP p
+    left join pip_sys_account t on t.id = p.create_by
+    where 1 =1 
+    <if test="msgTypeName !=null and msgTypeName !=''">
+    	and msg_Type_Name like '%${msgTypeName}%'
+    </if>
+    <if test="startDate !=null and startDate !=''">
+    	and to_char(create_date,'yyyy-MM-dd') >= #{startDate} 
+    </if>
+    <if test="endDate !=null and endDate !=''">
+    	and to_char(create_date,'yyyy-MM-dd') <![CDATA[<=]]> #{endDate} 
+    </if>
+    <if test="createName !=null and createName !=''">
+    	and t.name like '%${createName}%'
+    </if>
+    order by p.id desc
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PIP_MSG_MSGTMP
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PIP_MSG_MSGTMP
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bdcor.pip.web.msg.domain.PipMsgMsgtmpExample" >
+    delete from PIP_MSG_MSGTMP
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bdcor.pip.web.msg.domain.PipMsgMsgtmp" >
+    insert into PIP_MSG_MSGTMP (ID, MSG_CODE, MSG_NAME, 
+      MSG_TYPE_CODE, MSG_TYPE_NAME, CREATE_DATE, 
+      CREATE_BY)
+    values (#{id,jdbcType=VARCHAR}, #{msgCode,jdbcType=VARCHAR}, #{msgName,jdbcType=VARCHAR}, 
+      #{msgTypeCode,jdbcType=VARCHAR}, #{msgTypeName,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bdcor.pip.web.msg.domain.PipMsgMsgtmp" >
+    insert into PIP_MSG_MSGTMP
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="msgCode != null" >
+        MSG_CODE,
+      </if>
+      <if test="msgName != null" >
+        MSG_NAME,
+      </if>
+      <if test="msgTypeCode != null" >
+        MSG_TYPE_CODE,
+      </if>
+      <if test="msgTypeName != null" >
+        MSG_TYPE_NAME,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="msgCode != null" >
+        #{msgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="msgName != null" >
+        #{msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="msgTypeCode != null" >
+        #{msgTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="msgTypeName != null" >
+        #{msgTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bdcor.pip.web.msg.domain.PipMsgMsgtmpExample" resultType="java.lang.Integer" >
+    select count(*) from PIP_MSG_MSGTMP
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update PIP_MSG_MSGTMP
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgCode != null" >
+        MSG_CODE = #{record.msgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgName != null" >
+        MSG_NAME = #{record.msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgTypeCode != null" >
+        MSG_TYPE_CODE = #{record.msgTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msgTypeName != null" >
+        MSG_TYPE_NAME = #{record.msgTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        CREATE_BY = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update PIP_MSG_MSGTMP
+    set ID = #{record.id,jdbcType=VARCHAR},
+      MSG_CODE = #{record.msgCode,jdbcType=VARCHAR},
+      MSG_NAME = #{record.msgName,jdbcType=VARCHAR},
+      MSG_TYPE_CODE = #{record.msgTypeCode,jdbcType=VARCHAR},
+      MSG_TYPE_NAME = #{record.msgTypeName,jdbcType=VARCHAR},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      CREATE_BY = #{record.createBy,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bdcor.pip.web.msg.domain.PipMsgMsgtmp" >
+    update PIP_MSG_MSGTMP
+    <set >
+      <if test="msgCode != null" >
+        MSG_CODE = #{msgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="msgName != null" >
+        MSG_NAME = #{msgName,jdbcType=VARCHAR},
+      </if>
+      <if test="msgTypeCode != null" >
+        MSG_TYPE_CODE = #{msgTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="msgTypeName != null" >
+        MSG_TYPE_NAME = #{msgTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bdcor.pip.web.msg.domain.PipMsgMsgtmp" >
+    update PIP_MSG_MSGTMP
+    set MSG_CODE = #{msgCode,jdbcType=VARCHAR},
+      MSG_NAME = #{msgName,jdbcType=VARCHAR},
+      MSG_TYPE_CODE = #{msgTypeCode,jdbcType=VARCHAR},
+      MSG_TYPE_NAME = #{msgTypeName,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getRandomOneByType" parameterType="String" resultMap="BaseResultMap">
+  	select * from(
+  	select
+    <include refid="Base_Column_List" />
+    from PIP_MSG_MSGTMP where MSG_TYPE_CODE=#{msgTypeCode} order by dbms_random.value)where rownum=1
+  </select>
+</mapper>

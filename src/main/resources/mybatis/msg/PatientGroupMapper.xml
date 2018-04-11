@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.msg.dao.PatientGroupDao">
+	<update id="changeBelongGroup" parameterType="com.bdcor.pip.web.msg.domain.PatientGroupVo">
+		update PIP_COMM_PATIENT set BELONG_GROUP=#{groupStr},GROUP_DATE=sysdate where PATIENT_ID=#{patientId}
+	</update>
+	
+	<insert id="insert" parameterType="com.bdcor.pip.web.msg.domain.PatientGroupVo">
+		insert into PIP_COMM_PATIENT_GROUP(PATIENT_ID,CREATE_DATE,SEX,AGE_GRADE,MEDICALHIS_MI,EDU_LEVEL,MEDICALINSYRANCE,BELONG_GROUP)
+		values(#{patientId},sysdate,#{sex},#{age_grade},#{medicalHis_MI},#{edu_level},#{medicalInsurance},#{belong_group})
+	</insert>
+	
+	<select id="getOldSumMapList" resultType="map" parameterType="int">
+		with oldmult_group1
+		as(
+			select
+			<if test="isDiabetes==1">
+				sum(0)+1
+			</if>
+			<if test="isDiabetes==0">
+				sum(0)+1
+			</if>
+			
+
+			as num
+			
+			from PIP_COMM_PATIENT p
+			left join PIP_COMM_PATIENT_GROUP g on g.PATIENT_ID=p.PATIENT_ID
+			where substr(p.BELONG_GROUP,1,1)=#{isDiabetes} and g.CREATE_DATE &lt; to_date('2016-11-29 18:05:00','yyyy-MM-dd hh24:mi:ss')
+		),
+		old_mult
+		as(
+			select 
+			1 as BELONG_GROUP,
+			1 as mult
+			from dual
+			
+			union all
+			
+			select 2,num 
+			from oldmult_group1
+		)
+		
+		
+		select 
+		g.BELONG_GROUP as "group",
+		round(sum(case when g.sex=1 then 1 else 0 end)*max(m.mult),2) as "sex1",
+		round(sum(case when g.sex=2 then 1 else 0 end)*max(m.mult),2) as "sex2",
+		
+		round(sum(case when AGE_GRADE=1 then 1 else 0 end)*max(m.mult),2) "age1",
+		round(sum(case when AGE_GRADE=2 then 1 else 0 end)*max(m.mult),2) "age2",
+		round(sum(case when AGE_GRADE=3 then 1 else 0 end)*max(m.mult),2) "age3",
+		
+		round(sum(case when MEDICALHIS_MI=1 then 1 else 0 end)*max(m.mult),2) "mi1",
+		round(sum(case when MEDICALHIS_MI=2 then 1 else 0 end)*max(m.mult),2) "mi2",
+		
+		round(sum(case when g.EDU_LEVEL=1 then 1 else 0 end)*max(m.mult),2) as "edu1",
+		round(sum(case when g.EDU_LEVEL=2 then 1 else 0 end)*max(m.mult),2) as "edu2",
+		round(sum(case when g.EDU_LEVEL=3 then 1 else 0 end)*max(m.mult),2) as "edu3",
+		
+		round(sum(case when g.MEDICALINSYRANCE=1 then 1 else 0 end)*max(m.mult),2) as "medInsure1",
+		round(sum(case when g.MEDICALINSYRANCE=2 then 1 else 0 end)*max(m.mult),2) as "medInsure2",
+		round(sum(case when g.MEDICALINSYRANCE=3 then 1 else 0 end)*max(m.mult),2) as "medInsure3"
+		
+		
+		from PIP_COMM_PATIENT_GROUP g
+		left join PIP_COMM_PATIENT p on p.PATIENT_ID=g.PATIENT_ID
+		left join old_mult m on g.BELONG_GROUP=m.BELONG_GROUP
+		
+		where substr(p.BELONG_GROUP,1,1)=#{isDiabetes} and g.CREATE_DATE &lt; to_date('2016-11-29 18:05:00','yyyy-MM-dd hh24:mi:ss')
+		group by g.BELONG_GROUP
+	</select>
+
+	<select id="getGroupMap" resultType="map" parameterType="com.bdcor.pip.web.msg.domain.PatientGroupVo">
+		select 
+		nvl(
+		abs(sum(case when g.SEX=1 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_sex1}*${group1_weight}
+		-sum(case when g.SEX=1 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_sex1}
+		<if test="sex==1">+1*#{group1_weight}</if>)*#{sex1_weight} + 
+		
+		abs(sum(case when g.SEX=2 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_sex2}*#{group1_weight}
+		-sum(case when g.SEX=2 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_sex2}
+		<if test="sex==2">+1*#{group1_weight}</if>)*#{sex2_weight} +
+		
+		abs(sum(case when g.AGE_GRADE=1 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_age1}*#{group1_weight}
+		-sum(case when g.AGE_GRADE=1 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_age1}
+		<if test="age_grade==1">+1*#{group1_weight}</if>)*#{age_grade1_weight} +
+		
+		abs(sum(case when g.AGE_GRADE=2 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_age2}*#{group1_weight}
+		-sum(case when g.AGE_GRADE=2 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_age2}
+		<if test="age_grade==2">+1*#{group1_weight}</if>)*#{age_grade2_weight} +
+		
+		abs(sum(case when g.AGE_GRADE=3 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_age3}*#{group1_weight}
+		-sum(case when g.AGE_GRADE=3 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_age3}
+		<if test="age_grade==3">+1*#{group1_weight}</if>)*#{age_grade3_weight} +
+		
+		abs(sum(case when g.MEDICALHIS_MI=1 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_mi1}*#{group1_weight}
+		-sum(case when g.MEDICALHIS_MI=1 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_mi1}
+		<if test="medicalHis_MI==1">+1*#{group1_weight}</if>)*#{medicalHis_MI1_weight} +
+		
+		abs(sum(case when g.MEDICALHIS_MI=2 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_mi2}*#{group1_weight}
+		-sum(case when g.MEDICALHIS_MI=2 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_mi2}
+		<if test="medicalHis_MI==2">+1*#{group1_weight}</if>)*#{medicalHis_MI2_weight} +
+		
+		abs(sum(case when g.EDU_LEVEL=1 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_edu1}*#{group1_weight}
+		-sum(case when g.EDU_LEVEL=1 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_edu1}
+		<if test="edu_level==1">+1*#{group1_weight}</if>)*#{edu_level1_weight} +
+		
+		abs(sum(case when g.EDU_LEVEL=2 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_edu2}*#{group1_weight}
+		-sum(case when g.EDU_LEVEL=2 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_edu2}
+		<if test="edu_level==2">+1*#{group1_weight}</if>)*#{edu_level2_weight} +
+		
+		abs(sum(case when g.EDU_LEVEL=3 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_edu3}*#{group1_weight}
+		-sum(case when g.EDU_LEVEL=3 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_edu3}
+		<if test="edu_level==3">+1*#{group1_weight}</if>)*#{edu_level3_weight} +
+		
+		abs(sum(case when g.MEDICALINSYRANCE=1 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_medInsure1}*#{group1_weight}
+		-sum(case when g.MEDICALINSYRANCE=1 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_medInsure1}
+		<if test="medicalInsurance==1">+1*#{group1_weight}</if>)*#{medicalInsurance1_weight} +
+		
+		abs(sum(case when g.MEDICALINSYRANCE=2 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_medInsure2}*#{group1_weight}
+		-sum(case when g.MEDICALINSYRANCE=2 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_medInsure2}
+		<if test="medicalInsurance==2">+1*#{group1_weight}</if>)*#{medicalInsurance2_weight} +
+		
+		abs(sum(case when g.MEDICALINSYRANCE=3 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		+${oldsum_g1_medInsure3}*#{group1_weight}
+		-sum(case when g.MEDICALINSYRANCE=3 and g.BELONG_GROUP=2 then 1 else 0 end)
+		-${oldsum_g2_medInsure3}
+		<if test="medicalInsurance==3">+1*#{group1_weight}</if>)*#{medicalInsurance3_weight} 
+		,0)
+		as group1,
+		
+		nvl(
+		abs(sum(case when g.SEX=1 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_sex1}
+		-sum(case when g.SEX=1 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_sex1}*#{group1_weight}
+		<if test="sex==1">+1</if>)*#{sex1_weight} + 
+		
+		abs(sum(case when g.SEX=2 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_sex2}
+		-sum(case when g.SEX=2 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_sex2}*#{group1_weight}
+		<if test="sex==2">+1</if>)*#{sex2_weight} +
+		
+		abs(sum(case when g.AGE_GRADE=1 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_age1}
+		-sum(case when g.AGE_GRADE=1 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_age1}*#{group1_weight}
+		<if test="age_grade==1">+1</if>)*#{age_grade1_weight} +
+		
+		abs(sum(case when g.AGE_GRADE=2 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_age2}
+		-sum(case when g.AGE_GRADE=2 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_age2}*#{group1_weight}
+		<if test="age_grade==2">+1</if>)*#{age_grade2_weight} +
+		
+		abs(sum(case when g.AGE_GRADE=3 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_age3}
+		-sum(case when g.AGE_GRADE=3 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_age3}*#{group1_weight}
+		<if test="age_grade==3">+1</if>)*#{age_grade3_weight} +
+		
+		abs(sum(case when g.MEDICALHIS_MI=1 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_mi1}
+		-sum(case when g.MEDICALHIS_MI=1 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_mi1}*#{group1_weight}
+		<if test="medicalHis_MI==1">+1</if>)*#{medicalHis_MI1_weight} +
+		
+		abs(sum(case when g.MEDICALHIS_MI=2 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_mi2}
+		-sum(case when g.MEDICALHIS_MI=2 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_mi2}*#{group1_weight}
+		<if test="medicalHis_MI==2">+1</if>)*#{medicalHis_MI2_weight} +
+		
+		abs(sum(case when g.EDU_LEVEL=1 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_edu1}
+		-sum(case when g.EDU_LEVEL=1 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_edu1}*#{group1_weight}
+		<if test="edu_level==1">+1</if>)*#{edu_level1_weight} +
+		
+		abs(sum(case when g.EDU_LEVEL=2 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_edu2}
+		-sum(case when g.EDU_LEVEL=2 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_edu2}*#{group1_weight}
+		<if test="edu_level==2">+1</if>)*#{edu_level2_weight} +
+		
+		abs(sum(case when g.EDU_LEVEL=3 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_edu3}
+		-sum(case when g.EDU_LEVEL=3 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_edu3}*#{group1_weight}
+		<if test="edu_level==3">+1</if>)*#{edu_level3_weight} +
+		
+		abs(sum(case when g.MEDICALINSYRANCE=1 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_medInsure1}
+		-sum(case when g.MEDICALINSYRANCE=1 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_medInsure1}*#{group1_weight}
+		<if test="medicalInsurance==1">+1</if>)*#{medicalInsurance1_weight} +
+		
+		abs(sum(case when g.MEDICALINSYRANCE=2 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_medInsure2}
+		-sum(case when g.MEDICALINSYRANCE=2 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_medInsure2}*#{group1_weight}
+		<if test="medicalInsurance==2">+1</if>)*#{medicalInsurance2_weight} +
+		
+		abs(sum(case when g.MEDICALINSYRANCE=3 and g.BELONG_GROUP=2 then 1 else 0 end)
+		+${oldsum_g2_medInsure3}
+		-sum(case when g.MEDICALINSYRANCE=3 and g.BELONG_GROUP=1 then 1 else 0 end)*#{group1_weight}
+		-${oldsum_g1_medInsure3}*#{group1_weight}
+		<if test="medicalInsurance==3">+1</if>)*#{medicalInsurance3_weight} 
+		,0)
+		as group2
+		
+		from PIP_COMM_PATIENT_GROUP g
+		
+	    left join PIP_COMM_PATIENT p on g.PATIENT_ID=p.PATIENT_ID
+		where g.CREATE_DATE>to_date('2016-11-29 18:05:00','yyyy-MM-dd hh24:mi:ss')
+		<if test="is_diabetes==1">
+			and substr(p.BELONG_GROUP,1,1) = '1'
+		</if>
+		
+		<if test="is_diabetes==2">
+			and substr(p.BELONG_GROUP,1,1) = '0'
+		</if>
+	</select>
+	
+	<select id="getTestVo" resultType="com.bdcor.pip.web.msg.domain.PatientGroupVo">
+		select 
+		p.PATIENT_ID as patientId,
+		p.IS_DIABETES as is_diabetes,
+		g.SEX,
+		g.AGE_GRADE,
+		g.medicalHis_MI,
+		g.EDU_LEVEL,
+		g.MEDICALINSYRANCE medicalInsurance
+		from PIP_COMM_PATIENT_GROUP g
+		inner join PIP_COMM_PATIENT p on p.PATIENT_ID_OLD=g.PATIENT_ID and length(p.PATIENT_ID)=9
+		order by p.PATIENT_ID
+	</select>
+	
+	<select id="getRandomGroup" resultType="map">
+		select 
+		p.BELONG_GROUP r_group,count(*) r_sum,
+		sum(case when g.sex=1 then 1 else 0 end) as sex1,
+		sum(case when g.sex=2 then 1 else 0 end) as sex2,
+		
+		sum(case when AGE_GRADE=1 then 1 else 0 end) AGE_GRADE_1,
+		sum(case when AGE_GRADE=2 then 1 else 0 end) AGE_GRADE_2,
+		sum(case when AGE_GRADE=3 then 1 else 0 end) AGE_GRADE_3,
+		
+		sum(case when MEDICALHIS_MI=1 then 1 else 0 end) MEDICALHIS_MI_1,
+		sum(case when MEDICALHIS_MI=2 then 1 else 0 end) MEDICALHIS_MI_2,
+		
+		sum(case when g.EDU_LEVEL=1 then 1 else 0 end) as EDU_LEVEL_1,
+		sum(case when g.EDU_LEVEL=2 then 1 else 0 end) as EDU_LEVEL_2,
+		sum(case when g.EDU_LEVEL=3 then 1 else 0 end) as EDU_LEVEL_3,
+		
+		sum(case when g.MEDICALINSYRANCE=1 then 1 else 0 end) as MEDICALINSYRANCE_1,
+		sum(case when g.MEDICALINSYRANCE=2 then 1 else 0 end) as MEDICALINSYRANCE_2,
+		sum(case when g.MEDICALINSYRANCE=3 then 1 else 0 end) as MEDICALINSYRANCE_3
+		
+		
+		from PIP_COMM_PATIENT_GROUP g
+		left join PIP_COMM_PATIENT p on p.PATIENT_ID=g.PATIENT_ID
+		
+		group by p.BELONG_GROUP
+		order by p.BELONG_GROUP
+	</select>
+	
+	<select id="getEverydayAddNum" resultType="map">
+	select to_char(CREATE_DATE,'yyyy-MM-dd') as CREATE_DATE,
+        listagg(B_GROUP,',') within GROUP (order by B_GROUP) as GROUPLIST,
+        listagg(R_SUM,',') within GROUP (order by B_GROUP) as SUMLIST
+	from (
+	    SELECT 
+	      	p.BELONG_GROUP as B_GROUP,
+	      	TRUNC(g.create_date, 'DD') as CREATE_DATE,
+	      	COUNT(*) as R_SUM
+	        
+			      
+		  FROM PIP_COMM_PATIENT_GROUP g
+		  LEFT JOIN PIP_COMM_PATIENT p on p.PATIENT_ID = g.PATIENT_ID
+			
+		  GROUP BY p.BELONG_GROUP, TRUNC(g.create_date, 'DD')
+		  ORDER BY TRUNC(g.CREATE_DATE, 'DD') DESC, p.BELONG_GROUP ASC
+	)
+	group by CREATE_DATE
+	order by CREATE_DATE
+	</select>
+</mapper>

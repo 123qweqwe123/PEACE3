@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.scm.dao.ScmMapper">
+	
+	<select id="getBoxMap" parameterType="map" resultType="map">
+		select 
+		BOX_CODE,REMARK
+		from PIP_SCM_FROZENBOX
+		where PROJECT_ID=#{PROJECT_ID} and LCC_CODE=#{LCC_CODE} and BOX_CODE=#{BOX_CODE} and BOX_TYPE='A'
+	</select>
+	
+	<select id="getTubeList" parameterType="map" resultType="map">
+		select
+		TUBE_CODE,REMARK,to_char(BOX_ROWNO) BOX_ROWNO,to_char(BOX_COLNO) BOX_COLNO
+		from PIP_SCM_FROZEN_TUBE
+		where PROJECT_ID=#{PROJECT_ID} and LCC_CODE=#{LCC_CODE} and BOX_CODE=#{BOX_CODE} and BOX_TYPE='A' and TUBE_TYPE='A'
+		order by BOX_ROWNO,BOX_COLNO
+	</select>
+	
+	<insert id="insertBox" parameterType="map">
+		insert into PIP_SCM_FROZENBOX(PROJECT_ID,LCC_CODE,BOX_CODE,BOX_TYPE,CREATE_DATE,CREATE_BY,REMARK)values
+		(#{PROJECT_ID},#{LCC_CODE},#{BOX_CODE},'A',#{CREATE_DATE},#{CREATE_BY},#{REMARK,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateBox" parameterType="map">
+		update PIP_SCM_FROZENBOX set REMARK=#{REMARK,jdbcType=VARCHAR}
+		where PROJECT_ID=#{PROJECT_ID} and LCC_CODE=#{LCC_CODE} and BOX_CODE=#{BOX_CODE} and BOX_TYPE='A'
+	</update>
+	
+	<delete id="clearTube" parameterType="map">
+		delete from PIP_SCM_FROZEN_TUBE 
+		where PROJECT_ID=#{PROJECT_ID} and LCC_CODE=#{LCC_CODE} and BOX_CODE=#{BOX_CODE} and BOX_TYPE='A'
+	</delete>
+	
+	<insert id="insertTube" parameterType="map">
+		insert into PIP_SCM_FROZEN_TUBE(PROJECT_ID,LCC_CODE,TUBE_CODE,TUBE_TYPE,BOX_CODE,BOX_TYPE,BOX_COLNO,BOX_ROWNO,CREATE_DATE,CREATE_BY,REMARK)values
+		(#{PROJECT_ID},#{LCC_CODE},#{TUBE_CODE},'A',#{BOX_CODE},'A',#{BOX_COLNO},#{BOX_ROWNO},#{CREATE_DATE},#{CREATE_BY},#{REMARK,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="boxList" resultType="map" parameterType="com.bdcor.pip.web.scm.filter.ScmFilter">
+		select 
+		box.BOX_CODE as boxCode,
+		max(lcc.LCC_CODE) as lccCode,
+		max(lcc.LCC_NAME) as lccName,
+		to_char(max(box.CREATE_DATE),'yyyy-MM-dd hh24:mi:ss') as createDate,
+		to_char(max(tube.CREATE_DATE),'yyyy-MM-dd hh24:mi:ss') as lastTubeDate,
+		count(tube.TUBE_CODE) as countTube
+		
+		from PIP_SCM_FROZENBOX box
+		left join PIP_COMM_LCC lcc on lcc.PROJECT_ID=box.PROJECT_ID and box.LCC_CODE=lcc.LCC_CODE
+		left join PIP_SCM_FROZEN_TUBE tube on tube.PROJECT_ID=box.PROJECT_ID and tube.BOX_CODE=box.BOX_CODE and tube.LCC_CODE=box.LCC_CODE
+		where box.PROJECT_ID=#{projectId}
+		and box.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="lccCode !=null and lccCode !=''">
+		and box.lcc_code = #{lccCode}		
+		</if>
+		group by box.PROJECT_ID,box.LCC_CODE,box.BOX_CODE
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} 
+			<if test="sord!=null and sord!= ''">
+				${sord}
+			</if>
+		</if>
+	</select>
+	<select id="boxListSum" resultType="map" parameterType="com.bdcor.pip.web.scm.filter.ScmFilter">
+		select 
+			'' as boxCode,
+			'总计' as lccCode,
+			'' as lccName,
+			'' as createDate,
+			'' as lastTubeDate,
+			sum(countTube) as countTube
+		 from (
+		select 
+		box.BOX_CODE as boxCode,
+		max(lcc.LCC_CODE) as lccCode,
+		max(lcc.LCC_NAME) as lccName,
+		to_char(max(box.CREATE_DATE),'yyyy-MM-dd hh24:mi:ss') as createDate,
+		to_char(max(tube.CREATE_DATE),'yyyy-MM-dd hh24:mi:ss') as lastTubeDate,
+		count(tube.TUBE_CODE) as countTube
+		
+		from PIP_SCM_FROZENBOX box
+		left join PIP_COMM_LCC lcc on lcc.PROJECT_ID=box.PROJECT_ID and box.LCC_CODE=lcc.LCC_CODE
+		left join PIP_SCM_FROZEN_TUBE tube on tube.PROJECT_ID=box.PROJECT_ID and tube.BOX_CODE=box.BOX_CODE and tube.LCC_CODE=box.LCC_CODE
+		where box.PROJECT_ID=#{projectId}
+		and box.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="lccCode !=null and lccCode !=''">
+		and box.lcc_code = #{lccCode}		
+		</if>
+		group by box.PROJECT_ID,box.LCC_CODE,box.BOX_CODE
+		)
+	</select>
+
+
+	<select id="checkTubeCode" resultType="int">
+
+	select  count(1) from pip_uqs_answer t
+	where 1=1
+			and (
+				(
+					t.questionnaire_id = '004.001.001'
+					and t.option_id= '1'
+					and t.question_id= '3'
+					and t.questionset_id= '4'
+				)
+		    or
+				(
+					t.questionnaire_id = '004.011.001'
+					and t.option_id= '1'
+					and t.question_id= '3'
+					and t.questionset_id= '1'
+				)
+			or
+				(
+					t.questionnaire_id = '004.014.001'
+					and t.option_id= '1'
+					and t.question_id= '4'
+					and t.questionset_id= '4'
+				)
+			)
+		  and lcc_code = #{lcc}
+		  and t.answer = #{code}
+		  and not exists(
+		  select 1 from PIP_SCM_FROZEN_TUBE f
+		  where 1=1 and f.tube_code = t.answer
+		  and  f.box_code != #{boxcode}
+		  )
+
+	</select>
+</mapper>

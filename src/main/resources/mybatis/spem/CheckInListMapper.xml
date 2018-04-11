@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdcor.pip.web.spem.dao.CheckInListMapper">
+  
+	<select id="listQuery" parameterType="com.bdcor.pip.web.spem.filter.CheckInListFilter" resultType="com.bdcor.pip.web.spem.domain.CheckInListVo">
+		select 
+		checkInList.checkInList_id as "id",
+		lcc.lcc_name as "lccName",
+		checkInList.checkInList_no as "checkInListNo",
+		checkinlist.create_by as "createBy",
+		to_char(checkinlist.create_date,'yyyy-MM-dd') as "createDate"
+		from pip_scm_checkinlist checkInList
+		left join pip_comm_lcc lcc on checkInList.project_id=lcc.project_id and checkInList.lcc_code=lcc.lcc_code
+		where
+		checkInList.project_id=#{projectId} and
+		checkInList.lcc_code in (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="boxCode != null and boxCode != ''">
+			and checkinlist.checkinlist_id in (select checkinlist_id from pip_scm_frozenbox box where  checkInList.project_id=box.project_id and checkInList.lcc_code=box.lcc_code and box.box_code  like '%'||#{boxCode}||'%')
+		</if>
+		<if test="lccCode != null and lccCode != ''">
+			and checkInList.lcc_code = #{lccCode}
+		</if>
+		<if test="checkInListNo != null and checkInListNo != ''">
+			and checkInList.checkInList_no like '%'||#{checkInListNo}||'%'
+		</if>
+	</select> 
+	
+	<select id="getCanSelectBoxList"  parameterType="map" resultType="map">
+		select 
+		box.box_code as "boxCode",
+		box.box_type as "boxType",
+		box.fridge_id as "fridgeId",
+		box.checkInList_Id as "checkInListId",
+		box.box_state as "boxSate"
+		from pip_scm_frozenBox box
+		where box.project_Id=#{projectId}
+		and box.lcc_Code in  (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="fridgeId != null and fridgeId != ''">
+			and box.fridge_id=#{fridgeId}
+		</if>
+		
+		<if test="checkInListId != null and checkInListId != ''">
+			and (box.checkInList_Id is null or box.checkInList_Id='' or box.checkInList_Id=#{checkInListId})
+		</if>
+		
+		<if test="checkInListId == null or checkInListId == ''">
+			and (box.checkInList_Id is null or box.checkInList_Id='') and box.IS_CHECKIN != 1
+		</if>
+		order by box.box_code,box.box_type
+	</select>
+	
+	<select id="previewBoxList"  parameterType="map" resultType="map">
+		select
+		box.box_code||box.box_type as "id",
+		box.box_code as "boxCode",
+		box.box_type as "boxType",
+		count(tube.tube_Code) as "useCount"
+		from pip_scm_frozenbox box
+		left join pip_scm_frozentube tube on tube.project_id=box.project_id and tube.lcc_code=box.lcc_code and tube.box_code=box.box_code and tube.box_type=box.box_type
+		where box.project_Id=#{projectId}
+		and box.lcc_Code in  (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="boxs != null">
+			and box.box_Code||'_'||box.box_type in
+			<foreach collection="boxs" item="item" separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+		group by box.box_code,box.box_type
+		order by box.box_code,box.box_type
+	</select>
+	
+	<select id="previewTubeList"  parameterType="map" resultType="map">
+		select
+		tube.tube_code||tube.tube_type as "id",
+		box.box_Code as "boxCode",
+		tube.tube_code as "tubeCode",
+		tube.blood_code as "bloodCode",
+		tube.tube_type as "tubeType",
+		tube.box_rowno as "rowNo",
+		tube.box_colno as "colNo"
+		from pip_scm_frozentube tube
+		inner join pip_scm_frozenbox box on tube.project_id=box.project_id and tube.lcc_code=box.lcc_code and tube.box_code=box.box_code and tube.box_type=box.box_type		where box.project_Id=#{projectId}
+		and box.lcc_Code in  (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		<if test="boxs != null">
+			and box.box_Code||'_'||box.box_type in
+			<foreach collection="boxs" item="item" separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+		order by box.box_code,box.box_type
+	</select>
+	
+	<update id="updateBoxCheckInListId" parameterType="map">
+		update pip_scm_frozenBox set checkInList_ID=#{checkInListId}
+		where box_Code||'_'||box_type in
+		<foreach collection="boxs" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<update id="updateBoxCheckInListIdNull" parameterType="String">
+		update pip_scm_frozenBox set checkInList_ID=null
+		where checkInList_ID=#{id}
+	</update>
+	
+	<insert id="save" parameterType="com.bdcor.pip.web.spem.domain.CheckInListVo">
+		insert into pip_scm_checkinlist(CHECKINLIST_ID,CHECKINLIST_NO,PROJECT_ID,CREATE_DATE,CREATE_BY
+		<if test="lccCode != null and lccCode !=''">
+			,LCC_CODE
+		</if>
+		<if test="zyzxOperator != null and zyzxOperator !=''">
+			,ZYZX_OPERATOR
+		</if>
+		<if test="lccOperator != null and lccOperator !=''">
+			,LCC_OPERATOR
+		</if>
+		<if test="deliveryDate != null and deliveryDate !=''">
+			,DELIVERY_DATE
+		</if>
+		<if test="receiveDate != null and receiveDate !=''">
+			,RECEIVE_DATE
+		</if>
+		<if test="temperature != null and temperature !=''">
+			,DELIVERY_TEMPERATURE
+		</if>
+		<if test="remark != null and remark !=''">
+			,REMARK
+		</if>
+		)values(#{id,jdbcType=VARCHAR},#{checkInListNo,jdbcType=VARCHAR},#{projectId,jdbcType=VARCHAR},to_date(#{createDate},'yyyy-mm-dd hh24:mi:ss'),#{createBy,jdbcType=VARCHAR}
+		<if test="lccCode != null and lccCode !=''">
+			,#{lccCode,jdbcType=VARCHAR}
+		</if>
+		<if test="zyzxOperator != null and zyzxOperator !=''">
+			,#{zyzxOperator,jdbcType=VARCHAR}
+		</if>
+		<if test="lccOperator != null and lccOperator !=''">
+			,#{lccOperator,jdbcType=VARCHAR}
+		</if>
+		<if test="deliveryDate != null and deliveryDate !=''">
+			,to_date(#{deliveryDate},'yyyy-mm-dd')
+		</if>
+		<if test="receiveDate != null and receiveDate !=''">
+			,to_date(#{receiveDate},'yyyy-mm-dd')
+		</if>
+		<if test="temperature != null and temperature !=''">
+			,#{temperature,jdbcType=VARCHAR}
+		</if>
+		<if test="remark != null and remark !=''">
+			,#{remark,jdbcType=VARCHAR}
+		</if>
+		)
+	</insert>
+	
+	<select id="getCheckInListVoById" parameterType="map" resultType="com.bdcor.pip.web.spem.domain.CheckInListVo">
+		select 
+		lcc.lcc_name as "lccName",
+		cil.checkInList_No as "checkInListNo",
+		cil.checkInList_id as "id",
+		cil.project_id as "projectId",
+		to_char(cil.create_Date,'yyyy-MM-dd') as "createDate",
+		ac.name as "createBy",
+		cil.lcc_code as "lccCode",
+		cil.zyzx_operator as "zyzxOperator",
+		cil.lcc_operator as "lccOperator",
+		to_char(cil.DELIVERY_DATE,'yyyy-MM-dd') as "deliveryDate",
+		to_char(cil.RECEIVE_DATE,'yyyy-MM-dd') as "receiveDate",
+		cil.DELIVERY_TEMPERATURE as "temperature",
+		cil.REMARK as "remark",
+		(select listagg(box.box_code||'_'||box.box_type, ',') within group (order by box.box_code,box.box_type) from pip_scm_frozenbox box 
+		 where  box.project_id=cil.project_id and box.lcc_code=cil.lcc_code and box.checkinlist_id=cil.checkinlist_id) as "boxs"
+		from pip_scm_checkinlist cil
+		left join pip_comm_lcc lcc on lcc.project_id=cil.project_id and lcc.lcc_code=cil.lcc_code
+		left join pip_sys_account ac on ac.project_id=cil.project_id and ac.id=cil.create_by
+
+		where cil.project_id=#{projectId}
+		and cil.lcc_code  in  (select lcc_code from pip_sys_user_data_limit dataLimit where dataLimit.user_Id=#{userId})
+		and cil.checkinlist_id=#{checkInListId}
+	</select>
+	
+	<select id="getBoxs"  parameterType="map" resultType="map">
+		select 
+		box.box_code as "boxCode",
+		box.box_type as "boxType",
+		box.fridge_id as "fridgeId",
+		box.checkInList_Id as "checkInListId",
+		box.box_state as "boxSate"
+		from pip_scm_frozenBox box
+		where box.project_Id=#{projectId}
+		<if test="checkInListId != null and checkInListId !='' ">
+			and box.checkInList_Id=#{checkInListId}
+		</if>
+		<if test="boxs != null and boxs !='' ">
+		 and box_Code||'_'||box_type in
+			<foreach collection="boxs" item="item" separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+		order by box.box_code,box.box_type
+	</select>
+	
+	<update id="modify" parameterType="com.bdcor.pip.web.spem.domain.CheckInListVo">
+		update pip_scm_checkInList set CHECKINLIST_NO=#{checkInListNo,jdbcType=VARCHAR},LCC_CODE=#{lccCode,jdbcType=VARCHAR},ZYZX_OPERATOR=#{zyzxOperator,jdbcType=VARCHAR}
+		,LCC_OPERATOR=#{lccOperator,jdbcType=VARCHAR},DELIVERY_DATE=to_date(#{deliveryDate},'yyyy-mm-dd'),RECEIVE_DATE=to_date(#{receiveDate},'yyyy-mm-dd')
+		,DELIVERY_TEMPERATURE=#{temperature,jdbcType=VARCHAR},REMARK=#{remark,jdbcType=VARCHAR}
+		where CHECKINLIST_ID=#{id}
+		
+	</update>
+	
+</mapper>

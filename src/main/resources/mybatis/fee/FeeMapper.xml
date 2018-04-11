@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdcor.pip.web.fee.dao.FeeManagerDao" >
+
+<!--表实体映射-->
+<resultMap id="feeResultMap" type="com.bdcor.pip.web.fee.domain.ProjectCost">
+    <id property="id" column="id"/>
+    <result property="st_name"   column="type_name"/>
+    <result property="type_cost" column="type_cost"/>
+    <result property="pat_sum"  column="pat_sum"/> 
+    <result property="st_type"  column="st_type"/>
+</resultMap> 
+<!--    PIP_COMM_DICT_CHECKGROUP -->
+<select id="getFeeList" parameterType="com.bdcor.pip.web.fee.filter.FeeFilter" resultMap="feeResultMap">
+    
+       
+     select ps.GROUP_ID id, ps.GROUP_NAME as type_name ,ps.GROUP_COST type_cost , fis.*  from  PIP_COMM_DICT_CHECKGROUP ps , 
+     (  
+        select count(1) as pat_sum , st_type   from  pip_fee_info fi  where 1=1
+        
+         <if test="project_id != null ">   
+             and  PROJECT_ID='${project_id}' 
+         </if>
+         
+          <if test="lcc_code != null ">   
+              and  LCC_CODE in ${lcc_code}
+          </if>
+          
+          <if test="bg_date != null and bg_date!='' ">   
+            <![CDATA[ and UPLOAD_DATE >= #{bg_date}]]>
+         </if>  
+         <if test="end_date != null and end_date !='' ">   
+            <![CDATA[ and UPLOAD_DATE <= #{end_date}]]> 
+         </if>
+           group by ST_TYPE 
+     ) fis   
+     where   ps.GROUP_ID=fis.ST_TYPE  and  ps.GROUP_COST!=0
+     
+     <if test="project_id != null ">    
+        and  ps.PROJECT_ID ='${project_id}'
+     </if> 
+    
+     
+     <if test="sidx != null and sidx != ''">
+            order by ${sidx}
+            <if test="sord!=null and sord!= ''">
+                ${sord}
+            </if>
+        </if> 
+</select>   
+
+
+   
+<select id="getLccFee" parameterType="com.bdcor.pip.web.fee.filter.FeeFilter" resultType="map">
+     select lc.AMOUNT as LCC_SUM from PIP_FEE_PLAN lc where  lc.IN_USE='1' 
+     
+     <if test="project_id != null ">   
+             and  lc.PROJECTID='${project_id}'
+     </if>
+     
+     <if test="lcc_code != null ">   
+            and  ORGANID in ${lcc_code}
+     </if> 
+     
+     <!-- <if test="bg_date != null ">   
+            <![CDATA[ and REG_TIME >= #{bg_date,jdbcType=VARCHAR}]]>
+     </if>  
+      <if test="end_date != null ">   
+            <![CDATA[ and REG_TIME <= #{end_date,jdbcType=VARCHAR}]]> 
+     </if>  --> 
+     
+     <if test="sidx != null and sidx != ''">
+            order by ${sidx}
+            <if test="sord!=null and sord!= ''">
+                ${sord}
+            </if>
+        </if>   
+</select>     
+
+ 
+
+<resultMap id="feeRegResultMap" type="com.bdcor.pip.web.fee.domain.FeeRegister">
+    <id property="id" column="FEE_ID"/>
+    <result property="amount"   column="AMOUNT"/>
+    <result property="projectId" column="PROJECT_ID"/>
+    <result property="projectName" column="PROJECT_NAME"/>
+    <result property="departName" column="DEPART_NAME"/>
+    <result property="reg_type"  column="REGISTER_TYPE"/> 
+    <result property="departId"  column="DEPARTMENT_ID"/>
+    <result property="reasons"  column="REASONS"/>
+    <result property="reg_date"  column="REG_TIME" jdbcType="TIMESTAMP"/>
+    <!-- <result property="uTime"  column="REG_TIME" jdbcType="TIMESTAMP"/> -->
+</resultMap> 
+
+    
+ 
+ 
+ 
+ <select id="getById" parameterType="java.lang.String" resultMap="feeRegResultMap">
+     select  fn.*  from PIP_FEE_REGISTER   fn  where  IN_USE='1'     
+    
+     <if test="id != null ">   
+             and  fn.FEE_ID = #{id,jdbcType=VARCHAR}
+     </if>  
+        
+</select> 
+   
+   
+<select id="getFeeRegList" parameterType="com.bdcor.pip.web.fee.filter.FeeRegFilter" resultMap="feeRegResultMap">
+     select  fn.FEE_ID,fn.AMOUNT,fn.PROJECT_ID,fn.PROJECT_NAME,fn.DEPART_NAME,fr.TYPE_NAME REGISTER_TYPE ,fn.DEPARTMENT_ID,fn.REASONS,fn.REG_TIME  from PIP_FEE_REGISTER   fn
+     left join  PIP_FEE_REGTYPE fr  on fn.REGISTER_TYPE=fr.TYPE_CODE 
+     where  fn.IN_USE='1'      
+     
+     <if test="projectName != null ">   
+             and  fn.PROJECT_ID =  #{projectName,jdbcType=VARCHAR}
+     </if>
+     <if test="departId != null and departId != '' ">   
+             and  fn.DEPARTMENT_ID = #{departId,jdbcType=VARCHAR} 
+     </if>
+     <if test="reg_type != null  and  reg_type != '' ">    
+             and  fn.REGISTER_TYPE = #{reg_type,jdbcType=VARCHAR}
+     </if> 
+      <if test="bg_date != null ">   
+            <![CDATA[ and fn.REG_TIME >= #{bg_date,jdbcType=VARCHAR}]]>
+     </if>  
+      <if test="end_date != null ">   
+            <![CDATA[ and fn.REG_TIME <= #{end_date,jdbcType=VARCHAR}]]> 
+     </if>  
+     
+     <if test="sidx != null and sidx != ''">
+            order by ${sidx}
+            <if test="sord!=null and sord!= ''">
+                ${sord}
+            </if>
+        </if>  
+        
+</select> 
+
+
+<insert id="save" parameterType="com.bdcor.pip.web.fee.domain.FeeRegister">
+     insert into PIP_FEE_REGISTER  
+        <trim prefix="(" suffix=")" suffixOverrides=",">  
+            <if test="id != null">
+                FEE_ID,
+            </if>
+             <if test="projectId != null">
+                PROJECT_ID,
+            </if>
+            <if test="reg_type != null">
+                REGISTER_TYPE,
+            </if>
+            <if test="departId != null">
+                DEPARTMENT_ID,
+            </if>
+            <if test="amount != null">
+                AMOUNT,
+            </if>
+            <if test="reasons != null">
+                REASONS,
+            </if>
+            <if test="reg_date != null">
+                REG_TIME,
+            </if>
+            <if test="registrant != null">
+                REGISTRANT,
+            </if>
+            <if test="tally_month != null">
+                TALLY_MONTH,
+            </if>
+            <if test="tally_year != null">
+                TALLY_YEAR,
+            </if>
+            <if test="projectName != null">
+                PROJECT_NAME,
+            </if>
+            <if test="departName != null">
+                DEPART_NAME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="reg_type != null">
+                #{reg_type,jdbcType=VARCHAR},
+            </if>
+            <if test="departId != null">
+                #{departId,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null">
+               #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="reasons != null">
+                #{reasons,jdbcType=VARCHAR},
+            </if>
+            <if test="reg_date != null">
+                #{reg_date,jdbcType=DATE},
+            </if>
+            <if test="registrant != null">
+                #{registrant,jdbcType=VARCHAR}, 
+            </if>
+            <if test="tally_month != null">
+                #{tally_month,jdbcType=VARCHAR}, 
+            </if>  
+            <if test="tally_year != null">
+                #{tally_year,jdbcType=VARCHAR}, 
+            </if> 
+            <if test="projectName != null">
+                #{projectName,jdbcType=VARCHAR}, 
+            </if>  
+            <if test="departName != null">
+                #{departName,jdbcType=VARCHAR},  
+            </if>        
+        </trim>         
+</insert>   
+    
+    <update id="update" parameterType="com.bdcor.pip.web.fee.domain.FeeRegister">
+        update PIP_FEE_REGISTER
+        <set>
+           
+            <if test="projectId != null">
+                PROJECT_ID=#{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="reg_type != null">
+                REGISTER_TYPE=#{reg_type,jdbcType=VARCHAR},
+            </if>
+            <if test="departId != null">
+                DEPARTMENT_ID=#{departId,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null">
+               AMOUNT=#{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="reasons != null">
+                REASONS=#{reasons,jdbcType=VARCHAR}, 
+            </if>
+            <if test="reg_date != null">
+                REG_TIME=#{reg_date,jdbcType=DATE},
+            </if>
+            <if test="registrant != null">
+                REGISTRANT=#{registrant,jdbcType=VARCHAR}, 
+            </if>
+            <if test="tally_month != null">
+                TALLY_MONTH=#{tally_month,jdbcType=VARCHAR}, 
+            </if>  
+            <if test="tally_year != null">
+                TALLY_YEAR=#{tally_year,jdbcType=VARCHAR}, 
+            </if> 
+            <if test="projectName != null">
+                PROJECT_NAME=#{projectName,jdbcType=VARCHAR}, 
+            </if>  
+            <if test="departName != null">
+                DEPART_NAME=#{departName,jdbcType=VARCHAR},  
+            </if>        
+         </set>
+        where  FEE_ID=#{id,jdbcType=VARCHAR} 
+            
+    </update>
+    
+    <select id="getFeeRegisterById" parameterType="java.lang.String" resultMap="feeRegResultMap">
+      
+    </select>
+    
+    <delete id="delete" parameterType="java.lang.String">
+        <!-- delete from pip_project_region where region_id = #{regionId} -->
+        update PIP_FEE_REGISTER set IN_USE='0' where FEE_ID = #{id,jdbcType=VARCHAR}
+    </delete>
+
+<resultMap id="feeDepartResultMap" type="com.bdcor.pip.web.fee.domain.FeeDepartStatisVo">
+    <id property="reg_depart" column="DEPARTMENT_ID"/>
+    <result property="amount_total"   column="TOTAL_SUM"/>
+    <result property="x1" column="x1"/>
+    <result property="x2" column="x2"/>
+    <result property="x3" column="x3"/>
+    <result property="x4" column="x4"/>
+    <result property="x5" column="x5"/>
+    <result property="x6" column="x6"/>
+</resultMap>   
+
+
+<resultMap id="feeCategoryResultMap" type="com.bdcor.pip.web.fee.domain.FeeCategoryStatisVo">
+    <id property="reg_type" column="REGISTER_TYPE"/> 
+    <result property="amount_total"   column="TOTAL_SUM"/>
+    <result property="x1" column="x1"/>
+    <result property="x2" column="x2"/>
+    <result property="x3" column="x3"/>
+    <result property="x4" column="x4"/>
+    <result property="x5" column="x5"/>
+    <result property="x6" column="x6"/>
+</resultMap>   
+
+<select id="getFeeLineByCatagory" parameterType="java.util.Map" resultMap="feeCategoryResultMap">
+  select 
+  REGISTER_TYPE , 
+  sum(decode(YEAR_MONTH,#{x1},TOTAL_SUM)) as x1, 
+  sum(decode(YEAR_MONTH,#{x2},TOTAL_SUM)) as x2,
+  sum(decode(YEAR_MONTH,#{x3},TOTAL_SUM)) as x3,
+  sum(decode(YEAR_MONTH,#{x4},TOTAL_SUM)) as x4,
+  sum(decode(YEAR_MONTH,#{x5},TOTAL_SUM)) as x5,
+  sum(decode(YEAR_MONTH,#{x6},TOTAL_SUM)) as x6
+  from 
+  (
+       select 
+       sum(fr.AMOUNT) TOTAL_SUM, 
+       fr.TALLY_YEAR||fr.TALLY_MONTH  YEAR_MONTH ,
+       ft.TYPE_NAME as REGISTER_TYPE 
+       from PIP_FEE_REGISTER fr 
+       left join PIP_FEE_REGTYPE ft 
+       on ft.TYPE_CODE=fr.register_type  where fr.PROJECT_ID=#{projectId} and IN_USE!=0
+       group by fr.TALLY_YEAR||fr.TALLY_MONTH, ft.TYPE_NAME
+  )
+    group by REGISTER_TYPE
+
+  <!--   select  sum(AMOUNT) TOTAL_SUM, TALLY_YEAR||TALLY_MONTH  YEAR_MONTH , REGISTER_TYPE    from  PIP_FEE_REGISTER  fr  where fr.project_id=#{proid,jdbcType=VARCHAR}   group by TALLY_YEAR||TALLY_MONTH, REGISTER_TYPE   -->     
+</select> 
+
+
+<select id="getFeeLineByDepart" parameterType="java.util.Map" resultMap="feeDepartResultMap">
+   select DEPARTMENT_ID , 
+	sum(decode(YEAR_MONTH,#{x1},TOTAL_SUM)) as x1,
+	sum(decode(YEAR_MONTH,#{x2},TOTAL_SUM)) as x2, 
+	sum(decode(YEAR_MONTH,#{x3},TOTAL_SUM)) as x3,
+	sum(decode(YEAR_MONTH,#{x4},TOTAL_SUM)) as x4, 
+	sum(decode(YEAR_MONTH,#{x5},TOTAL_SUM)) as x5,
+	sum(decode(YEAR_MONTH,#{x6},TOTAL_SUM)) as x6 
+	from 
+   ( 
+    select sum(fr.AMOUNT) TOTAL_SUM, 
+    fr.TALLY_YEAR||fr.TALLY_MONTH YEAR_MONTH , 
+    fd.DEPT_NAME  as DEPARTMENT_ID 
+    from PIP_FEE_REGISTER fr 
+    left join PIP_FEE_DEPT fd 
+    on fd.DEPT_CODE=fr.DEPARTMENT_ID 
+    where fr.PROJECT_ID=#{projectId}  and IN_USE!=0
+    group by fr.TALLY_YEAR||fr.TALLY_MONTH, 
+    fd.DEPT_NAME 
+   ) 
+  group by DEPARTMENT_ID 
+</select> 
+
+</mapper>
